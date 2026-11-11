@@ -75,3 +75,5 @@ h2 .en{font-weight:400;font-style:italic;font-size:17px;color:var(--muted)}
 footer{border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
 footer p{margin:0;max-width:70ch}
 @media (prefers-reduced-motion:no-preference){.card{transition:border-color .15s}}
+
+/* Wei Ding · Practice Notes · 2026-11-11 */
