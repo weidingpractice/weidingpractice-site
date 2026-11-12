@@ -86,3 +86,13 @@ footer p{margin:0;max-width:70ch}
 .usehead .t .en{font-style:italic;font-size:15px;color:var(--muted)}
 .use .pair{border-top:0;padding-block:4px}
 .more{font-size:14px}
+
+/* Poses that use a point: one quiet card each, the whole card is the link */
+.uses{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+a.usecard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);text-decoration:none;min-width:0}
+a.usecard:hover{border-color:var(--water)}
+.usecard .t{font-family:var(--display);font-size:19px;line-height:1.3}
+.usecard .t .en{display:block;font-style:italic;font-size:14px;color:var(--muted)}
+.usecard .cue{font-size:15px;line-height:1.6}
+.usecard .cue .en{display:block;font-size:13.5px;color:var(--muted);margin-top:2px}
+.usecard .go{font-size:13px;color:var(--water);margin-top:2px}
