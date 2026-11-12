@@ -75,5 +75,14 @@ h2 .en{font-weight:400;font-style:italic;font-size:17px;color:var(--muted)}
 footer{border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
 footer p{margin:0;max-width:70ch}
 @media (prefers-reduced-motion:no-preference){.card{transition:border-color .15s}}
-
-/* Wei Ding · Practice Notes · 2026-11-11 */
+.ptc .head{display:flex;gap:12px;align-items:center}
+.small{font-size:13px;color:var(--muted)}
+.pt .name a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line)}
+.pthero{display:flex;gap:16px;align-items:center}
+.seal.big{width:72px;height:72px;font-size:32px;border-radius:12px}
+.use{border-top:1px solid var(--line);padding-block:14px;display:flex;flex-direction:column;gap:6px}
+.usehead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.usehead .t{font-family:var(--display);font-size:22px;color:var(--ink);text-decoration:none}
+.usehead .t .en{font-style:italic;font-size:15px;color:var(--muted)}
+.use .pair{border-top:0;padding-block:4px}
+.more{font-size:14px}
