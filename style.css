@@ -96,3 +96,11 @@ a.usecard:hover{border-color:var(--water)}
 .usecard .cue{font-size:15px;line-height:1.6}
 .usecard .cue .en{display:block;font-size:13.5px;color:var(--muted);margin-top:2px}
 .usecard .go{font-size:13px;color:var(--water);margin-top:2px}
+
+/* Classical sources: the authority of these notes, set apart on a warm ground */
+section.classics{background:var(--seal-soft);border-radius:14px;padding:20px 18px}
+section.classics h2{color:var(--seal)}
+section.classics .src{border-top:1px solid var(--line);padding-block:16px}
+section.classics .src:first-of-type{border-top:0}
+section.classics blockquote{font-size:22px;line-height:1.75;border-left:3px solid var(--seal);padding-left:14px;color:var(--ink)}
+section.classics cite{font-size:13.5px;color:var(--seal)}
