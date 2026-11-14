@@ -104,3 +104,6 @@ section.classics .src{border-top:1px solid var(--line);padding-block:16px}
 section.classics .src:first-of-type{border-top:0}
 section.classics blockquote{font-size:22px;line-height:1.75;border-left:3px solid var(--seal);padding-left:14px;color:var(--ink)}
 section.classics cite{font-size:13.5px;color:var(--seal)}
+
+.fix{margin-top:3rem;padding:1rem 1.1rem;border:1px solid var(--line,#d8d6cf);border-radius:10px;font-size:.95rem}
+.fix p{margin:0}
