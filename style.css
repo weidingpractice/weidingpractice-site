@@ -107,3 +107,7 @@ section.classics cite{font-size:13.5px;color:var(--seal)}
 
 .fix{margin-top:3rem;padding:1rem 1.1rem;border:1px solid var(--line,#d8d6cf);border-radius:10px;font-size:.95rem}
 .fix p{margin:0}
+
+.std{border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;margin:1.2rem 0}
+.std h2{margin-top:0}
+.stdzh{font-size:1.15rem;line-height:1.7}
