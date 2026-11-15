@@ -118,3 +118,4 @@ section.classics cite{font-size:13.5px;color:var(--seal)}
 
 .namelink{margin:14px 0 4px;font-size:15px}.namelink a{font-weight:500}.namelink .en{display:block;font-size:13px;color:var(--muted)}
 .lede.motto{font-family:var(--serif,Spectral,"Songti SC","Noto Serif SC",serif);font-size:20px;line-height:1.7;margin:4px 0 14px}
+.soil{background:var(--surface);border-top:3px solid #7a9a6a}.soil h2{font-size:19px;margin:0 0 8px}.soil p{margin:8px 0}.leafbtn{display:inline-block;padding:9px 16px;border-radius:20px;border:1px solid #7a9a6a;text-decoration:none;font-weight:500}.leaves{display:grid;gap:8px;margin:8px 0 12px}.leaf{border-left:3px solid #7a9a6a;padding:4px 10px}.leaf p{margin:0 0 2px}.intro{max-width:62ch;margin:10px 0 18px;line-height:1.75}.intro .en{display:block;margin-top:6px}
