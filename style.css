@@ -114,4 +114,6 @@ section.classics cite{font-size:13.5px;color:var(--seal)}
 
 .pcard{gap:6px}.pcard .sa{font-size:13px;color:var(--muted);font-style:italic}.pcard .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 
-.check h2{margin-top:36px}.check h3{margin-top:24px}.check blockquote{margin:12px 0;padding-left:14px;border-left:3px solid var(--line)}.tblwrap{overflow-x:auto;margin:12px 0}.check table{border-collapse:collapse;width:100%;font-size:14px}.check td:first-child,.check th:first-child{white-space:nowrap}.check th,.check td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}.check a{word-break:break-all}
+.check h2{font-size:21px;margin:32px 0 10px}.check h3{font-family:inherit;font-size:17px;font-weight:600;margin:24px 0 8px}.check hr{border:0;border-top:1px solid var(--line);margin:28px 0}.check blockquote{margin:12px 0;padding-left:14px;border-left:3px solid var(--line)}.tblwrap{overflow-x:auto;margin:12px 0}.check table{border-collapse:collapse;width:100%;font-size:14px}.check td:first-child,.check th:first-child{white-space:nowrap}.check th,.check td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}.check a{word-break:break-all}
+
+.namelink{margin:14px 0 4px;font-size:15px}.namelink a{font-weight:500}.namelink .en{display:block;font-size:13px;color:var(--muted)}
