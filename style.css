@@ -111,3 +111,5 @@ section.classics cite{font-size:13.5px;color:var(--seal)}
 .std{border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;margin:1.2rem 0}
 .std h2{margin-top:0}
 .stdzh{font-size:1.15rem;line-height:1.7}
+
+.pcard{gap:6px}.pcard .sa{font-size:13px;color:var(--muted);font-style:italic}.pcard .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
