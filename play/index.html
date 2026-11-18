@@ -42,6 +42,7 @@ h2.sec{font-family:var(--display);font-weight:600;font-size:21px;margin:0;displa
 h2.sec .en{font-weight:400;font-style:italic;font-size:15px;color:var(--muted)}
 .note{font-size:13px;color:var(--muted);margin:0}
 .small{font-size:12px;color:var(--muted)}
+.ffollow{border:1px solid var(--water);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;background:var(--water-soft)}.ffollow .fk{margin:0;font-size:12px;letter-spacing:.12em;color:var(--water);text-transform:uppercase}.ffollow p{margin:0}.fname2{font-family:var(--display);font-size:18px}.fways{display:flex;flex-direction:column;gap:8px;margin-top:4px}.fways .btn{text-align:left;justify-content:flex-start;text-decoration:none}
 .doors{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.door{appearance:none;font:inherit;text-align:left;color:inherit;background:var(--card,#fff);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:4px;cursor:pointer}.door.on{border-color:var(--water);box-shadow:inset 0 0 0 1px var(--water)}.door b{font-size:18px}.subh.grey{opacity:.6}
 .rows{display:flex;flex-direction:column;border-top:1px solid var(--line)}
 a.rowbtn{text-decoration:none}.jall{color:inherit;text-underline-offset:3px}.rowbtn{appearance:none;font:inherit;text-align:left;color:inherit;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 0;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:start}
@@ -566,7 +567,14 @@ function forestView(){const {fam,rest}=fstPoses();const C=fstCards();const nC=ne
   <div class="flayer fnext"><span class="fk">${esc(nxt[0])}</span><span style="display:flex;flex-direction:column;gap:4px">${nxt[1]}</span></div>
   </div>
   ${PUBLIC?'':'<button class="btn fadd" data-fgo="add">记一条：刚才感觉到了什么 →</button>'}
-  <div class="row"><button class="btn ghost" data-fgo="again">再来一局 · Play again</button><button class="btn ghost" data-fgo="home">换一个体式 · Another pose</button><a class="small" href="#${esc(k)}" style="align-self:center">${esc(v.zh)}的页面 · ${esc(v.py)} page</a></div>`+tail}
+  ${(()=>{const others=fstOther(po.id,k).slice(0,3).map(pid=>allPoses().find(p=>p.id===pid)||PDIM[pid]).filter(Boolean);
+   const where=others.length?bi(`${esc(v.zh)}还住在${others.map(o=>esc(fstName(o))).join('、')}里。`,`${esc(v.py)} also lives in ${others.map(o=>esc(fstEn(o))).join(', ')}.`):bi(`${esc(v.zh)}还没在别的体式里被找到。也许下一个找到它的是你。`,`${esc(v.py)} hasn't been found in another pose yet. You might be the next one.`);
+   return `<div class="ffollow"><p class="fk">跟着${esc(v.zh)}走 · Follow ${esc(v.py)}</p>
+    <p class="fname2">${bi(`你刚才感觉到的地方，有一个名字：<b>${esc(v.label||v.zh)}</b>。`,`The place you just felt has a name: <b>${esc(v.py)}</b>${v.en?`, ${esc(v.en)}`:''}.`)}</p>
+    <p class="small">${where}</p>
+    <div class="fways">${others.map(o=>`<button class="btn ghost" data-fgo="tree" data-fp="${esc(o.id)}">去${esc(fstName(o))}里找它 · Find it in ${esc(fstEn(o))}</button>`).join('')}
+    <a class="btn ghost" href="#${esc(k)}">看${esc(v.zh)}的地图：在哪、古书怎么说 · ${esc(v.py)} on the map →</a></div></div>`})()}
+  <div class="row"><button class="btn ghost" data-fgo="again">再来一局 · Play again</button><button class="btn ghost" data-fgo="home">换一个体式 · Another pose</button></div>`+tail}
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t||!t.closest('.fst'))return;
  if(t.dataset.fpose){FST={pose:t.dataset.fpose,feel:null,answer:null}}
  else if(t.dataset.ffeel){FST.feel=t.dataset.ffeel;FST.answer=null}
