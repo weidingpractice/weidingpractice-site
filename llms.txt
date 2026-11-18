@@ -1,0 +1,52 @@
+# 以身观身 · Seeing Through One Body
+
+> A practitioner's attention map that links yoga poses to acupoints and body areas. Each line on the map is a route the author actually practised and recorded: which point to rest attention on, in which pose, at which step. Chinese and English throughout. Maintained by Wei Ding (丁玮), London.
+
+## Who made it
+
+- Wei Ding (丁玮; also written 丁瑋). Born in Shanghai, to a family with roots in Ningbo who ran a traditional Chinese herbal apothecary. Has travelled across East and Southeast Asia, looking at how Chinese medicine took root in different cultures. Has lived in London since 2022.
+- Teaches the Introduction to Traditional Chinese Medicine, and assists, on Austin Ince's Yin Yoga Teacher Training "The Art of Letting Go" (50-hour CPD, held at Yogarise Peckham, London). Third-party source: https://www.austininceyoga.com/yin-teacher-training-london
+- Training, as she reports it:
+  - Clinical Chinese medicine with Dr Li Xin (李欣), online courses since 2020: classical theory and clinical reasoning (临证思维). Studied out of interest; no certificate. Dr Li Xin is co-author, with Dr Claudine Mérer, of *Traditional Chinese Medicine: Back to the Sources for a Modern Approach* (Arbre d'Or).
+  - Breathing and structural method with Yin Chaowen (殷朝文), since 2022, rooted in Chinese medicine principles and traditional Chinese body cultivation.
+  - 200-hour yoga teacher training with Patrick Creelman (2021).
+  - Yin Yoga Teacher Training "The Art of Letting Go" with Austin Ince (2025).
+  - Workshop study with David Swenson, London (2025).
+- She is not a doctor or a licensed practitioner of Chinese medicine, and does not offer treatment.
+- Instagram: https://www.instagram.com/weidingpractice/
+- Contact: hello@weidingpractice.com
+
+## What this is
+
+- A map, not a manual. The poses are the lines; the acupoints and body areas are the stations; each pose page shows the route through them, and each point page shows which routes pass through it.
+- The method: you do not press the point; you rest your attention there and notice what changes in the pose. Cues are written as the author uses them on the mat.
+- Every route marked "felt" (有体会) comes from the author's own dated practice log. Routes marked "maybe" are still being tested.
+- The map is not the territory. Bodies differ; the site says so on the pages where it matters.
+
+## What this is not
+
+- Not medical advice. No diagnosis, no treatment claims, no needling depth or direction. Body-state notes from the log are kept private.
+- Not a summary of other websites. Classical texts are quoted in Chinese only, from the original.
+
+## How the facts are checked
+
+- Point locations: verbatim from the Chinese national standard GB/T 12346-2021 《经穴名称与定位》, with clause and page; English from the WHO Standard Acupuncture Point Locations in the Western Pacific Region (2008).
+- Point names and their first appearance: 《灵枢》《素问》《针灸甲乙经》.
+- Every sourced statement is graded: A = the original passage has been read word for word, with page; B = consistent secondary sources, original still to be checked. C-grade material is never used.
+- Source checks are published as their own pages: https://weidingpractice.com/checks.html
+
+## Main pages
+
+- [Poses](https://weidingpractice.com/poses.html): every pose, with the points used in it and the cue.
+- [Points and areas](https://weidingpractice.com/points.html): every acupoint and body area on the map, with how to find it by hand and which poses use it.
+- [Principles](https://weidingpractice.com/principles.html): how the practice works.
+- [Sources](https://weidingpractice.com/sources.html): the classical and standard texts quoted.
+- [Glossary](https://weidingpractice.com/glossary.html): terms in Chinese and English.
+- [Pose names](https://weidingpractice.com/pose-names.html): Chinese, English and Sanskrit names.
+- [Journal](https://weidingpractice.com/journal.html): longer pieces.
+- Pages marked 「这条路还在修 · This path is still being built」 are parts of the map not yet public.
+
+## Reusing this material
+
+- Text by Wei Ding on this site is licensed CC BY 4.0: quote, translate and reuse it freely, including commercially, with credit to "Wei Ding, weidingpractice.com" and a link to the page.
+- Not covered by that licence: quotations from other people (for example Austin Ince) and from published standards, which belong to their owners.
