@@ -114,28 +114,28 @@ What the record on this site adds: every pose page links to the points used in i
 - [原文](https://weidingpractice.com/sources.html): 练习笔记引用的全部原文，按传统分组。Every classical source these notes quote, grouped by tradition.
 - [词汇](https://weidingpractice.com/glossary.html): 这些笔记里反复出现的词。Words used in these notes, explained.
 - [隐私 · Privacy](https://weidingpractice.com/privacy.html): 打勾和叶子怎么处理你的数据。How ticks and leaves handle your data.
-- [唱诵 Chanting](https://weidingpractice.com/chanting.html): Wei Ding 的唱诵练习笔记。Practice notes on Chanting.
-- [三段道家呼吸 Three-part Daoist Breath](https://weidingpractice.com/three-part-daoist-breath.html): Wei Ding 的三段道家呼吸练习笔记。Practice notes on Three-part Daoist Breath.
-- [四足四向手位 Four hand positions on all fours](https://weidingpractice.com/wrist-circles.html): Wei Ding 的四足四向手位练习笔记。Practice notes on Four hand positions on all fours.
-- [猫牛式 Cat–Cow](https://weidingpractice.com/cat-cow.html): Wei Ding 的猫牛式练习笔记。Practice notes on Cat–Cow.
-- [四足摆髋 → 绕臀 Hip sways → circles](https://weidingpractice.com/hip-circles.html): Wei Ding 的四足摆髋 → 绕臀练习笔记。Practice notes on Hip sways → circles.
-- [穿针式 Thread the Needle](https://weidingpractice.com/thread-the-needle.html): Wei Ding 的穿针式练习笔记。Practice notes on Thread the Needle.
-- [狮身人面式 → 海豹式 Sphinx → Seal](https://weidingpractice.com/sphinx-seal.html): Wei Ding 的狮身人面式 → 海豹式练习笔记。Practice notes on Sphinx → Seal.
-- [下犬式 Downward Dog](https://weidingpractice.com/downward-dog.html): Wei Ding 的下犬式练习笔记。Practice notes on Downward Dog.
-- [四柱支撑 Chaturanga](https://weidingpractice.com/chaturanga.html): Wei Ding 的四柱支撑练习笔记。Practice notes on Chaturanga.
-- [高弓步 High Lunge](https://weidingpractice.com/high-lunge.html): Wei Ding 的高弓步练习笔记。Practice notes on High Lunge.
-- [合掌扭转 Prayer Twist](https://weidingpractice.com/prayer-twist.html): Wei Ding 的合掌扭转练习笔记。Practice notes on Prayer Twist.
-- [战士二、三角式 Warrior II, Triangle](https://weidingpractice.com/warrior-2-triangle.html): Wei Ding 的战士二、三角式练习笔记。Practice notes on Warrior II, Triangle.
-- [三角扭转式 Revolved Triangle](https://weidingpractice.com/revolved-triangle.html): Wei Ding 的三角扭转式练习笔记。Practice notes on Revolved Triangle.
-- [侧蹲转换 Warrior II → Skandasana](https://weidingpractice.com/skandasana.html): Wei Ding 的侧蹲转换练习笔记。Practice notes on Warrior II → Skandasana.
-- [站立下轮 Standing drop-back to Wheel](https://weidingpractice.com/standing-backbend.html): Wei Ding 的站立下轮练习笔记。Practice notes on Standing drop-back to Wheel.
-- [幻椅式 Chair](https://weidingpractice.com/chair-pose.html): Wei Ding 的幻椅式练习笔记。Practice notes on Chair.
-- [鹰式手臂缠绕 Eagle arms](https://weidingpractice.com/eagle-arms.html): Wei Ding 的鹰式手臂缠绕练习笔记。Practice notes on Eagle arms.
-- [战士三、扭转半月 Warrior III, Revolved Half Moon](https://weidingpractice.com/warrior-3.html): Wei Ding 的战士三、扭转半月练习笔记。Practice notes on Warrior III, Revolved Half Moon.
-- [树式 Tree](https://weidingpractice.com/tree-pose.html): Wei Ding 的树式练习笔记。Practice notes on Tree.
-- [青蛙式 Frog](https://weidingpractice.com/frog.html): Wei Ding 的青蛙式练习笔记。Practice notes on Frog.
-- [鞍式 Saddle Pose](https://weidingpractice.com/saddle.html): Wei Ding 的鞍式练习笔记。Practice notes on Saddle Pose.
-- [蝴蝶式 Butterfly](https://weidingpractice.com/butterfly.html): Wei Ding 的蝴蝶式练习笔记。Practice notes on Butterfly.
-- [桥式 Bridge](https://weidingpractice.com/bridge.html): Wei Ding 的桥式练习笔记。Practice notes on Bridge.
-- [婴儿式 Child's Pose](https://weidingpractice.com/childs-pose.html): Wei Ding 的婴儿式练习笔记。Practice notes on Child's Pose.
-- [劳宫捂眼 Palming with Laogong](https://weidingpractice.com/palming.html): Wei Ding 的劳宫捂眼练习笔记。Practice notes on Palming with Laogong.
+- [唱诵 Chanting](https://weidingpractice.com/chanting.html): 唱诵的练习笔记。Practice notes on Chanting.
+- [三段道家呼吸 Three-part Daoist Breath](https://weidingpractice.com/three-part-daoist-breath.html): 三段道家呼吸的练习笔记。Practice notes on Three-part Daoist Breath.
+- [四足四向手位 Four hand positions on all fours](https://weidingpractice.com/wrist-circles.html): 四足四向手位的练习笔记。Practice notes on Four hand positions on all fours.
+- [猫牛式 Cat–Cow](https://weidingpractice.com/cat-cow.html): 猫牛式的练习笔记。Practice notes on Cat–Cow.
+- [四足摆髋 → 绕臀 Hip sways → circles](https://weidingpractice.com/hip-circles.html): 四足摆髋 → 绕臀的练习笔记。Practice notes on Hip sways → circles.
+- [穿针式 Thread the Needle](https://weidingpractice.com/thread-the-needle.html): 穿针式的练习笔记。Practice notes on Thread the Needle.
+- [狮身人面式 → 海豹式 Sphinx → Seal](https://weidingpractice.com/sphinx-seal.html): 狮身人面式 → 海豹式的练习笔记。Practice notes on Sphinx → Seal.
+- [下犬式 Downward Dog](https://weidingpractice.com/downward-dog.html): 下犬式的练习笔记。Practice notes on Downward Dog.
+- [四柱支撑 Chaturanga](https://weidingpractice.com/chaturanga.html): 四柱支撑的练习笔记。Practice notes on Chaturanga.
+- [高弓步 High Lunge](https://weidingpractice.com/high-lunge.html): 高弓步的练习笔记。Practice notes on High Lunge.
+- [合掌扭转 Prayer Twist](https://weidingpractice.com/prayer-twist.html): 合掌扭转的练习笔记。Practice notes on Prayer Twist.
+- [战士二、三角式 Warrior II, Triangle](https://weidingpractice.com/warrior-2-triangle.html): 战士二、三角式的练习笔记。Practice notes on Warrior II, Triangle.
+- [三角扭转式 Revolved Triangle](https://weidingpractice.com/revolved-triangle.html): 三角扭转式的练习笔记。Practice notes on Revolved Triangle.
+- [侧蹲转换 Warrior II → Skandasana](https://weidingpractice.com/skandasana.html): 侧蹲转换的练习笔记。Practice notes on Warrior II → Skandasana.
+- [站立下轮 Standing drop-back to Wheel](https://weidingpractice.com/standing-backbend.html): 站立下轮的练习笔记。Practice notes on Standing drop-back to Wheel.
+- [幻椅式 Chair](https://weidingpractice.com/chair-pose.html): 幻椅式的练习笔记。Practice notes on Chair.
+- [鹰式手臂缠绕 Eagle arms](https://weidingpractice.com/eagle-arms.html): 鹰式手臂缠绕的练习笔记。Practice notes on Eagle arms.
+- [战士三、扭转半月 Warrior III, Revolved Half Moon](https://weidingpractice.com/warrior-3.html): 战士三、扭转半月的练习笔记。Practice notes on Warrior III, Revolved Half Moon.
+- [树式 Tree](https://weidingpractice.com/tree-pose.html): 树式的练习笔记。Practice notes on Tree.
+- [青蛙式 Frog](https://weidingpractice.com/frog.html): 青蛙式的练习笔记。Practice notes on Frog.
+- [鞍式 Saddle Pose](https://weidingpractice.com/saddle.html): 鞍式的练习笔记。Practice notes on Saddle Pose.
+- [蝴蝶式 Butterfly](https://weidingpractice.com/butterfly.html): 蝴蝶式的练习笔记。Practice notes on Butterfly.
+- [桥式 Bridge](https://weidingpractice.com/bridge.html): 桥式的练习笔记。Practice notes on Bridge.
+- [婴儿式 Child's Pose](https://weidingpractice.com/childs-pose.html): 婴儿式的练习笔记。Practice notes on Child's Pose.
+- [劳宫捂眼 Palming with Laogong](https://weidingpractice.com/palming.html): 劳宫捂眼的练习笔记。Practice notes on Palming with Laogong.
