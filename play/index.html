@@ -206,7 +206,7 @@ form[data-mode="point"] .only-cue,form[data-mode="cue"] .only-point{display:none
   <header>
     <div class="proto">原型 · Prototype · 跟着 Wei 的练习记录一起长</div>
     <h1>以身观身<span class="en">Seeing Through One Body · Wei Ding Practice Notes</span></h1>
-    <p class="def">一个人的身体，看见更大的世界。瑜伽是印度的，我练着练着，有了中国的气韵。</p>
+    <p class="def">一个人的身体，看见更大的世界。瑜伽是印度的，我练着练着，有了中国的气韵。<span class="en">One body, and through it a wider world. Yoga came from India; as I kept practising, it took on a Chinese spirit.</span></p>
     <p class="def">穴位是身体上一个有名字的地方。练习时，把注意力放在这里，不用按，只是留意。
       <span class="en">A point is a named place on the body. In practice you don't press it; you rest your attention there.</span></p>
   </header>
@@ -526,32 +526,47 @@ function fstChoose(){const {fam,rest}=fstPoses();const po=[...fam,...rest].find(
  const maybe=c.filter(x=>x[1]==='maybe'),felt=c.filter(x=>x[1]==='felt');let pool=(maybe.length&&(Math.random()<.25||!felt.length))?maybe:felt.length?felt:c;
  const key=k=>po.id+'|'+k;const m=Math.min(...pool.map(([k])=>C[key(k)]||0));pool=pool.filter(([k])=>(C[key(k)]||0)===m);
  let [k,st]=fstPick(pool);if(FST.force){const hit=pts.find(([kk])=>kk===FST.force);if(hit){[k,st]=hit;FST.moved=false}FST.force=null}FST.pt=k;FST.status=st;return po}
+const FOREST_KNOB_EN={tree:['the lifted foot rests its toes on the floor','the lifted foot leaves the floor; or raise both arms overhead'],catcow:['round the back, like a cat','drop the belly and lift the head, like a cow'],child:['forehead on a block or bolster','take the block away'],lunge:['stay there and let go','stay there and firm the back leg; or keep moving'],chant:['a softer, slower voice','a fuller, longer voice'],palming:['stay longer, hands not pressing the eyes','rub the palms warmer before covering'],eagle:['wrap the arms more loosely','wrap the arms tighter and lift them higher']};
+const FOREST_KNOB_ANY_EN=['one more point of contact, or a prop; stay there and let go','one less point of contact, or raise the arms; stay there and work, or keep moving'];
+const FST_KEY_EN={'名字':'Name','你的身体说':'Your body said','一条常识':'Good to know','原文':'Source','国家标准':'Standard location','Austin':'Austin','殷朝文':'Yin Chaowen','它还在':'Also in','梵文':'Sanskrit'};
+const fstEn=po=>po&&po.en?po.en:fstName(po||{});
+const bi=(zh,en)=>`${zh}${en?`<span class="en" style="display:block">${en}</span>`:''}`;
+function fstLayerEn(L,k){const [key,html]=L;const v=P[k];let en='';
+ if(key==='一条常识'){const all=[...(v.about||[]),...(v.regionAbout||[])];const hit=all.find(a=>html.includes(esc(a[1])));if(hit&&hit[3])en=`<b>${esc(hit[2]||'')}</b> ${esc(hit[3])}`}
+ if(key==='国家标准'&&STD_LOC[k]&&STD_LOC[k].en)en=esc(STD_LOC[k].en);
+ if(key==='名字')en=`${esc(v.py)} · ${esc(v.en||'')}`;
+ if(key==='原文'){const id=(v.src||[]).map(x=>Array.isArray(x)?x[0]:x).find(id=>SRC[id]&&html.includes(esc(SRC[id].text)));const x=id&&SRC[id];en=(x&&(x.leadEn||x.textEn)?esc(x.textEn||x.leadEn)+' ':'')+'<span class="small">A line from the classical texts. It stays in Chinese.</span>'}
+ if(key==='它还在')en='Also in: '+fstOther(FST.pose,k).map(pid=>esc(fstEn(allPoses().find(p=>p.id===pid)||PDIM[pid]||{}))).join(', ');
+ return en}
 function forestView(){const {fam,rest}=fstPoses();const C=fstCards();const nC=new Set(Object.keys(C).map(x=>x.split('|')[1])).size;
  const head=PUBLIC?`<div class="fst"><div class="fsttop"><h2 class="sec">林子<span class="en">The Forest</span></h2><span class="small">词卡 ${nC} · Word cards</span></div>`:`<div class="fst"><div class="fsttop"><h2 class="sec">林子<span class="en">The Forest · 内部版</span></h2><span class="small">词卡 ${nC} · <a href="#bridges">桥表</a> · <a href="https://claude.ai/artifact/G47Ag5xYkfDmhrGTVFXQnP" target="_blank" rel="noopener">公开版</a></span></div>`;
- const tail=PUBLIC?`<p class="small fstfoot">只讲注意力放在哪里，不是诊断，也不是治疗。<span class="en" style="display:block">Only where attention rests. Not diagnosis, not treatment.</span></p></div>`:`<p class="small fstfoot">内部版：用你的日志、Austin 句库和殷朝文的段落，这些只在 Practice Notes 里。只讲注意力放在哪里，不是诊断，也不是治疗。</p></div>`;
- if(!FST.pose)return head+`<p class="note">一局 30 秒。选一个体式，选哪里有感觉，林子给一条线索。</p><p class="step">1 / 3 · 今天练了，或者想练</p>
+ const tail=PUBLIC?`<p class="small fstfoot">只讲注意力放在哪里，不是诊断，也不是治疗。<span class="en" style="display:block">Only where attention rests. Not diagnosis, not treatment.</span></p></div>`:`<p class="small fstfoot">内部版：用你的日志、Austin 句库和殷朝文的段落，这些只在 Practice Notes 里。只讲注意力放在哪里，不是诊断，也不是治疗。<span class="en" style="display:block">Inner version: your log, Austin's library and Yin Chaowen's passages, kept in Practice Notes only. Only where attention rests. Not diagnosis, not treatment.</span></p></div>`;
+ if(!FST.pose)return head+`<p class="note">${bi('一局 30 秒。选一个体式，选哪里有感觉，林子给一条线索。','One round, thirty seconds. Pick a pose, pick where you feel it, and the forest gives you a clue.')}</p><p class="step">${bi('1 / 3 · 今天练了，或者想练','1 / 3 · A pose you practised today, or would like to')}</p>
   <div class="fgrid">${fam.map(p=>`<button class="ftile" data-fpose="${esc(p.id)}"><b>${esc(fstName(p))}</b><span>${esc(p.en||'')}</span></button>`).join('')}</div>
-  <details${FST.more?' open':''}><summary class="small">日志里的其他体式 · ${rest.length}</summary><div class="fgrid" style="margin-top:8px">${rest.map(p=>`<button class="ftile" data-fpose="${esc(p.id)}"><b>${esc(p.zh)}</b>${p.n?`<span>记录 ${p.n} 次</span>`:''}</button>`).join('')}</div></details>`+tail;
- const po=[...fam,...rest].find(p=>p.id===FST.pose);
- if(!FST.feel)return head+`<p class="step">2 / 3 · ${esc(fstName(po))}里，哪里最有感觉？</p><div class="fgrid">${FOREST_FEEL.map(f=>`<button class="ftile" data-ffeel="${f[0]}"><b>${f[1]}</b><span>${f[2]}</span></button>`).join('')}</div><p><button class="btn ghost" data-fgo="home">← 换一个体式</button></p>`+tail;
- if(!FST.answer){fstChoose();const f=FOREST_FEEL.find(x=>x[0]===FST.feel);
-  return head+`<p class="step">3 / 3 · 线索</p><div class="fclue">${FST.moved?`<p class="small">${esc(fstName(po))}里，林子还没在「${f[1]}」找到路，先带你去另一个地方。</p>`:''}<p class="fq">在${esc(fstName(po))}里，注意力不放在最用力的地方。去找：${esc(fstFind(FST.pt))}</p>
-  <div class="fbreath"><div class="fdot" aria-hidden="true"></div><p class="small">进入${esc(fstName(po))}，注意力放在那里，停三个呼吸。不用按，只是留意。</p></div></div>
-  <p class="step">感觉到了吗？</p><div class="row"><button class="btn" data-fans="yes">感觉到了</button><button class="btn ghost" data-fans="no">没感觉</button><button class="btn ghost" data-fans="unsure">说不清</button></div>`+tail}
+  <details${FST.more?' open':''}><summary class="small">${PUBLIC?'更多体式 · More poses':'日志里的其他体式 · More poses'} · ${rest.length}</summary><div class="fgrid" style="margin-top:8px">${rest.map(p=>`<button class="ftile" data-fpose="${esc(p.id)}"><b>${esc(p.zh)}</b><span>${esc(p.en||'')}${!PUBLIC&&p.n?` · 记录 ${p.n} 次`:''}</span></button>`).join('')}</div></details>`+tail;
+ const po=[...fam,...rest].find(p=>p.id===FST.pose);const pe=esc(fstEn(po));
+ if(!FST.feel)return head+`<p class="step">${bi(`2 / 3 · ${esc(fstName(po))}里，哪里最有感觉？`,`2 / 3 · In ${pe}, where do you feel it most?`)}</p><div class="fgrid">${FOREST_FEEL.map(f=>`<button class="ftile" data-ffeel="${f[0]}"><b>${f[1]}</b><span>${f[2]}</span></button>`).join('')}</div><p><button class="btn ghost" data-fgo="home">← 换一个体式 · Another pose</button></p>`+tail;
+ if(!FST.answer){fstChoose();const f=FOREST_FEEL.find(x=>x[0]===FST.feel);const v0=P[FST.pt];
+  return head+`<p class="step">3 / 3 · 线索 · Clue</p><div class="fclue">${FST.moved?`<p class="small">${bi(`${esc(fstName(po))}里，林子还没在「${f[1]}」找到路，先带你去另一个地方。`,`In ${pe}, the forest has no path yet through "${esc(f[2])}". It takes you somewhere else first.`)}</p>`:''}<p class="fq">${bi(`在${esc(fstName(po))}里，注意力不放在最用力的地方。去找：${esc(fstFind(FST.pt))}`,`<span style="font-size:16px;line-height:1.5">In ${pe}, don't rest your attention where you work hardest. Look for this: ${esc(v0.findEn||'')}</span>`)}</p>
+  <div class="fbreath"><div class="fdot" aria-hidden="true"></div><p class="small">${bi(`进入${esc(fstName(po))}，注意力放在那里，停三个呼吸。不用按，只是留意。`,`Go into ${pe}. Rest your attention there for three breaths. Don't press; just notice.`)}</p></div></div>
+  <p class="step">感觉到了吗？ · Did you feel it?</p><div class="row"><button class="btn" data-fans="yes">感觉到了 · Yes</button><button class="btn ghost" data-fans="no">没感觉 · No</button><button class="btn ghost" data-fans="unsure">说不清 · Not sure</button></div>`+tail}
  const k=FST.pt,v=P[k],L=fstLayers(po,k),C2=fstCards(),key=po.id+'|'+k,before=C2[key]||0,full=before>=L.length,lv=full?L.length:before+1;C2[key]=Math.max(before,lv);fstSave(C2);
- const opened=full?fstPick(L.slice(1).length?L.slice(1):L):L[lv-1];const kn=FOREST_KNOB[po.id]||FOREST_KNOB_ANY;const nm=fstName(po);
- const oth=allPoses().filter(p=>p.id!==po.id&&p.pts.some(([kk,st])=>kk===k&&st==='felt')).map(fstName);
+ const opened=full?fstPick(L.slice(1).length?L.slice(1):L):L[lv-1];const kn=FOREST_KNOB[po.id]||FOREST_KNOB_ANY;const kne=FOREST_KNOB_EN[po.id]||FOREST_KNOB_ANY_EN;const nm=fstName(po);
  const o2=fstOther(po.id,k);const why=o2.length?fstWhy(o2[0],k):null;
- const nxt=FST.answer==='yes'?['下次往阳',esc(`同一个${nm}，${kn[1]}。注意力还放在${v.zh}，看它还在不在。`)]:FST.answer==='no'?['下次往阴',esc(`同一个${nm}，${kn[0]}。慢一点，再找一次${v.zh}。`)]:['换一棵树',o2.length?`<span>${fstPoseLink(o2[0])}里也有${esc(v.zh)}${why?'：'+esc(fstShort(why.q)):''}。</span>`:esc(`明天在${nm}里再找一次。`)];
- return head+`<p class="step">发芽</p><div class="fcard"><div class="fname">${esc(v.label||v.zh)}<small>${esc(v.code==='Area'?'一片区域':v.code)}</small></div>
+ const o2en=o2.length?esc(fstEn(allPoses().find(p=>p.id===o2[0])||PDIM[o2[0]]||{})):'';
+ const nxt=FST.answer==='yes'?['下次往阳 · Next time, toward yang',bi(esc(`同一个${nm}，${kn[1]}。注意力还放在${v.zh}，看它还在不在。`),esc(`The same ${fstEn(po)}: ${kne[1]}. Keep your attention on ${v.py}, and see whether it is still there.`))]
+  :FST.answer==='no'?['下次往阴 · Next time, toward yin',bi(esc(`同一个${nm}，${kn[0]}。慢一点，再找一次${v.zh}。`),esc(`The same ${fstEn(po)}: ${kne[0]}. Slow down, and look for ${v.py} again.`))]
+  :['换一棵树 · Try another tree',o2.length?bi(`<span>${fstPoseLink(o2[0])}里也有${esc(v.zh)}${why?'：'+esc(fstShort(why.q)):''}。</span>`,`${o2en} has ${esc(v.py)} too.`):bi(esc(`明天在${nm}里再找一次。`),esc(`Look for it again in ${fstEn(po)} tomorrow.`))];
+ const oen=fstLayerEn(opened,k);const ok=FST_KEY_EN[opened[0]]||'';
+ return head+`<p class="step">发芽 · A sprout</p><div class="fcard"><div class="fname">${esc(v.label||v.zh)}<small>${esc(v.py)} · ${esc(v.code==='Area'?'一片区域 · an area':v.code)}</small></div>
   <div class="flv">${L.map((_,i)=>`<i class="${i<lv?'on':''}"></i>`).join('')}</div>
-  <p class="small">${before===0?'新词卡 · 你在'+esc(nm)+'里找到了它。':full?'这张词卡已经全部打开。林子每天在长，以后会有新的一层。':'打开了第 '+lv+' / '+L.length+' 层。'}</p>
-  <div class="flayer"><span class="fk">${esc(opened[0])}</span><span>${opened[1]}</span></div>
-  ${FST.status==='maybe'?`<p class="fclear">这块是空地：${esc(nm)}和${esc(v.zh)}之间，你还没有走通过。今天的感觉可以记一条。</p>`:''}
+  <p class="small">${before===0?bi('新词卡 · 你在'+esc(nm)+'里找到了它。',`A new word card: you found it in ${pe}.`):full?bi('这张词卡已经全部打开。林子每天在长，以后会有新的一层。','This card is fully open. The forest grows every day; a new layer will come.'):bi('打开了第 '+lv+' / '+L.length+' 层。',`Layer ${lv} of ${L.length} is open.`)}</p>
+  <div class="flayer"><span class="fk">${esc(opened[0])}${ok?` · ${ok}`:''}</span><span>${opened[1]}${oen?`<span class="en" style="display:block;margin-top:4px">${oen}</span>`:''}</span></div>
+  ${FST.status==='maybe'?`<p class="fclear">${bi(`这块是空地：${esc(nm)}和${esc(v.zh)}之间，你还没有走通过。${PUBLIC?'':'今天的感觉可以记一条。'}`,`This is a clearing: no path walked yet between ${pe} and ${esc(v.py)}.`)}</p>`:''}
   <div class="flayer fnext"><span class="fk">${esc(nxt[0])}</span><span style="display:flex;flex-direction:column;gap:4px">${nxt[1]}</span></div>
   </div>
   ${PUBLIC?'':'<button class="btn fadd" data-fgo="add">记一条：刚才感觉到了什么 →</button>'}
-  <div class="row"><button class="btn ghost" data-fgo="again">再来一局</button><button class="btn ghost" data-fgo="home">换一个体式</button><a class="small" href="#${esc(k)}" style="align-self:center">${esc(v.zh)}的页面</a></div>`+tail}
+  <div class="row"><button class="btn ghost" data-fgo="again">再来一局 · Play again</button><button class="btn ghost" data-fgo="home">换一个体式 · Another pose</button><a class="small" href="#${esc(k)}" style="align-self:center">${esc(v.zh)}的页面 · ${esc(v.py)} page</a></div>`+tail}
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t||!t.closest('.fst'))return;
  if(t.dataset.fpose){FST={pose:t.dataset.fpose,feel:null,answer:null}}
  else if(t.dataset.ffeel){FST.feel=t.dataset.ffeel;FST.answer=null}
@@ -1778,7 +1793,7 @@ render();
 (async()=>{
  const timer=setTimeout(()=>{if(!loaded){statusEl.textContent='练习记录暂时读不到。索引照常可以看。'}},10000);
  try{db=await claude.use('db')}catch(e){db=null}
- if(!db){clearTimeout(timer);statusEl.textContent='登录 claude.ai 后打开这一页，就能看到并记录练习数据。现在显示的是基础索引。';render();return}
+ if(!db){clearTimeout(timer);if(PUBLIC){statusEl.hidden=true}else{statusEl.textContent='登录 claude.ai 后打开这一页，就能看到并记录练习数据。现在显示的是基础索引。'}render();return}
  db.collection('entries').onSnapshot(snap=>{
   loaded=true;clearTimeout(timer);
   ENTRIES=snap.docs.map(d=>({id:d.id,...d.data()}));
