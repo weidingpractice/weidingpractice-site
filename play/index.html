@@ -222,7 +222,6 @@ form[data-mode="point"] .only-cue,form[data-mode="cue"] .only-point{display:none
     <button class="tab add" role="tab" data-go="add">记一条<small>Log</small></button>
     <button class="tab" role="tab" data-go="forest">林子<small>Play</small></button>
     <button class="tab" role="tab" data-go="log">日志<small>Practice log</small></button>
-    <button class="tab" role="tab" data-go="austin">Austin<small>Austin's words</small></button>
     <button class="tab" role="tab" data-go="sources">原文<small>Classical sources</small></button>
     <button class="tab" role="tab" data-go="checks">核查<small>Checks</small></button>
     <button class="tab" role="tab" data-go="scripts">跟练<small>Scripts</small></button>
@@ -516,8 +515,8 @@ function fstLayers(po,k){const v=P[k],L=[],nm=fstName(po);
  if(STD_LOC[k]&&STD_LOC[k].zh)L.push(['国家标准',esc(STD_LOC[k].zh)+'<span class="small"> · GB/T 12346-2021</span>']);
  const ausLabels=[...new Set(ENTRIES.filter(e=>poseIdOf(e)===po.id&&e.austin).map(e=>e.austin))];
  const ausHit=AUS_ALL.filter(a=>ausLabels.includes(a[0])||(a[4]||'').includes(nm)||(a[4]||'').includes(po.zh));
- if(ausHit.length){const a=fstPick(ausHit);L.push(['Austin',`<i>${esc(a[1]||a[0])}</i><span class="small"> · ${esc(a[2]||'')}</span>`])}
- const yl=fstYinLayer(po,k,nm);if(yl)L.push(yl);
+ if(ausHit.length){const a=fstPick(ausHit);const t=a[1]||a[0];L.push(['Austin',`「${esc(t)}」`]);fstStone('Austin',t,a[2]||'',nm,v.zh||v.label||'')}
+ const yl=fstYinLayer(po,k,nm);if(yl){L.push(['殷朝文',`「${esc(yl.t)}」`]);fstStone('殷朝文',yl.t,yl.src,nm,v.zh||v.label||'')}
  const others=allPoses().filter(p=>p.id!==po.id&&p.pts.some(([kk,st])=>kk===k&&st==='felt')).map(fstName);
  if(others.length)L.push(['它还在',fstOther(po.id,k).map(fstPoseLink).join('、')]);
  if(po.sa)L.push(['梵文',`${esc(nm)} · <i>${esc(po.sa.replace(/（.*?）/g,''))}</i>`]);
@@ -583,9 +582,14 @@ function fstRecord(){const po=FST.pose,k=FST.pt,a=FST.answer;if(!po||!k||!a)retu
   try{fetch(TICKS_API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}).catch(()=>{})}catch(_){}
   return}
  if(db){const d=PDIM[po];try{db.collection('plays').doc().set({date:today(),time:now.toTimeString().slice(0,5),poseId:po,pose:d?d.zh:'',point:k,feel:FST.feel||'',answer:a,status:FST.status||'',ts:now.getTime()}).catch(()=>{})}catch(_){}}}
+/* Stones met in the forest: words the two elders (Austin, 殷朝文) once said. Met by chance; once met, kept here (this browser). Source kept behind, not shown. */
+function fstStone(who,t,src,pose,pt){if(PUBLIC||!t)return;try{const L=JSON.parse(localStorage.getItem('pn-stones')||'[]');if(L.some(x=>x.t===t))return;L.push({who,t,src,pose,pt,d:today()});localStorage.setItem('pn-stones',JSON.stringify(L))}catch(_){}}
+function fstStones(){if(PUBLIC)return '';let L=[];try{L=JSON.parse(localStorage.getItem('pn-stones')||'[]')}catch(_){}
+ return `<details class="stones"><summary class="small">遇见过的石子 · ${L.length}<span class="en"> · Stones you have met</span></summary>${L.length?`<ul style="margin:8px 0 0;padding-left:1.1em;display:flex;flex-direction:column;gap:8px">${L.slice().reverse().map(x=>`<li>「${esc(x.t)}」<span class="small"> —— ${esc(x.who)}${x.pose?' · 在'+esc(x.pose)+(x.pt?'，'+esc(x.pt):''):''}</span></li>`).join('')}</ul>`:'<p class="small">还没有。在林子里走一走，会遇见前辈留下的石子。</p>'}</details>`}
 function forestView(){const {fam,rest}=fstPoses();const C=fstCards();const nC=new Set(Object.keys(C).map(x=>x.split('|')[1])).size;
  const head=PUBLIC?`<div class="fst"><div class="fsttop"><h2 class="sec">林子<span class="en">The Forest</span></h2><span class="small">词卡 ${nC} · Word cards</span></div>`:`<div class="fst"><div class="fsttop"><h2 class="sec">林子<span class="en">The Forest · 内部版</span></h2><span class="small">词卡 ${nC} · <a href="#forest-stats">统计 ${PLAYS.length}</a> · <a href="#bridges">桥表</a> · <a href="https://claude.ai/artifact/G47Ag5xYkfDmhrGTVFXQnP" target="_blank" rel="noopener">公开版</a></span></div>`;
- const tail=PUBLIC?`<p class="small fstfoot">只讲注意力放在哪里，不是诊断，也不是治疗。<span class="en" style="display:block">Only where attention rests. Not diagnosis, not treatment.</span></p></div>`:`<p class="small fstfoot">内部版：用你的日志、Austin 句库和殷朝文的段落，这些只在 Practice Notes 里。只讲注意力放在哪里，不是诊断，也不是治疗。<span class="en" style="display:block">Inner version: your log, Austin's library and Yin Chaowen's passages, kept in Practice Notes only. Only where attention rests. Not diagnosis, not treatment.</span></p></div>`;
+ const stonesHtml=fstStones();
+ const tail=PUBLIC?`<p class="small fstfoot">只讲注意力放在哪里，不是诊断，也不是治疗。<span class="en" style="display:block">Only where attention rests. Not diagnosis, not treatment.</span></p></div>`:stonesHtml+`<p class="small fstfoot">内部版：用你的日志、两位前辈留下的石子（Austin、殷朝文的原话），这些只在 Practice Notes 里。只讲注意力放在哪里，不是诊断，也不是治疗。<span class="en" style="display:block">Inner version: your log, Austin's library and Yin Chaowen's passages, kept in Practice Notes only. Only where attention rests. Not diagnosis, not treatment.</span></p></div>`;
  if(!FST.pose)return head+`<p class="note">${bi('一局 30 秒。选一个体式，选哪里有感觉，林子给一条线索。','One round, thirty seconds. Pick a pose, pick where you feel it, and the forest gives you a clue.')}</p><p class="step">${bi('1 / 3 · 今天练了，或者想练','1 / 3 · A pose you practised today, or would like to')}</p>
   <div class="fgrid">${fam.map(p=>`<button class="ftile" data-fpose="${esc(p.id)}"><b>${esc(fstName(p))}</b><span>${esc(p.en||'')}</span></button>`).join('')}</div>
   <details${FST.more?' open':''}><summary class="small">${PUBLIC?'更多体式 · More poses':'日志里的其他体式 · More poses'} · ${rest.length}</summary><div class="fgrid" style="margin-top:8px">${rest.map(p=>`<button class="ftile" data-fpose="${esc(p.id)}"><b>${esc(p.zh)}</b><span>${esc(p.en||'')}${!PUBLIC&&p.n?` · 记录 ${p.n} 次`:''}</span></button>`).join('')}</div></details>`+tail;
@@ -902,7 +906,7 @@ function insideBlock(k){const p=P[k];if(!p.inside)return '';
    poses: pose names (resolved through the pose table); points: places this bears on. The 《Dynamic Vinyasa》 lines in that report are not his and are left out. */
 const YIN_THORAX=[];
 const ytPoses=y=>y.poses.map(resolvePose).filter(Boolean);
-function yinThoraxCard(y){return `<div class="yt"><p><b>${esc(y.label)}</b></p><blockquote class="quote" style="margin:4px 0">${esc(y.q)}<footer>殷朝文 · ${esc(y.src)} · A</footer></blockquote></div>`}
+function yinThoraxCard(y){return `<div class="yt"><p><b>${esc(y.label)}</b></p><blockquote class="quote" style="margin:4px 0">${esc(y.q)}<footer>—— 殷朝文</footer></blockquote></div>`}
 const YT_STEPS=[];
 function yinThoraxPath(){return ''}
 function yinThoraxForPoint(k){if(k==='xiangxia')return yinThoraxPath()+yinThoraxCore();const ys=YIN_THORAX.filter(y=>y.points.includes(k));if(!ys.length)return '';
@@ -1554,6 +1558,8 @@ function wireAustin(){
   if(ok)alertMsg('存好了。');
  });
 }
+/* 殷朝文的石子: every stone of his in one place (前辈与石子). Only his words, with his name; no course or time shown. */
+function yinView(){return ''}
 function austinView(){
  const cnt=(h,q)=>{const m=ENTRIES.filter(x=>ausMatch(x,h,q));const y=m.filter(x=>x.ausfx==='yes').length;return m.length?` <span class="small auscnt">跟过 ${m.length} 次${y?` · 变了 ${y} 次`:''}</span>`:''};
  return `<section class="ausview"><span class="eyebrow">Austin 怎么说 · Austin's words</span><h2>Austin 句库</h2>
@@ -1778,14 +1784,14 @@ const addSwitch=cur=>`<div class="seg addsw" role="tablist" style="margin-bottom
 /* 路径：林子里走到哪，都能回到上一步，也能跳回路上任何一处 */
 let NAV=[];try{NAV=JSON.parse(sessionStorage.getItem('pfp-nav')||'[]')}catch(_){NAV=[]}
 let navReset=false,navSib=false;
-const ROOTS=['','by-body','glossary','principles','add','add-day','add-point','log','austin','sources','checks','scripts','journal','leaves'];
+const ROOTS=['','by-body','glossary','principles','add','add-day','add-point','log','austin','yin','sources','checks','scripts','journal','leaves'];
 function navTrack(){const h=location.hash.slice(1);
  if(navReset||!NAV.length){NAV=[h];navReset=false}
  else if(navSib&&NAV.length){NAV[NAV.length-1]=h;navSib=false}
  else{const i=NAV.indexOf(h);if(i>=0)NAV=NAV.slice(0,i+1);else{NAV.push(h);if(NAV.length>12)NAV=NAV.slice(-12)}}
  try{sessionStorage.setItem('pfp-nav',JSON.stringify(NAV))}catch(_){}}
 function navLabel(h){
- const T={'':'按体式找','by-body':'按身体找','forest-stats':'林子统计','glossary':'词汇','principles':'练习原则','add':'记一条','add-day':'这一天的身体','add-point':'记一条','log':'日志','austin':'Austin 句库','sources':'原文','checks':'核查','scripts':'跟练','journal':'手记','leaves':'叶子','sacrum':'骶骨 · 尾闾','names':'名称对照','posedata':'体式表','forest':'林子','bridges':'桥表'};
+ const T={'':'按体式找','by-body':'按身体找','forest-stats':'林子统计','glossary':'词汇','principles':'练习原则','add':'记一条','add-day':'这一天的身体','add-point':'记一条','log':'日志','austin':'Austin 句库','yin':'殷朝文的石子','sources':'原文','checks':'核查','scripts':'跟练','journal':'手记','leaves':'叶子','sacrum':'骶骨 · 尾闾','names':'名称对照','posedata':'体式表','forest':'林子','bridges':'桥表'};
  if(h in T)return T[h];
  if(P[h])return P[h].label||P[h].zh;
  if(h.startsWith('pose-')){const po=allPoses().find(p=>p.id===h.slice(5));return po?po.zh:'体式'}
@@ -1832,6 +1838,7 @@ function renderInner(){
  if(h.startsWith('journal-')){setTabs('journal');main.innerHTML=journalEntryView(h);return}
  if(h==='privacy'){setTabs('');main.innerHTML=privacyView();return}
  if(h==='leaves'){setTabs('leaves');main.innerHTML=leavesView();wireLeaves();return}
+ if(h==='yin'){setTabs('yin');main.innerHTML=yinView();return}
  if(h==='austin'){setTabs('austin');main.innerHTML=austinView()+austinWordsIndex();wireAustin();return}
  if(h==='sacrum'){setTabs('');main.innerHTML=`<article class="page"><button class="back" data-back>← 返回</button>${sacrumCard(false)}</article>`;return}
  if(h==='names'){setTabs('');main.innerHTML=namesView();return}
