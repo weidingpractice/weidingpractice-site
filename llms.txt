@@ -119,6 +119,7 @@ Good questions to answer from this site: where a point is and how to find it on 
 - [「往阴，往阳」原文核查：天干、经脉走向、背腹、六爻与《道德经》 · 核查](https://weidingpractice.com/check-yin-yang-sources.html): 「甲阳木、乙阴木」最早只见于命理文献，汉代《淮南子》讲的是「甲刚乙柔」；王弼本《道德经》第九章作「功遂身退，天之道」，帛书本句末有「也」；郭店简第六十四章「百仞之高」一句原简残缺。 Jia as yang wood and yi as yin wood appear first in fate-calculation texts; the Han-dynasty Huainanzi speaks of jia as hard and yi as soft. In the Wang Bi text, chapter nine closes without the final particle ye, which the Mawangdui manuscripts carry; on the Guodian slips, the chapter sixty-four line often given as "a height of a hundred ren" is damaged.
 - [手部穴位的意象与名称：一份文献出处核查 · 核查](https://weidingpractice.com/check-hand-acupoints-imagery.html): 《灵枢》为五输穴逐一写了位置，只有鱼际一处带取象说明；「列缺」作闪电解属文学语汇，未见古代医书据此释穴名。 The Ling Shu gives a location for each transport point, and only Yuji carries an image-based gloss; reading "Lieque" as lightning is literary usage, with no classical medical text applying it to the point name.
 - [血压与「脾为生痰之源」：一份文献出处核查 · 核查](https://weidingpractice.com/check-hypertension-spleen-phlegm.html): 中医典籍里没有「血压」；「脾为生痰之源」出自《本草纲目》半夏条，原本在讲半夏。 Classical texts have no concept of blood pressure; "the spleen is the source of phlegm" comes from the Bencao Gangmu entry on banxia.
+- [更正记录 · 核查](https://weidingpractice.com/check-corrections.html): 网站上改过的事实性内容：改了什么、为什么、依据。改正公开保留，不悄悄覆盖。 Every factual correction made on this site: what changed, why, and on what basis. Corrections are kept in the open, not quietly overwritten.
 
 ### Journal
 
