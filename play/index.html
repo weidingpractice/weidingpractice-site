@@ -302,6 +302,10 @@ function stats(k,pose){
  const best=withQ.length?withQ.reduce((m,e)=>((e.intensity??-1)>=(m.intensity??-1)?e:m)):null;
  return {es,count:es.length,latest:es[es.length-1],best,felt:es.some(isFelt)};
 }
+/* First dated record of feeling a point in a pose (from the log; renamed points: 太溪→太白, 血海→膝盖内侧). Snapshot 2026-11-19 for the public site; in the log, live entries are used. */
+const FIRST_FELT={"sphinx": {"baliao": "2026-11-18", "dantian": "2026-11-12", "qugu": "2026-11-18"}, "tree": {"zhongjiao": "2026-07-05"}, "eagle": {"yuji": "2026-07"}, "dd": {"laogong": "2026-11-10"}, "wrist": {"laogong": "2026-11-10"}, "lunge": {"huantiao": "2026-11-10", "yongquan": "2026-11-11", "taibai": "2026-11-16", "xinei": "2026-11-16"}, "w3": {"yongquan": "2026-11-10"}, "prayer": {"yemen": "2026-11-10"}, "headturn": {"fengchi": "2026-11-10"}, "revtri": {"baliao": "2026-11-11", "shenque": "2026-11-11"}, "skandasana": {"baliao": "2026-11-17"}, "standbend": {"xinei": "2026-11-11"}, "chat": {"laogong": "2026-11-11", "yunmen": "2026-11-11"}, "chant": {"laogong": "2026-11-13"}, "child": {"yintang": "2026-11-14"}, "frog": {"xinei": "2026-11-14", "kuagen": "2026-11-14"}, "bridge": {"jianwo": "2026-11-16", "kuagen": "2026-11-16", "baliao": "2026-11-16"}, "cattail": {"baliao": "2026-11-18"}};
+const PT_ALIAS={taibai:['taixi'],xinei:['xuehai']};
+function feltDate(pid,k){const ks=[k,...(PT_ALIAS[k]||[])];let d=null;for(const e of ENTRIES){if(e.kind==='day'||poseIdOf(e)!==pid||!e.date||e.intensity===0)continue;if(ptsOf(e).some(x=>ks.includes(x))&&(!d||e.date<d))d=e.date}return d||(FIRST_FELT[pid]||{})[k]||null}
 const pointStatus=k=>stats(k).felt?'ok':P[k].st;
 
 /* All poses = base sequence + any new poses from the log, each with a stable ASCII id */
@@ -788,7 +792,7 @@ function poseView(id){
   ${po.pts.map(([k,how])=>{const p=P[k];if(!p)return '';const s=stats(k,po.id),sa=stats(k);const q=s.best?.quote;
    return `<div class="card"><div class="chead"><div class="seal s" aria-hidden="true">${p.trad}</div><div><h3>${p.zh} ${p.py}</h3><span class="small">${p.code} · ${p.en} · ${MER[p.mer].zh}</span></div></div>
     ${PHOTOS[k]&&PHOTOS[k].finger?`<img class="thumb" src="${blobUrl(PHOTOS[k].finger)}" alt="手指按在${p.zh}上">`:''}
-    <div>${how==='felt'?'<span class="st ok">✓ 在这个体式里感觉到 · felt in this pose</span>':'<span class="st try">○ 可能，待验证 · possible, to test</span>'} ${s.latest?`<span class="small">强度 </span>${bars(s.latest.intensity)}`:''}</div>
+    <div>${how==='felt'?`<span class="st ok">✓ 在这个体式里感觉到 · felt in this pose</span>${feltDate(po.id,k)?` <span class="small">首次记录 · first noted ${esc(feltDate(po.id,k))}</span>`:''}`:'<span class="st try">○ 可能，待验证 · possible, to test</span>'} ${s.latest?`<span class="small">强度 </span>${bars(s.latest.intensity)}`:''}</div>
     ${db?confirmBlock(po,k,how):''}${PUBLIC&&how==='felt'?`<div class="tick" data-tick="${k}-${po.id}" hidden><button type="button">✓ 我也感觉到了 · Me too</button><span class="n small"></span></div>`:''}
     <dl class="facts"><dt>用手怎么找</dt><dd>${esc(p.find)}<span class="en">${esc(p.findEn)}</span></dd><dt>经络</dt><dd>${MER[p.mer].zh}<span class="en">${MER[p.mer].en}</span></dd></dl>
     ${q?`<blockquote class="quote">${esc(q)}<footer>Wei · ${esc(s.best.date)}</footer></blockquote>`:''}
@@ -940,7 +944,7 @@ function pointView(k){
   ${p.frame?`<section><h2 class="sec">练习框架<span class="en">Practice framework</span></h2>${p.frame.map(g=>`<h3 style="margin:18px 0 6px">${esc(g.h)} <span class="small">${esc(g.en)}</span></h3><ul>${g.list.map((t,ii)=>`<li>${esc(t)}${g.listEn&&g.listEn[ii]?`<span class="en" style="display:block">${esc(g.listEn[ii])}</span>`:''}</li>`).join('')}</ul>`).join('')}</section>`:''}
   ${(pv(p.priv||''),'')}${!PUBLIC&&p.priv?`<section><h2 class="sec">课堂笔记（不公开）<span class="en">Class notes, private</span></h2>${p.priv.map(t=>`<p class="note">${esc(t)}</p>`).join('')}</section>`:''}
   ${(()=>{const ids=p.src.filter(id=>!(PUBLIC&&SRC[id]&&SRC[id].modern&&pv('x')===''));return ids.length?`<section><h2 class="sec">原文<span class="en">Classical source</span></h2>${ids.map(srcCard).join('')}</section>`:''})()}
-  <section><h2 class="sec">在哪些体式里<span class="en">Poses</span></h2><div class="rows">${poses.map(po=>`<button class="rowbtn" data-pose="${po.id}"><span class="name">${esc(po.zh)}${po.en?`<span class="en">${esc(po.en)}</span>`:''}</span>${(()=>{const c=[[po.cue,po.cueEn],...(po.notes||[]).map(n=>[n[1],n[3]])].find(([a])=>a&&a.includes(p.zh));return c?`<span class="cue">${esc(c[0])}${c[1]?`<span class="en" style="display:block">${esc(c[1])}</span>`:''}</span>`:''})()}${badge(po.pts.find(x=>x[0]===k)[1]==='felt'?'ok':'try')}</button>`).join('')}</div></section>
+  <section><h2 class="sec">在哪些体式里<span class="en">Poses</span></h2><div class="rows">${poses.map(po=>`<button class="rowbtn" data-pose="${po.id}"><span class="name">${esc(po.zh)}${po.en?`<span class="en">${esc(po.en)}</span>`:''}</span>${(()=>{const c=[[po.cue,po.cueEn],...(po.notes||[]).map(n=>[n[1],n[3]])].find(([a])=>a&&a.includes(p.zh));return c?`<span class="cue">${esc(c[0])}${c[1]?`<span class="en" style="display:block">${esc(c[1])}</span>`:''}</span>`:''})()}${badge(po.pts.find(x=>x[0]===k)[1]==='felt'?'ok':'try')}${po.pts.find(x=>x[0]===k)[1]==='felt'&&feltDate(po.id,k)?`<span class="small">首次记录 ${esc(feltDate(po.id,k))}</span>`:''}</button>`).join('')}</div></section>
   <section><h2 class="sec">经络<span class="en">Channel</span></h2>${merBlock(p.mer)}</section>
   ${pv(s.count?`<section><h2 class="sec">练习记录<span class="en">From the log</span></h2><div class="hist">${s.es.slice().reverse().map(histRow).join('')}</div></section>`:'')}
   ${pv(photoBlock(k))}
@@ -948,6 +952,11 @@ function pointView(k){
   ${mapLinkBlock(k)}
  </article>`;
 }
+const SRC_EDITION={
+ '医经':['所据版本：多个网络转录本，彼此文字一致；还没有对照一部写明书名、出版社、年份的整理本。等级 B。','Edition used: several online transcriptions that agree word for word; not yet checked against a named modern edition (title, publisher, year). Grade B.'],
+ '后世医书':['所据版本：条目里写了的，按条目；没写的，版本待核。','Edition used: as stated in each entry; where none is stated, the edition is still to be checked.'],
+ '道家内丹':['所据版本：各本的异文写在条目的校注里；底本还没有核定，版本待核。','Edition used: variant readings are given in each entry\'s textual note; the base text is not yet settled, edition to be checked.'],
+ '拳经':['所据版本：待核。','Edition used: still to be checked.']};
 function sourcesView(){
  const mods=Object.keys(SRC).filter(k=>SRC[k].modern);
  const grouped=new Set(SRC_GROUPS.flatMap(g=>g[4]));
@@ -956,7 +965,7 @@ function sourcesView(){
  return `<section><h2 class="sec">原文<span class="en">Classical sources</span></h2>
   <p class="note">原文在这里是图例和回声，不是证据。它说明一个名字从哪里来、属于哪张图，名字本身的意象也常常就是口令；有时我在身体里先发现一件事，回头才在古书里读到相近的话。古书证明不了今天的身体：一个点只有原文、没有体会，就仍然是「可能」。<span class="en" style="display:block;margin-top:4px">Here the classics are a map legend and an echo, not evidence. They show where a name comes from and which map it belongs to, and the image in the name is often the cue itself. Sometimes I find something in my body first and only later read something close to it in an old text. An old text cannot prove what a body does today: a point with a source but no felt experience stays "possible".</span></p>
   <p class="note">每一条都写到书名和篇名。按传统分组，因为同一个词在不同传统里意思不同，这就是「先说用的是哪张图」。注单独标出，注不是经。标「待核」的，还没对过原书版本。<span class="en" style="display:block;margin-top:4px">Every passage names its book and chapter. They are grouped by tradition, because the same word means different things in different traditions: say which map you are using. Commentaries are marked; a commentary is not the classic. Anything marked "to be checked" has not yet been checked against the original edition.</span></p></section>
-  ${groups.map(([zh,en,nz,ne,ids])=>`<section><h2 class="sec">${zh}<span class="en">${en}</span></h2>${nz?`<p class="note">${nz}<span class="en" style="display:block;margin-top:4px">${ne}</span></p>`:''}${ids.filter(id=>SRC[id]).map(srcCard).join('')}</section>`).join('')}
+  ${groups.map(([zh,en,nz,ne,ids])=>`<section><h2 class="sec">${zh}<span class="en">${en}</span></h2>${nz?`<p class="note">${nz}<span class="en" style="display:block;margin-top:4px">${ne}</span></p>`:''}${SRC_EDITION[zh]?`<p class="small">${esc(SRC_EDITION[zh][0])}<span class="en" style="display:block;margin-top:2px">${esc(SRC_EDITION[zh][1])}</span></p>`:''}${ids.filter(id=>SRC[id]).map(srcCard).join('')}</section>`).join('')}
   <section><h2 class="sec">和别人对照<span class="en">Modern teachers</span></h2><p class="note">现代老师的话不算原文。只在和练习里的体会对照时引用，短引、署名、附出处。<span class="en" style="display:block;margin-top:4px">Modern teachers are not classical sources. They are quoted only to compare with what the practice showed: short, attributed, with the source.</span></p>${(()=>{const pr=id=>/Austin|Ince|殷朝文/.test(SRC[id].book||'');const ok=PUBLIC?mods.filter(id=>!pr(id)):mods;if(PUBLIC&&ok.length<mods.length)PV_HIT=true;return ok.map(srcCard).join('')+(PUBLIC&&ok.length<mods.length?BUILDING:'')})()}</section>`;
 }
 const KIND={axial:'中轴 · axial',limb:'四肢 · limb',aware:'觉知 · awareness'};
