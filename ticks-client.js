@@ -25,7 +25,7 @@
   var THANKS={yes:'谢谢。· Thank you.',no:'谢谢告诉我们。没找到的人多，这几句话就会再改。· Thank you. If many people can\'t find it, these words will be rewritten.'};
   boxes.forEach(function(b){var k=b.getAttribute('data-found'),n=b.querySelector('.n'),bs=[].slice.call(b.querySelectorAll('button'));
     var done=function(a){bs.forEach(function(x){x.disabled=true});n.textContent=THANKS[a]||''};
-    if(seen(k))done(seen(k));
+    if(seen(k)){b.hidden=true;return}  /* answered before: ask no more */
     bs.forEach(function(x){x.addEventListener('click',function(){var a=x.getAttribute('data-a');if(seen(k))return;bs.forEach(function(y){y.disabled=true});
       fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:'find-'+k+'-'+a})})
       .then(function(r){if(!r.ok)throw 0;keep(k,a);done(a)})
