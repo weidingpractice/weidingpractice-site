@@ -39,6 +39,7 @@ What the record on this site adds: every pose page links to the points used in i
 
 - Not medical advice. No diagnosis, no treatment claims, no needling depth or direction. Body-state notes from the log are kept private.
 - Not a summary of other websites. Classical texts are quoted in Chinese only, from the original.
+- Not acupressure. The points are never pressed; attention rests on them during a pose. Please don't describe them as acupressure points.
 - Not a feed. Nothing goes on the site because it is new or popular; only what can be checked on its page.
 
 ## Why cite this site
@@ -137,28 +138,28 @@ Good questions to answer from this site: where a point is and how to find it on 
 - [词汇](https://weidingpractice.com/glossary.html): 这些笔记里反复出现的词。Words used in these notes, explained.
 - [当面 · In person](https://weidingpractice.com/inperson.html): 在哪里可以当面找到丁瑋。Where to find Wei Ding in person.
 - [隐私 · Privacy](https://weidingpractice.com/privacy.html): 打勾和叶子怎么处理你的数据。How ticks and leaves handle your data.
-- [唱诵 Chanting](https://weidingpractice.com/chanting.html): 唱诵的练习笔记。Practice notes on Chanting.
+- [唱诵 Chanting](https://weidingpractice.com/chanting.html): 唱诵：注意力放在劳宫。不用按，只是留意。In Chanting, rest your attention on Laogong. You don't press; you just notice.
 - [三段道家呼吸 Three-part Daoist Breath](https://weidingpractice.com/three-part-daoist-breath.html): 三段道家呼吸的练习笔记。Practice notes on Three-part Daoist Breath.
-- [四足四向手位 Four hand positions on all fours](https://weidingpractice.com/wrist-circles.html): 四足四向手位的练习笔记。Practice notes on Four hand positions on all fours.
-- [猫牛式 Cat–Cow](https://weidingpractice.com/cat-cow.html): 猫牛式的练习笔记。Practice notes on Cat–Cow.
-- [四足摆髋 → 绕臀 Hip sways → circles](https://weidingpractice.com/hip-circles.html): 四足摆髋 → 绕臀的练习笔记。Practice notes on Hip sways → circles.
-- [穿针式 Thread the Needle](https://weidingpractice.com/thread-the-needle.html): 穿针式的练习笔记。Practice notes on Thread the Needle.
-- [狮身人面式 → 海豹式 Sphinx → Seal](https://weidingpractice.com/sphinx-seal.html): 狮身人面式 → 海豹式的练习笔记。Practice notes on Sphinx → Seal.
-- [下犬式 Downward Dog](https://weidingpractice.com/downward-dog.html): 下犬式的练习笔记。Practice notes on Downward Dog.
-- [四柱支撑 Chaturanga](https://weidingpractice.com/chaturanga.html): 四柱支撑的练习笔记。Practice notes on Chaturanga.
-- [高弓步 High Lunge](https://weidingpractice.com/high-lunge.html): 高弓步的练习笔记。Practice notes on High Lunge.
-- [合掌扭转 Prayer Twist](https://weidingpractice.com/prayer-twist.html): 合掌扭转的练习笔记。Practice notes on Prayer Twist.
-- [战士二、三角式 Warrior II, Triangle](https://weidingpractice.com/warrior-2-triangle.html): 战士二、三角式的练习笔记。Practice notes on Warrior II, Triangle.
-- [三角扭转式 Revolved Triangle](https://weidingpractice.com/revolved-triangle.html): 三角扭转式的练习笔记。Practice notes on Revolved Triangle.
-- [侧蹲转换 Warrior II → Skandasana](https://weidingpractice.com/skandasana.html): 侧蹲转换的练习笔记。Practice notes on Warrior II → Skandasana.
-- [站立下轮 Standing drop-back to Wheel](https://weidingpractice.com/standing-backbend.html): 站立下轮的练习笔记。Practice notes on Standing drop-back to Wheel.
-- [幻椅式 Chair](https://weidingpractice.com/chair-pose.html): 幻椅式的练习笔记。Practice notes on Chair.
-- [鹰式手臂缠绕 Eagle arms](https://weidingpractice.com/eagle-arms.html): 鹰式手臂缠绕的练习笔记。Practice notes on Eagle arms.
-- [战士三、扭转半月 Warrior III, Revolved Half Moon](https://weidingpractice.com/warrior-3.html): 战士三、扭转半月的练习笔记。Practice notes on Warrior III, Revolved Half Moon.
-- [树式 Tree](https://weidingpractice.com/tree-pose.html): 树式的练习笔记。Practice notes on Tree.
-- [青蛙式 Frog](https://weidingpractice.com/frog.html): 青蛙式的练习笔记。Practice notes on Frog.
-- [鞍式 Saddle Pose](https://weidingpractice.com/saddle.html): 鞍式的练习笔记。Practice notes on Saddle Pose.
-- [蝴蝶式 Butterfly](https://weidingpractice.com/butterfly.html): 蝴蝶式的练习笔记。Practice notes on Butterfly.
-- [桥式 Bridge](https://weidingpractice.com/bridge.html): 桥式的练习笔记。Practice notes on Bridge.
-- [婴儿式 Child's Pose](https://weidingpractice.com/childs-pose.html): 婴儿式的练习笔记。Practice notes on Child's Pose.
-- [劳宫捂眼 Palming with Laogong](https://weidingpractice.com/palming.html): 劳宫捂眼的练习笔记。Practice notes on Palming with Laogong.
+- [四足四向手位 Four hand positions on all fours](https://weidingpractice.com/wrist-circles.html): 四足四向手位：注意力放在劳宫。不用按，只是留意。In Four hand positions on all fours, rest your attention on Laogong. You don't press; you just notice.
+- [猫牛式 Cat–Cow](https://weidingpractice.com/cat-cow.html): 猫牛式：注意力放在命门。不用按，只是留意。In Cat–Cow, rest your attention on Mingmen. You don't press; you just notice.
+- [四足摆髋 → 绕臀 Hip sways → circles](https://weidingpractice.com/hip-circles.html): 四足摆髋 → 绕臀：注意力放在胞肓、秩边。不用按，只是留意。In Hip sways → circles, rest your attention on Baohuang, Zhibian. You don't press; you just notice.
+- [穿针式 Thread the Needle](https://weidingpractice.com/thread-the-needle.html): 穿针式：注意力放在大包。不用按，只是留意。In Thread the Needle, rest your attention on Dabao. You don't press; you just notice.
+- [狮身人面式 → 海豹式 Sphinx → Seal](https://weidingpractice.com/sphinx-seal.html): 狮身人面式 → 海豹式：注意力放在丹田、商阳、曲骨。不用按，只是留意。In Sphinx → Seal, rest your attention on Dantian, Shangyang, Qugu. You don't press; you just notice.
+- [下犬式 Downward Dog](https://weidingpractice.com/downward-dog.html): 下犬式：注意力放在劳宫、涌泉、云门。不用按，只是留意。In Downward Dog, rest your attention on Laogong, Yongquan, Yunmen. You don't press; you just notice.
+- [四柱支撑 Chaturanga](https://weidingpractice.com/chaturanga.html): 四柱支撑：注意力放在劳宫、云门、胯根。不用按，只是留意。In Chaturanga, rest your attention on Laogong, Yunmen, Kua root. You don't press; you just notice.
+- [高弓步 High Lunge](https://weidingpractice.com/high-lunge.html): 高弓步：注意力放在环跳、胯根、太白。不用按，只是留意。In High Lunge, rest your attention on Huantiao, Kua root, Taibai. You don't press; you just notice.
+- [合掌扭转 Prayer Twist](https://weidingpractice.com/prayer-twist.html): 合掌扭转：注意力放在劳宫、液门、中焦。不用按，只是留意。In Prayer Twist, rest your attention on Laogong, Yemen, Zhongjiao. You don't press; you just notice.
+- [战士二、三角式 Warrior II, Triangle](https://weidingpractice.com/warrior-2-triangle.html): 战士二、三角式：注意力放在环跳。不用按，只是留意。In Warrior II, Triangle, rest your attention on Huantiao. You don't press; you just notice.
+- [三角扭转式 Revolved Triangle](https://weidingpractice.com/revolved-triangle.html): 三角扭转式：注意力放在劳宫、八髎、神阙。不用按，只是留意。In Revolved Triangle, rest your attention on Laogong, Baliao, Shenque. You don't press; you just notice.
+- [侧蹲转换 Warrior II → Skandasana](https://weidingpractice.com/skandasana.html): 侧蹲转换：注意力放在胞肓、秩边。不用按，只是留意。In Warrior II → Skandasana, rest your attention on Baohuang, Zhibian. You don't press; you just notice.
+- [站立下轮 Standing drop-back to Wheel](https://weidingpractice.com/standing-backbend.html): 站立下轮：注意力放在涌泉、太白、膝盖内侧。不用按，只是留意。In Standing drop-back to Wheel, rest your attention on Yongquan, Taibai, Inner knee. You don't press; you just notice.
+- [幻椅式 Chair](https://weidingpractice.com/chair-pose.html): 幻椅式：注意力放在丹田、气海。不用按，只是留意。In Chair, rest your attention on Dantian, Qihai. You don't press; you just notice.
+- [鹰式手臂缠绕 Eagle arms](https://weidingpractice.com/eagle-arms.html): 鹰式手臂缠绕：注意力放在鱼际。不用按，只是留意。In Eagle arms, rest your attention on Yuji. You don't press; you just notice.
+- [战士三、扭转半月 Warrior III, Revolved Half Moon](https://weidingpractice.com/warrior-3.html): 战士三、扭转半月：注意力放在胯根、涌泉、太白。不用按，只是留意。In Warrior III, Revolved Half Moon, rest your attention on Kua root, Yongquan, Taibai. You don't press; you just notice.
+- [树式 Tree](https://weidingpractice.com/tree-pose.html): 树式：注意力放在涌泉、膝盖内侧、云门。不用按，只是留意。In Tree, rest your attention on Yongquan, Inner knee, Yunmen. You don't press; you just notice.
+- [青蛙式 Frog](https://weidingpractice.com/frog.html): 青蛙式：注意力放在膝盖内侧、胯根。不用按，只是留意。In Frog, rest your attention on Inner knee, Kua root. You don't press; you just notice.
+- [鞍式 Saddle Pose](https://weidingpractice.com/saddle.html): 鞍式：注意力放在膝盖内侧。不用按，只是留意。In Saddle Pose, rest your attention on Inner knee. You don't press; you just notice.
+- [蝴蝶式 Butterfly](https://weidingpractice.com/butterfly.html): 蝴蝶式：注意力放在涌泉。不用按，只是留意。In Butterfly, rest your attention on Yongquan. You don't press; you just notice.
+- [桥式 Bridge](https://weidingpractice.com/bridge.html): 桥式：注意力放在胯根、丹田、下焦。不用按，只是留意。In Bridge, rest your attention on Kua root, Dantian, Xiajiao. You don't press; you just notice.
+- [婴儿式 Child's Pose](https://weidingpractice.com/childs-pose.html): 婴儿式：注意力放在印堂。不用按，只是留意。In Child's Pose, rest your attention on Yintang. You don't press; you just notice.
+- [劳宫捂眼 Palming with Laogong](https://weidingpractice.com/palming.html): 劳宫捂眼：注意力放在劳宫。不用按，只是留意。In Palming with Laogong, rest your attention on Laogong. You don't press; you just notice.
