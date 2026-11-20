@@ -141,6 +141,26 @@ body.zh #idle .sep,body.en #idle .sep{display:none}
 #entry.out{opacity:0;pointer-events:none}
 @media (prefers-reduced-motion: reduce){.light .halo,.light.invite .halo{animation:none!important}#map,.path,#card,.drawer,.lantern,#entry{transition:none!important}}
 
+
+/* stars (11-20) */
+.light .rays{fill:#fffbe9;opacity:0;transform-box:fill-box;transform-origin:center;pointer-events:none}
+#lights .light.star{opacity:1!important}
+#lights .light.star .core{fill:#fff}
+#lights .light.star .halo{opacity:1!important;transform-box:fill-box;transform-origin:center;animation:starpulse 2.2s ease-in-out infinite}
+#lights .light.star .rays{opacity:.95;animation:twinkle 2.2s ease-in-out infinite;filter:url(#glow)}
+#lights .light.nearstar{opacity:1!important}
+#lights .light.nearstar .halo{opacity:.9!important;animation:breathe 2.6s ease-in-out infinite}
+#lights .light.nearstar .rays{opacity:.7;transform:scale(.6);animation:twinkle2 2.6s ease-in-out infinite}
+#lights .light.peek .rays{opacity:1;transform:scale(.8)}.light.peek .halo{opacity:1!important}
+.chan.shine{opacity:1;filter:url(#glow);animation:chanshine 2.2s ease-in-out infinite}
+@keyframes starpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+@keyframes twinkle{0%,100%{transform:scale(.7) rotate(0deg);opacity:.75}50%{transform:scale(1.15) rotate(22deg);opacity:1}}
+@keyframes twinkle2{0%,100%{transform:scale(.45);opacity:.45}50%{transform:scale(.7);opacity:.9}}
+/* the moment you choose a light, every light in the forest flickers once for you (三体) */
+body.flicker #lights .light .halo{animation:flicker 1.6s ease-in-out 1}
+@keyframes flicker{0%{opacity:.45}15%{opacity:1}30%{opacity:.15}50%{opacity:1}70%{opacity:.25}100%{opacity:.6}}
+@keyframes chanshine{0%,100%{opacity:.75}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){#lights .light.star .halo,#lights .light.star .rays,#lights .light.nearstar .halo,#lights .light.nearstar .rays,.chan.shine{animation:none}}
 </style>
 <canvas id="woods" aria-hidden="true"></canvas>
 <svg id="map" viewBox="200 70 600 1580" preserveAspectRatio="xMidYMid meet" role="group" aria-label="林子 · The forest">
@@ -285,7 +305,12 @@ function openCard(html,y){lastFocus=document.activeElement;html=nearHTML()+html;
  /* keep the light and its line in view: a light low on the body sends the card to the top */
  let top=false;if(y!=null){const m=$('#map').getScreenCTM();if(m)top=(y*m.d+m.f)>innerHeight*.5}
  card.classList.toggle('top',top);card.classList.add('on');idleReset()}
-function clearLit(){document.querySelectorAll('.light.on,.light.go').forEach(g=>g.classList.remove('on','go'));document.body.classList.remove('focus','mat')}
+/* 11-20 「全宇宙的星星都为你闪亮」: the light you chose twinkles like a star (both sides); the lights next to it glimmer; its channel shines with it */
+const RAY='M0,-30 L3.5,-3.5 L30,0 L3.5,3.5 L0,30 L-3.5,3.5 L-30,0 L-3.5,-3.5Z';
+function star(k,cls){if(!cls&&!reduce){document.body.classList.remove('flicker');void document.body.offsetWidth;document.body.classList.add('flicker');clearTimeout(window.__flk);window.__flk=setTimeout(()=>document.body.classList.remove('flicker'),1700)}document.querySelectorAll(`#lights [data-pt="${k}"]`).forEach(g=>{if(!g.querySelector('.rays'))el('path',{d:RAY,class:'rays'},g);g.classList.add(cls||'star')});
+ if(!cls||cls==='star'){const co=chanOf(k);if(co&&CH[co[0]]){[CH[co[0]].line,CH[co[0]].mirror].forEach(ln=>{if(ln&&ln.classList.contains('on'))ln.classList.add('shine')})}}}
+function unstar(){document.querySelectorAll('#lights .star,#lights .nearstar').forEach(g=>g.classList.remove('star','nearstar'));document.querySelectorAll('.chan.shine').forEach(l=>l.classList.remove('shine'))}
+function clearLit(){unstar();document.querySelectorAll('.light.on,.light.go').forEach(g=>g.classList.remove('on','go'));document.body.classList.remove('focus','mat')}
 function closeCard(){const lit=document.querySelector('.light.on,.light.go');card.classList.remove('on');clearLit();
  if(lit){lit.classList.add('was');setTimeout(()=>lit.classList.remove('was'),reduce?1500:4500)}  /* 11-20: the light you were at stays lit a moment */
  STACK=[];try{if(location.hash)history.replaceState(null,'',location.pathname+location.search)}catch(x){}
@@ -306,9 +331,10 @@ addEventListener('popstate',()=>{const h=location.hash.slice(1);
  if(!h){if(card.classList.contains('on')){const lit=document.querySelector('.light.on,.light.go');card.classList.remove('on');clearLit();if(lit){lit.classList.add('was');setTimeout(()=>lit.classList.remove('was'),4500)}}STACK=[];return}
  const i=STACK.lastIndexOf(h);STACK=i>=0?STACK.slice(0,i+1):[h];route(h)});
 card.querySelector('.x').onclick=closeCard;
-card.addEventListener('ff-caught',e=>{const d=e.detail||{};if(d.kind==='felt'&&d.c!=='none'&&LIGHT[d.k])felt(d.k,true)});
+['pointerover','focusin'].forEach(t=>card.addEventListener(t,e=>{const c=e.target.closest&&e.target.closest('[data-pt]');document.querySelectorAll('#lights .peek').forEach(g=>g.classList.remove('peek'));if(c)document.querySelectorAll(`#lights [data-pt="${c.dataset.pt}"]`).forEach(g=>g.classList.add('peek'))}));
+card.addEventListener('ff-caught',e=>{const d=e.detail||{};if(d.c==='where'&&window.FF_NEAR)window.FF_NEAR(d.k).forEach(x=>star(x.k,'nearstar'));if(d.kind==='felt'&&d.c!=='none'&&LIGHT[d.k])felt(d.k,true)});
 
-function touchPoint(k,after){{const r_=ROUTING;setTimeout(()=>stepTo('pt-'+k,r_),0)}clearLit();document.querySelectorAll('.light.invite').forEach(x=>x.classList.remove('invite'));const p=DATA.pts[k],L=LIGHT[k];L.g.classList.add('on');
+function touchPoint(k,after){{const r_=ROUTING;setTimeout(()=>stepTo('pt-'+k,r_),0)}clearLit();document.querySelectorAll('.light.invite').forEach(x=>x.classList.remove('invite'));const p=DATA.pts[k],L=LIGHT[k];L.g.classList.add('on');setTimeout(()=>{star(k);NEAR.forEach(g=>{if(g.dataset.pt)star(g.dataset.pt,'nearstar')})},0);
  const fresh=!touched.has(k);if(fresh){touched.add(k);store.set('forest-touched',[...touched]);L.g.classList.add('touched');L.halo.setAttribute('fill','url(#haloWarm)');bodyCheck();lanternCheck();updateCount()}
  const co=chanOf(k);let reveal='';
  if(co){const [id,i]=co;const had=CH[id].line.classList.contains('on');const span=chanSpan(id);
@@ -326,7 +352,7 @@ function touchPoint(k,after){{const r_=ROUTING;setTimeout(()=>stepTo('pt-'+k,r_)
 /* A pose is a door to the mat. It remembers which light you came from and points only there. */
 function lightPose(id,from){{const r_=ROUTING;setTimeout(()=>stepTo('pose-'+id+(from?'-'+from:''),r_),0)}clearLit();const po=poseById(id);if(!po)return;
  const ks=po.pts.map(([k])=>k).filter(k=>LIGHT[k]);const k=from&&ks.includes(from)?from:(po.pts.find(([x,s])=>s==='felt'&&LIGHT[x])||[ks[0]])[0];
- const v=DATA.pts[k];document.body.classList.add('focus');LIGHT[k].g.classList.add('go');
+ const v=DATA.pts[k];document.body.classList.add('focus');LIGHT[k].g.classList.add('go');star(k);ks.filter(x=>x!==k).forEach(x=>star(x,'nearstar'));
  openCard(`<h2 id="card-h">${bi(po.zh,po.en)}</h2>
   <p class="aim">${bi('这一次，注意力放在','This time, rest your attention on')} <b>${bi(v.zh,v.py)}</b></p>
   ${ks.length>1?`<p class="lab">${bi('这个体式里的光','Lights in this pose')}</p><div class="ways">${ks.filter(x=>x!==k).map(x=>`<button class="chip" type="button" data-pt="${x}">${bi(DATA.pts[x].zh,DATA.pts[x].py)}</button>`).join('')}</div>`:''}
