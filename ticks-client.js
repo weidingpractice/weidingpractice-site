@@ -23,7 +23,7 @@
   var API=document.documentElement.getAttribute('data-ticks')||window.__TICKS||'';
   var FELT=[['warm','热了','warm'],['soft','松了','softer'],['tingle','有点麻','tingling'],['sink','沉下去','sinking'],['none','没什么感觉','nothing yet']];
   var STUCK=[['where','不确定是不是这里',"not sure it's here"],['step','有一步看不懂','one step is unclear'],['reach','手够不到',"can't reach"],['nails','指甲太长','long nails']];
-  function INP(found){return '<div class="ff-in"><b>'+(found?'想当面一起练？<span class="ff-en">Practise together in person?</span>':'想当面找一找？<span class="ff-en">Rather find it in person?</span>')+'</b>'+
+  function INP(found){return '<div class="ff-in"><b>'+(found?'你也在这里捡叶子呀。要不要找一天，一起捡？<span class="ff-en">You\'re picking up leaves here too. Shall we pick some together one day?</span>':'这一片不好找。要不要找一天，一起来找？<span class="ff-en">This one is hard to find. Shall we look for it together one day?</span>')+'</b>'+
     '<p><b>2027 年 9 月 · 伦敦 Yogarise Peckham</b> · Austin Ince 阴瑜伽师资培训，中医入门<span class="ff-en">September 2027 · London · Introduction to TCM on Austin Ince\'s Yin Yoga Teacher Training</span></p>'+
     '<p class="ff-links"><a href="https://www.austininceyoga.com/yin-teacher-training-london" rel="noopener" target="_blank">Austin Ince 的课程 · The course ↗</a> <a href="inperson.html">当面 · In person →</a></p>'+
     '<p class="ff-mail"><span>写信 · Write</span> <code>hello@weidingpractice.com</code> <button type="button" class="ff-copy">复制 · Copy</button></p></div>'}
