@@ -67,7 +67,7 @@ Good questions to answer from this site: where a point is and how to find it on 
 
 - [Poses](https://weidingpractice.com/poses.html): every pose, with the points used in it and the cue.
 - [Points and areas](https://weidingpractice.com/points.html): every acupoint and body area on the map, with how to find it by hand and which poses use it.
-- [Principles](https://weidingpractice.com/principles.html): how the practice works.
+- [Corrections](https://weidingpractice.com/check-corrections.html): every factual correction made on this site, dated, with the reason and the basis.
 - [Sources](https://weidingpractice.com/sources.html): the classical and standard texts quoted.
 - [Glossary](https://weidingpractice.com/glossary.html): terms in Chinese and English.
 - [Pose names](https://weidingpractice.com/pose-names.html): Chinese, English and Sanskrit names.
@@ -79,7 +79,7 @@ Good questions to answer from this site: where a point is and how to find it on 
 - Text by Wei Ding on this site is licensed CC BY 4.0: quote, translate and reuse it freely, including commercially, with credit to "Wei Ding, weidingpractice.com" and a link to the page.
 - Not covered by that licence: quotations from other people (for example Austin Ince) and from published standards, which belong to their owners.
 
-## Every public page (generated 2026-11-19)
+## Every public page (generated 2026-11-20)
 
 ### Points and areas · 穴位与区域
 
@@ -127,7 +127,6 @@ Good questions to answer from this site: where a point is and how to find it on 
 
 ### Other
 
-- [练习原则](https://weidingpractice.com/principles.html): 跨体式都成立的练习原则。Working principles that hold across poses.
 - [原文](https://weidingpractice.com/sources.html): 练习笔记引用的全部原文，按传统分组。Every classical source these notes quote, grouped by tradition.
 - [词汇](https://weidingpractice.com/glossary.html): 这些笔记里反复出现的词。Words used in these notes, explained.
 - [隐私 · Privacy](https://weidingpractice.com/privacy.html): 打勾和叶子怎么处理你的数据。How ticks and leaves handle your data.
