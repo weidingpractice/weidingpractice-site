@@ -388,12 +388,17 @@ else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gat
 (function(){
   if(window.FoundFlow)return;
   var API=document.documentElement.getAttribute('data-ticks')||window.__TICKS||'';
-  var FELT=[['warm','热了','warm'],['soft','松了','softer'],['tingle','有点麻','tingling'],['sink','沉下去','sinking'],['none','没什么感觉','nothing yet']];
-  var STUCK=[['where','不确定是不是这里',"not sure it's here"],['step','有一步看不懂','one step is unclear'],['reach','手够不到',"can't reach"],['nails','指甲太长','long nails']];
-  function INP(found){return '<div class="ff-in"><b>'+(found?'你也在这里捡叶子呀。要不要找一天，一起捡？<span class="ff-en">You\'re picking up leaves here too. Shall we pick some together one day?</span>':'这一片不好找。要不要找一天，一起来找？<span class="ff-en">This one is hard to find. Shall we look for it together one day?</span>')+'</b>'+
-    '<p><b>2027 年 9 月 · 伦敦 Yogarise Peckham</b> · Austin Ince 阴瑜伽师资培训，中医入门<span class="ff-en">September 2027 · London · Introduction to TCM on Austin Ince\'s Yin Yoga Teacher Training</span></p>'+
-    '<p class="ff-links"><a href="https://www.austininceyoga.com/yin-teacher-training-london" rel="noopener" target="_blank">Austin Ince 的课程 · The course ↗</a> <a href="inperson.html">当面 · In person →</a></p>'+
-    '<p class="ff-mail"><span>写信 · Write</span> <code>hello@weidingpractice.com</code> <button type="button" class="ff-copy">复制 · Copy</button></p></div>'}
+  var FELT=[['warm','热了','Warm'],['soft','松了','Softer'],['tingle','有点麻','Tingling'],['sink','沉下去','Sinking'],['move','想动','Engaged'],['none','没感觉','Nothing yet']];
+  var STUCK=[['where','不确定是这里',"Not sure it's here"],['step','有一步不懂','A step is unclear'],['reach','够不到',"Can't reach"]];
+  var STUCK_AT={laogong:[['nails','指甲太长','Long nails']]};  // only where it really happens
+  function stuckFor(k){return STUCK.concat(STUCK_AT[k]||[])}
+  // the forest has a 中文/English switch (body.zh / body.en, spans .z/.e); point pages show Chinese with English beneath
+  function forest(){return document.body.classList.contains('zh')||document.body.classList.contains('en')}
+  function T(z,e,inline){return forest()?'<span class="z">'+z+'</span><span class="e">'+e+'</span>':(inline?z+' · '+e:z+'<span class="ff-en">'+e+'</span>')}
+  function INP(found){return '<div class="ff-in"><b>'+(found?T('一起捡叶子？','Meet up?'):T('哪天一起找？','Find it together?'))+'</b>'+
+    '<p>'+T('2027 年 9 月 · 伦敦 · Austin Ince 阴瑜伽师资培训',"Sep 2027 · London · Austin Ince's Yin Yoga teacher training")+'</p>'+
+    '<p class="ff-links"><a href="https://www.austininceyoga.com/yin-teacher-training-london" rel="noopener" target="_blank">'+T('课程','Course',1)+' ↗</a> <a href="inperson.html">'+T('当面','In person',1)+' →</a></p>'+
+    '<p class="ff-mail"><code>hello@weidingpractice.com</code> <button type="button" class="ff-copy">'+T('复制','Copy',1)+'</button></p></div>'}
   var CSS='.ff{display:flex;flex-direction:column;gap:10px;margin-top:12px}.ff[hidden]{display:none}.ff p{margin:0}'+
     '.ff-en{display:block;color:var(--muted,#5d6b6b);font-size:13px;font-weight:400}'+
     '.ff-q{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.ff-q b{font-weight:600}'+
@@ -418,20 +423,20 @@ else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gat
   function counts(ids){return fetch(API+'/counts?ids='+ids.join(',')).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){return {}})}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function chips(k,list,cls,c){return '<div class="ff-drift '+cls+'">'+list.map(function(x){var id='leaf-'+k+'-'+x[0],on=get('leaf:'+k+':'+x[0])==='1',n=c[id]||0;
-    return '<button type="button" class="ff-chip'+(on?' on':'')+'" data-c="'+x[0]+'"'+(on?' aria-pressed="true" disabled':'')+'>'+esc(x[1])+' · '+esc(x[2])+(n?'<i>'+n+'</i>':'')+'</button>'}).join('')+'</div>'}
+    return '<button type="button" class="ff-chip'+(on?' on':'')+'" data-c="'+x[0]+'"'+(on?' aria-pressed="true" disabled':'')+'>'+T(esc(x[1]),esc(x[2]),1)+(n?'<i>'+n+'</i>':'')+'</button>'}).join('')+'</div>'}
   function after(el,k,a){
-    var list=a==='yes'?FELT:STUCK,ids=list.map(function(x){return 'leaf-'+k+'-'+x[0]});if(a==='yes')ids.push('find-'+k+'-yes');
+    var list=a==='yes'?FELT:stuckFor(k),ids=list.map(function(x){return 'leaf-'+k+'-'+x[0]});if(a==='yes')ids.push('find-'+k+'-yes');
     counts(ids).then(function(c){
       var head;
       if(a==='yes'){var n=Math.max(0,(c['find-'+k+'-yes']||1)-1);
-        head='<p class="ff-done">✓ '+(n?'你和另外 '+n+' 个人找到了。<span class="ff-en">You and '+n+' others found it.</span>':'找到了。<span class="ff-en">Found.</span>')+'</p><p><b>这里有什么感觉？</b><span class="ff-en">What do you feel here? Catch a leaf.</span></p>';
-      }else head='<p><b>卡在哪一步？</b><span class="ff-en">Where did it stop working?</span></p>';
+        head='<p class="ff-done">✓ '+(n?T('你和另外 '+n+' 人找到了','Found, with '+n+' others'):T('找到了','Found'))+'</p><p><b>'+T('有什么感觉？','What do you feel?')+'</b></p>';
+      }else head='<p><b>'+T('卡在哪？','Stuck where?')+'</b></p>';
       var caught=list.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
-      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+'<p class="ff-say" role="status"></p>'+(caught?INP(a==='yes'):'');
+      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(caught?INP(a==='yes'):'');
     });
   }
   function ask(el,k){
-    el.innerHTML='<div class="ff-q"><b>找到了吗？</b><span class="ff-en" style="display:inline">Did you find it?</span> <button type="button" data-a="yes">✓ 找到了 · Yes</button> <button type="button" data-a="no">没找到 · Not yet</button></div>';
+    el.innerHTML='<div class="ff-q"><b>'+T('找到了吗？','Found it?',1)+'</b> <button type="button" data-a="yes">'+T('✓ 找到了','✓ Yes',1)+'</button> <button type="button" data-a="no">'+T('没找到','Not yet',1)+'</button></div>';
   }
   function mount(el){
     if(el.__ff)return;el.__ff=1;var k=el.getAttribute('data-ff');if(!API||!/^[a-z0-9-]{1,40}$/.test(k))return;css();el.classList.add('ff');
@@ -443,7 +448,6 @@ else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gat
       if(b.classList.contains('ff-chip')){var c=b.getAttribute('data-c');b.disabled=true;
         tick('leaf-'+k+'-'+c).then(function(x){put('leaf:'+k+':'+c,'1');b.classList.add('on');b.setAttribute('aria-pressed','true');
           var i=b.querySelector('i');if(!i){i=document.createElement('i');b.appendChild(i)}i.textContent=x.count;
-          var say=el.querySelector('.ff-say');if(say)say.textContent='✓ 你接住了这片叶子，它长在这里了。 Caught: it grows here now.';
           if(!el.querySelector('.ff-in'))el.insertAdjacentHTML('beforeend',INP(!b.closest('.ff-stuck')));
         }).catch(function(){b.disabled=false});return}
       if(b.classList.contains('ff-copy')){var t='hello@weidingpractice.com';
