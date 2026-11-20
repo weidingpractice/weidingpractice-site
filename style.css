@@ -163,3 +163,6 @@ section.classics cite{font-size:13.5px;color:var(--seal)}
 .top .brand small,.top .links a small{font-family:var(--body,inherit);font-size:11px;letter-spacing:.03em;color:var(--muted);font-weight:400}
 .top .brand small{font-style:italic}
 .top .links{gap:14px}
+
+.toforest{align-self:flex-start;font-size:14px;color:var(--water);text-decoration:none;margin-bottom:-24px}
+.toforest .en{color:var(--muted);font-size:13px}
