@@ -23,10 +23,10 @@
   var API=document.documentElement.getAttribute('data-ticks')||window.__TICKS||'';
   var FELT=[['warm','热了','warm'],['soft','松了','softer'],['tingle','有点麻','tingling'],['sink','沉下去','sinking'],['none','没什么感觉','nothing yet']];
   var STUCK=[['where','不确定是不是这里',"not sure it's here"],['step','有一步看不懂','one step is unclear'],['reach','手够不到',"can't reach"],['nails','指甲太长','long nails']];
-  var INPERSON='<div class="ff-in"><b>想当面找一找？<span class="ff-en">Rather find it in person?</span></b>'+
+  function INP(found){return '<div class="ff-in"><b>'+(found?'你也在这里捡叶子呀。要不要找一天，一起捡？<span class="ff-en">You\'re picking up leaves here too. Shall we pick some together one day?</span>':'这一片不好找。要不要找一天，一起来找？<span class="ff-en">This one is hard to find. Shall we look for it together one day?</span>')+'</b>'+
     '<p><b>2027 年 9 月 · 伦敦 Yogarise Peckham</b> · Austin Ince 阴瑜伽师资培训，中医入门<span class="ff-en">September 2027 · London · Introduction to TCM on Austin Ince\'s Yin Yoga Teacher Training</span></p>'+
     '<p class="ff-links"><a href="https://www.austininceyoga.com/yin-teacher-training-london" rel="noopener" target="_blank">Austin Ince 的课程 · The course ↗</a> <a href="inperson.html">当面 · In person →</a></p>'+
-    '<p class="ff-mail"><span>写信 · Write</span> <code>hello@weidingpractice.com</code> <button type="button" class="ff-copy">复制 · Copy</button></p></div>';
+    '<p class="ff-mail"><span>写信 · Write</span> <code>hello@weidingpractice.com</code> <button type="button" class="ff-copy">复制 · Copy</button></p></div>'}
   var CSS='.ff{display:flex;flex-direction:column;gap:10px;margin-top:12px}.ff[hidden]{display:none}.ff p{margin:0}'+
     '.ff-en{display:block;color:var(--muted,#5d6b6b);font-size:13px;font-weight:400}'+
     '.ff-q{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.ff-q b{font-weight:600}'+
@@ -59,8 +59,8 @@
       if(a==='yes'){var n=Math.max(0,(c['find-'+k+'-yes']||1)-1);
         head='<p class="ff-done">✓ '+(n?'你和另外 '+n+' 个人找到了。<span class="ff-en">You and '+n+' others found it.</span>':'找到了。<span class="ff-en">Found.</span>')+'</p><p><b>这里有什么感觉？</b><span class="ff-en">What do you feel here? Catch a leaf.</span></p>';
       }else head='<p><b>卡在哪一步？</b><span class="ff-en">Where did it stop working?</span></p>';
-      var caughtStuck=STUCK.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
-      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+'<p class="ff-say" role="status"></p>'+(a==='no'&&caughtStuck?INPERSON:'');
+      var caught=list.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
+      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+'<p class="ff-say" role="status"></p>'+(caught?INP(a==='yes'):'');
     });
   }
   function ask(el,k){
@@ -77,7 +77,7 @@
         tick('leaf-'+k+'-'+c).then(function(x){put('leaf:'+k+':'+c,'1');b.classList.add('on');b.setAttribute('aria-pressed','true');
           var i=b.querySelector('i');if(!i){i=document.createElement('i');b.appendChild(i)}i.textContent=x.count;
           var say=el.querySelector('.ff-say');if(say)say.textContent='✓ 你接住了这片叶子，它长在这里了。 Caught: it grows here now.';
-          if(b.closest('.ff-stuck')&&!el.querySelector('.ff-in'))el.insertAdjacentHTML('beforeend',INPERSON);
+          if(!el.querySelector('.ff-in'))el.insertAdjacentHTML('beforeend',INP(!b.closest('.ff-stuck')));
         }).catch(function(){b.disabled=false});return}
       if(b.classList.contains('ff-copy')){var t='hello@weidingpractice.com';
         (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已复制 · Copied'}).catch(function(){var r=document.createRange();r.selectNodeContents(el.querySelector('.ff-mail code'));var s=getSelection();s.removeAllRanges();s.addRange(r)})}
