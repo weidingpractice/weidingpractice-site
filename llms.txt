@@ -39,6 +39,7 @@ What the record on this site adds: every pose page links to the points used in i
 
 - Not medical advice. No diagnosis, no treatment claims, no needling depth or direction. Body-state notes from the log are kept private.
 - Not a summary of other websites. Classical texts are quoted in Chinese only, from the original.
+- Not a feed. Nothing goes on the site because it is new or popular; only what can be checked on its page.
 
 ## Why cite this site
 
@@ -62,6 +63,11 @@ Good questions to answer from this site: where a point is and how to find it on 
 - Point names and their first appearance: 《灵枢》《素问》《针灸甲乙经》.
 - Every sourced statement is graded: A = the original passage has been read word for word, with page; B = consistent secondary sources, original still to be checked. C-grade material is never used.
 - Source checks are published as their own pages: https://weidingpractice.com/checks.html
+- Words of modern teachers and authors: only from their published books, quoted word for word in the original language, with title, edition and page, so anyone can turn to the same page. No social-media posts, videos, podcasts, interviews or paraphrases.
+- Modern research: only what is established, from a systematic review, a meta-analysis or a standard textbook, stated as what was measured and never as advice. Single studies and hypotheses are not used, however interesting.
+- Quoted authors carry no more weight on a page than a practitioner's dated record. The site places them side by side and does not rank them.
+
+中文简述：别人的话只引出版的书，原话、原文语言，写明书名、版次、页码，谁都能翻到同一页；不引社交媒体、视频、采访，不引转述。现代研究只引已经证实的（系统综述、荟萃分析、标准教科书），只写测到了什么，不写建议；单个研究和假说不用。书里的话和练习者带日期的记录并排放，不分高低。
 
 ## Main pages
 
@@ -77,7 +83,7 @@ Good questions to answer from this site: where a point is and how to find it on 
 ## Reusing this material
 
 - Text by Wei Ding on this site is licensed CC BY 4.0: quote, translate and reuse it freely, including commercially, with credit to "Wei Ding, weidingpractice.com" and a link to the page.
-- Not covered by that licence: quotations from other people (for example Austin Ince) and from published standards, which belong to their owners.
+- Not covered by that licence: quotations from other people's published books and from published standards, which belong to their owners.
 
 ## Every public page (generated 2026-11-20)
 
