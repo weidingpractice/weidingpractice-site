@@ -451,7 +451,7 @@ function seqView(){
   +sec('手放在哪里','Where the hands go','不分层，加在任何体式上',hands,HANDS.filter(x=>!hands.some(h=>h.zh.includes(x))&&!['劳宫捂眼'].includes(x)),'还有')
   +sec('声与静','Chanting & meditation',POSE_VOICE[1],voice,greyOf(d=>d.group==='voice'),'还有')
   +(none.length&&!PUBLIC?sec('还没归层','Not yet placed','这些名字体式表里还没有，或者还没定在哪一层。<a href="#posedata">到体式表里归类 →</a>',none,[]):'')
-  +principlesBlock()+`<p class="small" style="margin-top:28px"><a href="#principles">练习原则 · Principles</a>　<a href="#glossary">词汇 · Glossary</a>　<a href="#names">体式名称对照 · Pose names</a></p>`;
+  +`<p class="small" style="margin-top:28px"><a href="#glossary">词汇 · Glossary</a>　<a href="#names">体式名称对照 · Pose names</a></p>`;
 }
 /* 体式表页：每个体式一行，可以改层、俯仰、分组、别名、组成；下面列出日志里还没对上的名字 */
 function poseDataView(){
@@ -906,7 +906,7 @@ function insideBlock(k){const p=P[k];if(!p.inside)return '';
    poses: pose names (resolved through the pose table); points: places this bears on. The 《Dynamic Vinyasa》 lines in that report are not his and are left out. */
 const YIN_THORAX=[];
 const ytPoses=y=>y.poses.map(resolvePose).filter(Boolean);
-function yinThoraxCard(y){return `<div class="yt"><p><b>${esc(y.label)}</b></p><blockquote class="quote" style="margin:4px 0">${esc(y.q)}<footer>—— 殷朝文</footer></blockquote></div>`}
+function yinThoraxCard(y){return `<div class="yt"><p><b>${esc(y.label)}</b></p><blockquote class="quote" style="margin:4px 0">${esc(y.q)}<footer>—— 殷朝文</footer></blockquote>${y.mine?`<p class="small" style="margin:2px 0 0;border-left:2px solid var(--line,#ccc);padding-left:8px">我的理解：${esc(y.mine)}</p>`:''}</div>`}
 const YT_STEPS=[];
 function yinThoraxPath(){return ''}
 function yinThoraxForPoint(k){if(k==='xiangxia')return yinThoraxPath()+yinThoraxCore();const ys=YIN_THORAX.filter(y=>y.points.includes(k));if(!ys.length)return '';
@@ -995,7 +995,7 @@ function journalView(){
  <div class="rows">${JOURNAL.slice().reverse().map(j=>`<button class="rowbtn" data-journal="${j.slug}"><span class="name">#${j.n} · ${esc(j.title)}<span class="en" style="display:block">${esc(j.summary)}</span></span><span class="small">${esc(j.date)}</span></button>`).join('')}</div></section>`;
 }
 function journalEntryView(slug){const j=JOURNAL.find(x=>x.slug===slug);if(!j)return '<p class="note">没有这一篇。</p>';
- return `<article class="page" lang="en">${PUBLIC?'':'<button class="back" data-back>← 返回</button>'}<p class="small">Journal · #${j.n} · ${esc(j.date)}</p><h2 class="cktitle">${esc(j.title)}</h2>${j.paras.map(t=>`<p>${esc(t)}</p>`).join('')}<p class="small"><i>${esc(j.sign)}</i></p><p class="small">Thanks to Austin Ince.</p>${(j.principles||[]).length?`<p class="small">Related principle: <a href="#principles">${j.principles.map(esc).join(' · ')}</a></p>`:''}</article>`}
+ return `<article class="page" lang="en">${PUBLIC?'':'<button class="back" data-back>← 返回</button>'}<p class="small">Journal · #${j.n} · ${esc(j.date)}</p><h2 class="cktitle">${esc(j.title)}</h2>${j.paras.map(t=>`<p>${esc(t)}</p>`).join('')}<p class="small"><i>${esc(j.sign)}</i></p><p class="small">Thanks to Austin Ince.</p></article>`}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-journal]');if(t)location.hash=t.dataset.journal});
 document.addEventListener('input',e=>{if(e.target.id!=='nmq')return;const f=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');const v=f(e.target.value.trim());document.querySelectorAll('#nmlist .ncard').forEach(c=>{c.hidden=!!v&&!f(c.textContent).includes(v)})});
 function namesView(){
@@ -1750,7 +1750,7 @@ function focusCard(compact){
  <details><summary>按国家标准，这块地方有哪些点</summary><dl class="fstd">${FOCUS.std.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl><p class="small">${esc(FOCUS.classic)}</p></details>
  ${pz.length?`<p class="small">相关体式：${pz.map(p=>`<a href="#pose-${p.id}">${esc(p.zh)}</a>`).join(' · ')} · 头倒立 · 三点头倒立 · 尖倒立 · Anahatasana</p>`:''}</section>`;
 }
-const SITEPAGES=[["index.html", "以身观身 · Seeing Through One Body"], ["journal.html", "Journal"], ["journal-yang-habits-in-yin.html", "Noticing My Yang Habits in Yin · Journal"], ["three-part-daoist-breath.html", "三段道家呼吸 Three-part Daoist Breath"], ["revolved-triangle.html", "三角扭转式 Revolved Triangle"], ["shangjiao.html", "上焦 Shangjiao Area"], ["xiajiao.html", "下焦 Xiajiao Area"], ["downward-dog.html", "下犬式 Downward Dog"], ["zhongfu.html", "中府 Zhongfu LU1"], ["zhongjiao.html", "中焦 Zhongjiao Area"], ["dantian.html", "丹田 Dantian Area"], ["yunmen.html", "云门 Yunmen LU2"], ["poses.html", "体式"], ["pose-names.html", "体式名称对照 · Pose names in Chinese, English and Sanskrit"], ["skandasana.html", "侧蹲转换 Warrior II → Skandasana"], ["baliao.html", "八髎 Baliao BL31–34"], ["chongmen.html", "冲门 Chongmen SP12"], ["laogong.html", "劳宫 Laogong PC8"], ["palming.html", "劳宫捂眼 Palming with Laogong"], ["yintang.html", "印堂 Yintang GV24+"], ["sources.html", "原文"], ["prayer-twist.html", "合掌扭转 Prayer Twist"], ["mingmen.html", "命门 Mingmen GV4"], ["chanting.html", "唱诵 Chanting"], ["shangyang.html", "商阳 Shangyang LI1"], ["chaturanga.html", "四柱支撑 Chaturanga"], ["hip-circles.html", "四足摆髋 → 绕臀 Hip sways → circles"], ["dabao.html", "大包 Dabao SP21"], ["taibai.html", "太白 Taibai SP3"], ["childs-pose.html", "婴儿式 Child&#x27;s Pose"], ["chair-pose.html", "幻椅式 Chair"], ["warrior-3.html", "战士三、扭转半月 Warrior III, Revolved Half Moon"], ["warrior-2-triangle.html", "战士二、三角式 Warrior II, Triangle"], ["wrist-circles.html", "手腕绕环 Wrist circles"], ["check-hand-acupoints-imagery.html", "手部穴位的意象与名称：一份文献出处核查 · 核查"], ["qugu.html", "曲骨 Qugu CV2"], ["tree-pose.html", "树式 Tree"], ["checks.html", "核查 · Source checks"], ["check-corrections.html", "更正记录 · 核查"], ["bridge.html", "桥式 Bridge"], ["qichong.html", "气冲 Qichong ST30"], ["qihai.html", "气海 Qihai CV6"], ["yongquan.html", "涌泉 Yongquan KI1"], ["yemen.html", "液门 Yemen TE2"], ["sphinx-seal.html", "狮身人面式 → 海豹式（转头变体） Sphinx → Seal, with head turns"], ["cat-cow.html", "猫牛式 Cat–Cow"], ["huantiao.html", "环跳 Huantiao GB30"], ["shenque.html", "神阙 Shenque CV8"], ["zhibian.html", "秩边 Zhibian BL54"], ["thread-the-needle.html", "穿针式 Thread the Needle"], ["standing-backbend.html", "站立下轮 Standing drop-back to Wheel"], ["principles.html", "练习原则"], ["baohuang.html", "胞肓 Baohuang BL53"], ["kuagen.html", "胯根 Kua root Area"], ["butterfly.html", "蝴蝶式 Butterfly"], ["check-hypertension-spleen-phlegm.html", "血压与「脾为生痰之源」：一份文献出处核查 · 核查"], ["xuehai.html", "血海 Xuehai SP10"], ["glossary.html", "词汇"], ["frog.html", "青蛙式 Frog"], ["saddle.html", "鞍式 Saddle Pose"], ["fengchi.html", "风池 Fengchi GB20"], ["high-lunge.html", "高弓步 High Lunge"], ["yuji.html", "鱼际 Yuji LU10"], ["eagle-arms.html", "鹰式手臂缠绕 Eagle arms"]];
+const SITEPAGES=[["index.html", "以身观身 · Seeing Through One Body"], ["journal.html", "Journal"], ["journal-yang-habits-in-yin.html", "Noticing My Yang Habits in Yin · Journal"], ["three-part-daoist-breath.html", "三段道家呼吸 Three-part Daoist Breath"], ["revolved-triangle.html", "三角扭转式 Revolved Triangle"], ["shangjiao.html", "上焦 Shangjiao Area"], ["xiajiao.html", "下焦 Xiajiao Area"], ["downward-dog.html", "下犬式 Downward Dog"], ["zhongfu.html", "中府 Zhongfu LU1"], ["zhongjiao.html", "中焦 Zhongjiao Area"], ["dantian.html", "丹田 Dantian Area"], ["yunmen.html", "云门 Yunmen LU2"], ["poses.html", "体式"], ["pose-names.html", "体式名称对照 · Pose names in Chinese, English and Sanskrit"], ["skandasana.html", "侧蹲转换 Warrior II → Skandasana"], ["baliao.html", "八髎 Baliao BL31–34"], ["chongmen.html", "冲门 Chongmen SP12"], ["laogong.html", "劳宫 Laogong PC8"], ["palming.html", "劳宫捂眼 Palming with Laogong"], ["yintang.html", "印堂 Yintang GV24+"], ["sources.html", "原文"], ["prayer-twist.html", "合掌扭转 Prayer Twist"], ["mingmen.html", "命门 Mingmen GV4"], ["chanting.html", "唱诵 Chanting"], ["shangyang.html", "商阳 Shangyang LI1"], ["chaturanga.html", "四柱支撑 Chaturanga"], ["hip-circles.html", "四足摆髋 → 绕臀 Hip sways → circles"], ["dabao.html", "大包 Dabao SP21"], ["taibai.html", "太白 Taibai SP3"], ["childs-pose.html", "婴儿式 Child&#x27;s Pose"], ["chair-pose.html", "幻椅式 Chair"], ["warrior-3.html", "战士三、扭转半月 Warrior III, Revolved Half Moon"], ["warrior-2-triangle.html", "战士二、三角式 Warrior II, Triangle"], ["wrist-circles.html", "手腕绕环 Wrist circles"], ["check-hand-acupoints-imagery.html", "手部穴位的意象与名称：一份文献出处核查 · 核查"], ["qugu.html", "曲骨 Qugu CV2"], ["tree-pose.html", "树式 Tree"], ["checks.html", "核查 · Source checks"], ["check-corrections.html", "更正记录 · 核查"], ["bridge.html", "桥式 Bridge"], ["qichong.html", "气冲 Qichong ST30"], ["qihai.html", "气海 Qihai CV6"], ["yongquan.html", "涌泉 Yongquan KI1"], ["yemen.html", "液门 Yemen TE2"], ["sphinx-seal.html", "狮身人面式 → 海豹式（转头变体） Sphinx → Seal, with head turns"], ["cat-cow.html", "猫牛式 Cat–Cow"], ["huantiao.html", "环跳 Huantiao GB30"], ["shenque.html", "神阙 Shenque CV8"], ["zhibian.html", "秩边 Zhibian BL54"], ["thread-the-needle.html", "穿针式 Thread the Needle"], ["standing-backbend.html", "站立下轮 Standing drop-back to Wheel"], ["baohuang.html", "胞肓 Baohuang BL53"], ["kuagen.html", "胯根 Kua root Area"], ["butterfly.html", "蝴蝶式 Butterfly"], ["check-hypertension-spleen-phlegm.html", "血压与「脾为生痰之源」：一份文献出处核查 · 核查"], ["xuehai.html", "血海 Xuehai SP10"], ["glossary.html", "词汇"], ["frog.html", "青蛙式 Frog"], ["saddle.html", "鞍式 Saddle Pose"], ["fengchi.html", "风池 Fengchi GB20"], ["high-lunge.html", "高弓步 High Lunge"], ["yuji.html", "鱼际 Yuji LU10"], ["eagle-arms.html", "鹰式手臂缠绕 Eagle arms"]];
 const SITELEAVES=[];
 /* ---------- Leaves ---------- */
 let LEAVES=[];
@@ -1784,14 +1784,14 @@ const addSwitch=cur=>`<div class="seg addsw" role="tablist" style="margin-bottom
 /* 路径：林子里走到哪，都能回到上一步，也能跳回路上任何一处 */
 let NAV=[];try{NAV=JSON.parse(sessionStorage.getItem('pfp-nav')||'[]')}catch(_){NAV=[]}
 let navReset=false,navSib=false;
-const ROOTS=['','by-body','glossary','principles','add','add-day','add-point','log','austin','yin','sources','checks','scripts','journal','leaves'];
+const ROOTS=['','by-body','glossary','add','add-day','add-point','log','austin','yin','sources','checks','scripts','journal','leaves'];
 function navTrack(){const h=location.hash.slice(1);
  if(navReset||!NAV.length){NAV=[h];navReset=false}
  else if(navSib&&NAV.length){NAV[NAV.length-1]=h;navSib=false}
  else{const i=NAV.indexOf(h);if(i>=0)NAV=NAV.slice(0,i+1);else{NAV.push(h);if(NAV.length>12)NAV=NAV.slice(-12)}}
  try{sessionStorage.setItem('pfp-nav',JSON.stringify(NAV))}catch(_){}}
 function navLabel(h){
- const T={'':'按体式找','by-body':'按身体找','forest-stats':'林子统计','glossary':'词汇','principles':'练习原则','add':'记一条','add-day':'这一天的身体','add-point':'记一条','log':'日志','austin':'Austin 句库','yin':'殷朝文的石子','sources':'原文','checks':'核查','scripts':'跟练','journal':'手记','leaves':'叶子','sacrum':'骶骨 · 尾闾','names':'名称对照','posedata':'体式表','forest':'林子','bridges':'桥表'};
+ const T={'':'按体式找','by-body':'按身体找','forest-stats':'林子统计','glossary':'词汇','add':'记一条','add-day':'这一天的身体','add-point':'记一条','log':'日志','austin':'Austin 句库','yin':'殷朝文的石子','sources':'原文','checks':'核查','scripts':'跟练','journal':'手记','leaves':'叶子','sacrum':'骶骨 · 尾闾','names':'名称对照','posedata':'体式表','forest':'林子','bridges':'桥表'};
  if(h in T)return T[h];
  if(P[h])return P[h].label||P[h].zh;
  if(h.startsWith('pose-')){const po=allPoses().find(p=>p.id===h.slice(5));return po?po.zh:'体式'}
@@ -1829,7 +1829,6 @@ function renderInner(){
  if(h==='log'){setTabs('log');main.innerHTML=`<div style="display:flex;flex-direction:column;gap:24px">${logView()}</div>`;return}
  if(h==='sources'){setTabs('sources');main.innerHTML=sourcesView();return}
  if(h==='glossary'){setTabs('');main.innerHTML=glossaryView();return}
- if(h==='principles'){setTabs('');main.innerHTML=principlesView();return}
  if(h==='checks'){setTabs('checks');main.innerHTML=checksView();return}
  if(h.startsWith('check-')){setTabs('checks');main.innerHTML=checkView(h.slice(6));return}
  if(h==='scripts'){setTabs('scripts');main.innerHTML=scriptsView();return}
