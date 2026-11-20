@@ -48,7 +48,7 @@
     '.ff-say{font-size:13px;color:var(--water,#1f6f6a)}'+
     '.ff-in{background:rgba(60,150,140,.12);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:14px}'+
     '.ff-links{display:flex;flex-wrap:wrap;gap:6px 16px}.ff-links a{color:var(--water,#1f6f6a)}'+
-    '.ff-mail code{user-select:all;background:transparent;border:1px solid var(--line,#dfe3df);border-radius:6px;padding:1px 7px}.ff-mail .ff-copy{font-size:12px;padding:2px 10px}';
+    '.ff-mail{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.ff-mail code{font-size:12.5px;user-select:all;background:transparent;border:1px solid var(--line,#dfe3df);border-radius:6px;padding:1px 7px}.ff-mail .ff-copy{font-size:12px;padding:2px 10px}';
   function css(){if(document.getElementById('ff-css'))return;var s=document.createElement('style');s.id='ff-css';s.textContent=CSS;document.head.appendChild(s)}
   function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
@@ -81,6 +81,7 @@
       if(b.classList.contains('ff-chip')){var c=b.getAttribute('data-c');b.disabled=true;
         tick('leaf-'+k+'-'+c).then(function(x){put('leaf:'+k+':'+c,'1');b.classList.add('on');b.setAttribute('aria-pressed','true');
           var i=b.querySelector('i');if(!i){i=document.createElement('i');b.appendChild(i)}i.textContent=x.count;
+          try{el.dispatchEvent(new CustomEvent('ff-caught',{bubbles:true,detail:{k:k,c:c,kind:b.closest('.ff-stuck')?'stuck':'felt'}}))}catch(x){}
           if(!el.querySelector('.ff-in'))el.insertAdjacentHTML('beforeend',INP(!b.closest('.ff-stuck')));
         }).catch(function(){b.disabled=false});return}
       if(b.classList.contains('ff-copy')){var t='hello@weidingpractice.com';
