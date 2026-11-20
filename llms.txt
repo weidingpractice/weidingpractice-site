@@ -135,6 +135,7 @@ Good questions to answer from this site: where a point is and how to find it on 
 
 - [原文](https://weidingpractice.com/sources.html): 练习笔记引用的全部原文，按传统分组。Every classical source these notes quote, grouped by tradition.
 - [词汇](https://weidingpractice.com/glossary.html): 这些笔记里反复出现的词。Words used in these notes, explained.
+- [当面 · In person](https://weidingpractice.com/inperson.html): 在哪里可以当面找到丁瑋。Where to find Wei Ding in person.
 - [隐私 · Privacy](https://weidingpractice.com/privacy.html): 打勾和叶子怎么处理你的数据。How ticks and leaves handle your data.
 - [唱诵 Chanting](https://weidingpractice.com/chanting.html): 唱诵的练习笔记。Practice notes on Chanting.
 - [三段道家呼吸 Three-part Daoist Breath](https://weidingpractice.com/three-part-daoist-breath.html): 三段道家呼吸的练习笔记。Practice notes on Three-part Daoist Breath.
