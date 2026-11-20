@@ -155,3 +155,11 @@ section.classics cite{font-size:13.5px;color:var(--seal)}
 .knob .kl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
 .knob .en{font-size:13px;color:var(--muted)}
 .wrap>.appv{padding:0}
+
+/* bilingual navigation (11-20): Chinese above, English below */
+.top{align-items:center}
+.top .brand,.top .links a{display:inline-flex;flex-direction:column;line-height:1.2}
+.top .links a{align-items:center}
+.top .brand small,.top .links a small{font-family:var(--body,inherit);font-size:11px;letter-spacing:.03em;color:var(--muted);font-weight:400}
+.top .brand small{font-style:italic}
+.top .links{gap:14px}
