@@ -45,7 +45,7 @@
     '.ff .ff-chip:nth-child(2n){animation-delay:-1.6s}.ff .ff-chip:nth-child(3n){animation-delay:-3.1s}'+
     '.ff-chip i{font-style:normal;font-size:12px;color:var(--muted,#5d6b6b);margin-left:6px}'+
     '.ff-stuck .ff-chip{background:rgba(190,90,60,.16)}'+
-    '.ff .ff-chip.on{background:#1f6f6a;color:#fff;animation:none}.ff-chip.on i{color:#fff}'+
+    '.ff .ff-chip.on{background:#1f6f6a;color:#fff;animation:none}.ff-chip.on i{color:#fff}.ff-redo{margin:12px 0 0;display:flex;gap:14px;flex-wrap:wrap}.ff-redo button{background:none;border:0;padding:4px 0;font:inherit;font-size:13px;color:inherit;opacity:.7;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.ff-redo button:hover{opacity:1}'+
     '@keyframes fffloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-1deg)}}'+
     '@media (prefers-reduced-motion:reduce){.ff .ff-chip{animation:none}}'+
     '.ff-say{font-size:13px;color:var(--water,#1f6f6a)}'+
@@ -55,12 +55,13 @@
   function css(){if(document.getElementById('ff-css'))return;var s=document.createElement('style');s.id='ff-css';s.textContent=CSS;document.head.appendChild(s)}
   function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  function del(k){try{localStorage.removeItem(k)}catch(e){}}
   // 11-21: a preview (no counter) still shows the whole flow; it just counts nothing
   function tick(id){try{if(window.__flog)window.__flog('tick',{id:id})}catch(x){}if(!API)return Promise.resolve({count:1,preview:true});return fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
   function counts(ids){if(!API)return Promise.resolve({});return fetch(API+'/counts?ids='+ids.join(',')).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){return {}})}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function chips(k,list,cls,c){return '<div class="ff-drift '+cls+'">'+list.map(function(x){var id='leaf-'+k+'-'+x[0],on=get('leaf:'+k+':'+x[0])==='1',n=c[id]||0;
-    return '<button type="button" class="ff-chip'+(on?' on':'')+'" data-c="'+x[0]+'"'+(on?' aria-pressed="true" disabled':'')+'>'+T(esc(x[1]),esc(x[2]),1)+(n?'<i>'+n+'</i>':'')+'</button>'}).join('')+'</div>'}
+    return '<button type="button" class="ff-chip'+(on?' on':'')+'" data-c="'+x[0]+'"'+(on?' aria-pressed="true"':' aria-pressed="false"')+'>'+T(esc(x[1]),esc(x[2]),1)+(n?'<i>'+n+'</i>':'')+'</button>'}).join('')+'</div>'}
   function after(el,k,a){
     var list=a==='yes'?FELT:stuckFor(k),ids=list.concat(a==='yes'?KIND:[]).map(function(x){return 'leaf-'+k+'-'+x[0]});if(a==='yes')ids.push('find-'+k+'-yes');
     counts(ids).then(function(c){
@@ -69,7 +70,7 @@
         head='<p class="ff-done">✓ '+(n?T('你和另外 '+n+' 人找到了','Found, with '+n+' others'):T('找到了','Found'))+'</p><p><b>'+T('找到的是','What you found')+'</b></p>'+chips(k,KIND,'ff-kind',c)+'<p><b>'+T('有什么感觉？','What do you feel?')+'</b></p>';
       }else head='<p><b>'+T('卡在哪？','Stuck where?')+'</b></p>';
       var caught=list.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
-      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+(caught?INP(a==='yes'):'');
+      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+(caught?INP(a==='yes'):'')+'<p class="ff-redo"><button type="button" class="ff-change">'+T(a==='yes'?'改成「没找到」':'改成「找到了」',a==='yes'?'Change to: not yet':'Change to: found it',1)+'</button> <button type="button" class="ff-reset">'+T('重新选','Start over',1)+'</button></p>';
     });
   }
   function ask(el,k){
@@ -82,8 +83,17 @@
       var b=e.target.closest('button');if(!b||b.disabled)return;
       if(b.hasAttribute('data-a')){var ans=b.getAttribute('data-a');[].forEach.call(el.querySelectorAll('button'),function(x){x.disabled=true});
         tick('find-'+k+'-'+ans).then(function(){put('found:'+k,ans);after(el,k,ans)}).catch(function(){[].forEach.call(el.querySelectorAll('button'),function(x){x.disabled=false})});return}
+      if(b.classList.contains('ff-change')||b.classList.contains('ff-reset')){var prev=get('found:'+k);
+        // counters only go up: an undo is counted as its own event, so the numbers stay honest
+        if(prev)tick('undo-'+k+'-'+prev).catch(function(){});
+        [FELT,KIND,STUCK,STUCK_AT[k]||[]].forEach(function(L){(L||[]).forEach(function(x){del('leaf:'+k+':'+x[0])})});
+        if(b.classList.contains('ff-reset')||!prev){del('found:'+k);ask(el,k);return}
+        var nx=prev==='yes'?'no':'yes';tick('find-'+k+'-'+nx).then(function(){put('found:'+k,nx);after(el,k,nx)}).catch(function(){put('found:'+k,nx);after(el,k,nx)});return}
+      if(b.classList.contains('ff-chip')&&b.classList.contains('on')){var cc=b.getAttribute('data-c');del('leaf:'+k+':'+cc);b.classList.remove('on');b.setAttribute('aria-pressed','false');
+        var ii=b.querySelector('i');if(ii){var nn=Math.max(0,(+ii.textContent||1)-1);if(nn)ii.textContent=nn;else ii.remove()}
+        tick('unleaf-'+k+'-'+cc).catch(function(){});return}
       if(b.classList.contains('ff-chip')){var c=b.getAttribute('data-c');b.disabled=true;
-        tick('leaf-'+k+'-'+c).then(function(x){put('leaf:'+k+':'+c,'1');b.classList.add('on');b.setAttribute('aria-pressed','true');
+        tick('leaf-'+k+'-'+c).then(function(x){put('leaf:'+k+':'+c,'1');b.disabled=false;b.classList.add('on');b.setAttribute('aria-pressed','true');
           var i=b.querySelector('i');if(!i){i=document.createElement('i');b.appendChild(i)}i.textContent=x.count;
           try{el.dispatchEvent(new CustomEvent('ff-caught',{bubbles:true,detail:{k:k,c:c,kind:b.closest('.ff-stuck')?'stuck':'felt'}}))}catch(x){}
           if(c==='where'&&!el.querySelector('.ff-near')){var nb=NEARBY(el,k);if(nb)el.querySelector('.ff-drift').insertAdjacentHTML('afterend',nb)}
