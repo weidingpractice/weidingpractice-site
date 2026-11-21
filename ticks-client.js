@@ -22,6 +22,8 @@
   if(window.FoundFlow)return;
   var API=document.documentElement.getAttribute('data-ticks')||window.__TICKS||'';
   var FELT=[['warm','热了','Warm'],['soft','松了','Softer'],['tingle','有点麻','Tingling'],['sink','沉下去','Sinking'],['move','想动','Engaged'],['none','没感觉','Nothing yet']];
+  // 11-21 Wei: what you find can be a point, a stretch of the body, or a whole line. None is more right.
+  var KIND=[['kind-point','一个点','A point'],['kind-area','一片','An area'],['kind-line','一条线','A line']];
   var STUCK=[['where','不确定是这里',"Not sure it's here"],['step','有一步不懂','A step is unclear'],['reach','够不到',"Can't reach"]];
   var STUCK_AT={laogong:[['nails','指甲太长','Long nails']]};  // only where it really happens
   function stuckFor(k){return STUCK.concat(STUCK_AT[k]||[])}
@@ -60,11 +62,11 @@
   function chips(k,list,cls,c){return '<div class="ff-drift '+cls+'">'+list.map(function(x){var id='leaf-'+k+'-'+x[0],on=get('leaf:'+k+':'+x[0])==='1',n=c[id]||0;
     return '<button type="button" class="ff-chip'+(on?' on':'')+'" data-c="'+x[0]+'"'+(on?' aria-pressed="true" disabled':'')+'>'+T(esc(x[1]),esc(x[2]),1)+(n?'<i>'+n+'</i>':'')+'</button>'}).join('')+'</div>'}
   function after(el,k,a){
-    var list=a==='yes'?FELT:stuckFor(k),ids=list.map(function(x){return 'leaf-'+k+'-'+x[0]});if(a==='yes')ids.push('find-'+k+'-yes');
+    var list=a==='yes'?FELT:stuckFor(k),ids=list.concat(a==='yes'?KIND:[]).map(function(x){return 'leaf-'+k+'-'+x[0]});if(a==='yes')ids.push('find-'+k+'-yes');
     counts(ids).then(function(c){
       var head;
       if(a==='yes'){var n=Math.max(0,(c['find-'+k+'-yes']||1)-1);
-        head='<p class="ff-done">✓ '+(n?T('你和另外 '+n+' 人找到了','Found, with '+n+' others'):T('找到了','Found'))+'</p><p><b>'+T('有什么感觉？','What do you feel?')+'</b></p>';
+        head='<p class="ff-done">✓ '+(n?T('你和另外 '+n+' 人找到了','Found, with '+n+' others'):T('找到了','Found'))+'</p><p><b>'+T('找到的是','What you found')+'</b></p>'+chips(k,KIND,'ff-kind',c)+'<p><b>'+T('有什么感觉？','What do you feel?')+'</b></p>';
       }else head='<p><b>'+T('卡在哪？','Stuck where?')+'</b></p>';
       var caught=list.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
       el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+(caught?INP(a==='yes'):'');
