@@ -12,6 +12,7 @@ These files are generated from Practice Notes, Wei Ding's private practice log. 
 - **Elders' words stay in the private log.** Thanks to Austin Ince appears once, in the footer.
 - **Open to everyone, no sign-in.** Leaves and "found it" counts are anonymous.
 
+- **Show the page we read.** When a line comes from an old book that we read on its original page, the page itself is shown beside the words, with the lines we read framed. Images live in `pages/`, from public-domain books only.
 - **Smooth first, then beautiful.** Every page must open fast everywhere, including mainland China. Nothing loads from Google or other hosts that are blocked there; fonts are served from `fonts/` on our own domain, Latin-only subsets of about 25 KB each. Before adding any font, image or script, check its size first. A Chinese font is only ever added as a subset of the characters actually used.
 
 The seven promises in `llms.txt` ("Why cite this site") are kept word for word.
@@ -23,6 +24,7 @@ The seven promises in `llms.txt` ("Why cite this site") are kept word for word.
 - `points.html`, `poses.html`, `sources.html`, `checks.html`, `glossary.html`, `journal.html`
 - `inperson.html`, `about.html`, `privacy.html`, `404.html`
 - `llms.txt`, `robots.txt`, `sitemap.xml`, `style.css`, `ticks-client.js`
+- `pages/` — the pages of the old books we read (the 1339 Lingshu so far)
 - `fonts/` — Spectral and Inter, subset to Latin, with their SIL Open Font Licence files
 
 © 2026 Wei Ding · text CC BY 4.0
