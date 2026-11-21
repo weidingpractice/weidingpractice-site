@@ -104,14 +104,14 @@ body.zh #idle .sep,body.en #idle .sep{display:none}
 #card .lg:focus-visible{outline:1px solid var(--water)}
 #card .ways.txt{gap:4px 14px;margin-top:10px}#card .ways.txt .chip{border:0;background:none;padding:2px 0;font-size:14px;color:var(--mist);text-decoration:underline;text-decoration-color:rgba(201,214,207,.3);text-underline-offset:4px}
 #card .row.end{align-items:center;gap:16px}
-#card .bk{display:block;background:none;border:0;padding:0 0 6px;color:var(--water);font:inherit;font-size:14px;cursor:pointer;text-align:left}
+#card .trail{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;margin:0 36px 8px 0;font-size:13px;line-height:1.5}.trail .tc{background:none;border:0;padding:2px 0;color:var(--water);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(124,199,189,.35)}.trail .tc.here{color:var(--ink);text-decoration:none;cursor:default}.trail .ts{color:var(--muted)}.stepper{display:flex;justify-content:space-between;gap:8px;margin:4px 0 10px}.side{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.side .lab{margin:0 0 6px}.side .chip{margin:0 6px 6px 0}.bk{display:block;background:none;border:0;padding:0 0 6px;color:var(--water);font:inherit;font-size:14px;cursor:pointer;text-align:left}
 #card .lab{margin:12px 0 0;font-size:11px;letter-spacing:.18em;color:var(--water);text-transform:uppercase}
 .light.was .core{fill:#fff}.light.was .halo{opacity:1!important}.light.was{opacity:1!important}
 #card .row.end{position:sticky;bottom:-12px;margin:12px -16px -12px;padding:10px 16px 12px;background:rgb(13,22,21);border-top:1px solid rgba(201,214,207,.12);z-index:2}#card .row.end .go{margin-top:0}
 
 /* corner */
-#corner{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:calc(10px + env(safe-area-inset-right,0px));z-index:30;width:44px;height:44px;border-radius:50%;border:1px solid transparent;background:none;color:var(--muted);cursor:pointer;opacity:0;transition:opacity 2s,border-color .3s}
-#corner.on{opacity:.7}#corner:hover,#corner:focus-visible{opacity:1;border-color:var(--line);outline:none}
+#corner{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:calc(10px + env(safe-area-inset-right,0px));z-index:30;height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:var(--ink);font:inherit;font-size:14px;letter-spacing:.04em;cursor:pointer;opacity:0;transition:opacity 2s,border-color .3s}
+#corner.on{opacity:.92}#corner:hover,#corner:focus-visible{opacity:1;border-color:var(--line);outline:none}
 #corner svg{width:20px;height:20px}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:min(320px,86vw);background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-left:1px solid var(--line);z-index:40;transform:translateX(105%);transition:transform .45s ease;
  padding:calc(64px + env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) 24px 22px;box-sizing:border-box;overflow:auto}
@@ -196,7 +196,7 @@ body.flicker #lights .light .halo{animation:flicker 1.6s ease-in-out 1}
  <g id="bones"></g><g id="chans"></g><g id="lights"></g><g id="lanterns"></g>
 </svg>
 <div id="idle" aria-hidden="true"><span class="z">点一盏光</span><span class="sep"> · </span><span class="e">tap a light</span></div>
-<button id="corner" type="button" aria-label="角落 · Corner" aria-expanded="false" aria-controls="drawer"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M10 2c3 4 3 12 0 16M10 2c-3 4-3 12 0 16M3 10h14"/></svg></button>
+<button id="corner" type="button" aria-label="目录 · Menu" aria-expanded="false" aria-controls="drawer"><span aria-hidden="true">≡</span> <span class="z">目录</span><span class="e">Menu</span></button>
 <div id="veil"></div>
 <nav class="drawer" id="drawer" aria-label="角落 · Corner" hidden>
  <p class="count" id="count"></p>
@@ -390,8 +390,8 @@ card.addEventListener('click',e=>{if(DRAGGED){e.stopPropagation();e.preventDefau
 const bi=(z,e)=>`<span class="z">${esc(z)}</span>${e?`<span class="e">${esc(e)}</span>`:''}`;
 function nearHTML(){if(!NEAR.length)return '';const n=NEAR.map(g=>{if(g.dataset.pt){const p=DATA.pts[g.dataset.pt];return `<button class="chip" type="button" data-pt="${g.dataset.pt}">${bi(p.zh+(p.code?' '+p.code:''),p.py+(p.code?' '+p.code:''))}</button>`}
   if(g.dataset.chan){const s=CH[g.dataset.chan].c.st[+g.dataset.i];return `<button class="chip" type="button" data-stonepick="${g.dataset.stone}">${bi(s.zh+' '+s.code,(s.py||'')+' '+s.code)}</button>`}return ''}).join('');
- NEAR=[];return n?`<div class="near"><span>${bi('附近还有','Nearby')}</span>${n}</div>`:''}
-function openCard(html,y){lastFocus=document.activeElement;resetCard();html=nearHTML()+html;body.innerHTML=html;
+ NEAR=[];return n?`<div class="near">${n}</div>`:''}
+function openCard(html,y){lastFocus=document.activeElement;resetCard();{const nh=nearHTML();const cut=html.lastIndexOf('<div class="row end">');html=nh?(cut>=0?html.slice(0,cut)+`<div class="side"><p class="lab">${bi('旁边的光','Lights nearby')}</p>${nh}</div>`+html.slice(cut):html+`<div class="side"><p class="lab">${bi('旁边的光','Lights nearby')}</p>${nh}</div>`):html}body.innerHTML=html;if(window.top===window.self)body.querySelectorAll('a.go[target]').forEach(a=>{a.removeAttribute('target');a.removeAttribute('rel')});
  /* keep the light and its line in view: a light low on the body sends the card to the top */
  let top=false,sy=null;if(y!=null){const m=$('#map').getScreenCTM();if(m){sy=y*m.d+m.f;top=sy>innerHeight*.5}}
  card.classList.toggle('top',top);card.classList.add('on');
@@ -426,8 +426,9 @@ function closeCard(){panMap(0);resetCard();const lit=document.querySelector('.li
 /* 11-20 有来有往：every card is a step. ← and the phone's back gesture go one step back; the address (#pt-laogong) can be shared. */
 let STACK=[],ROUTING=false;
 function label(h){const m=h.split('-');if(m[0]==='pt'&&DATA.pts[m[1]])return bi(DATA.pts[m[1]].zh,DATA.pts[m[1]].py);if(m[0]==='pose'){const po=poseById(m[1]);if(po)return bi(po.zh,po.en)}if(m[0]==='mat')return bi('垫子上','On the mat');return ''}
-function paintBack(){const old=body.querySelector('.bk');if(old)old.remove();if(STACK.length<2)return;
- body.insertAdjacentHTML('afterbegin',`<button class="bk" type="button" data-navback>← ${label(STACK[STACK.length-2])}</button>`)}
+function paintBack(){body.querySelectorAll('.bk,.trail').forEach(x=>x.remove());if(!STACK.length)return;const n=STACK.length;
+ const crumbs=[`<button type="button" class="tc" data-navhome>${bi('林子','Forest')}</button>`,...STACK.map((h,i)=>i===n-1?`<span class="tc here" aria-current="step">${label(h)}</span>`:`<button type="button" class="tc" data-navgo="${n-1-i}">${label(h)}</button>`)];
+ body.insertAdjacentHTML('afterbegin',`<nav class="trail" aria-label="${document.body.classList.contains('zh')?'你在这里':'You are here'}">${crumbs.join('<span class="ts" aria-hidden="true">›</span>')}</nav>`)}
 function stepTo(h,r){if(r){paintBack();return}if(STACK[STACK.length-1]===h){paintBack();return}STACK.push(h);
  try{history.pushState({f:1},'','#'+h)}catch(x){}paintBack()}
 function route(h){const m=(h||'').split('-');ROUTING=true;try{
@@ -485,7 +486,8 @@ function lightPose(id,from){flog('pose',{pose:id,from:from||''});{const r_=ROUTI
   <div class="row end"><a class="go" href="${SITE}${po.slug}.html">${bi('走进去','Walk in')} →</a><button class="lg" type="button" data-swap aria-label="换语言 · Switch language"><span class="z">EN</span><span class="e">中文</span></button></div>`,LIGHT[k].y)}
 function mat(id,k){{const r_=ROUTING;setTimeout(()=>stepTo('mat-'+id+'-'+k,r_),0)}const po=poseById(id),v=DATA.pts[k];clearLit();document.body.classList.add('focus','mat');LIGHT[k].g.classList.add('go');
  openCard(`<div class="breath"><span class="dot" aria-hidden="true"></span><span>${bi(`进入${po.zh}，注意力放在${v.zh}，停三个呼吸。不用按，只是留意。`,`Go into ${po.en}. Rest your attention on ${v.py} for three breaths. Don't press; just notice.`)}</span></div>
-  <div class="row"><button class="btn" type="button" data-back="${k}" data-ok="1">${bi('感觉到了','I felt it')}</button><button class="btn ghost" type="button" data-back="${k}">${bi('还没有','Not yet')}</button></div>`,LIGHT[k].y)}
+  <div class="row"><button class="btn" type="button" data-back="${k}" data-ok="1">${bi('感觉到了','I felt it')}</button><button class="btn ghost" type="button" data-back="${k}">${bi('还没有','Not yet')}</button></div>
+  <p class="sub" style="margin-top:10px">${bi(`回答以后，回到${v.zh}这盏光：从那里可以换一个体式，或者走近去读它的那一页。`,`After you answer, you return to ${v.py}: from there, try another pose, or go closer and read its page.`)}</p>`,LIGHT[k].y)}
 /* did the words lead the hand there? Only a count; on the real site it goes to the same counter as 「我也感觉到了」. */
 const FOUND=store.get('forest-found-pt',{});
 function foundRow(k){const p=DATA.pts[k];return `<div data-ff="${k}"${p&&p.map==='body'?' data-ff-q="felt"':''} hidden></div>`}
@@ -502,7 +504,7 @@ function stoneCard(g){if(g.dataset.side&&g.dataset.side!==VIEW)setView(g.dataset
   h=c.segs?seeStation(c,s,+g.dataset.i):known?`<h2 id="card-h">${bi(s.zh,s.py||s.zh)}</h2><p class="sub">${bi(s.py||'',s.zh)} · ${esc(s.code)}</p><p class="chanlab">${bi(`${c.zh} · 第 ${+g.dataset.i+1} 站`,`${c.en} · station ${+g.dataset.i+1}`)}</p><p class="find"><span class="e sub" style="display:block;font-size:13px;margin-bottom:4px">Location in the Chinese national standard, quoted in the original:</span>${esc(s.loc)}<span class="sub" style="display:block;font-size:13px;margin-top:4px">${esc('GB/T 12346-2021 '+s.clause)}</span></p><p class="sub" style="margin-top:12px">${bi('这一站还没有人走到。这条路还在修。','Nobody has walked to this station yet. This path is still being built.')}</p>`
    :`<h2 id="card-h" style="font-size:22px">这条路还在修</h2><p class="sub"><i class="e">This path is still being built</i></p>`}
  else h=`<h2 id="card-h" style="font-size:22px">这条路还在修</h2><p class="sub"><i class="e">This path is still being built</i></p>`;
- openCard(h,sy);if(g.dataset.chan){if(unwalked(g.dataset.chan))peek(g.dataset.chan);document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`).forEach(x=>{x.classList.add('here');x.style.setProperty('--cc',CH[g.dataset.chan].c.color)});{const st=CH[g.dataset.chan].c.st[+g.dataset.i];if(st)pinHere(document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`),st.zh,st.py)}}}
+ openCard(h,sy);if(g.dataset.chan){{const c_=CH[g.dataset.chan].c,s_=c_.st[+g.dataset.i];STACK=[];body.querySelectorAll('.trail').forEach(x=>x.remove());body.insertAdjacentHTML('afterbegin',`<nav class="trail"><button type="button" class="tc" data-navhome>${bi('林子','Forest')}</button><span class="ts" aria-hidden="true">›</span><span style="color:var(--muted)">${bi(c_.zh,c_.en.replace(/ \(.*\)/,''))}</span><span class="ts" aria-hidden="true">›</span><span class="tc here" aria-current="step">${bi(s_.zh,s_.py||s_.zh)}</span></nav>`);{const i_=+g.dataset.i,nb=d=>document.querySelector(`#lights [data-chan="${g.dataset.chan}"][data-i="${i_+d}"]`),pv=nb(-1),nx=nb(1),st=d=>c_.st[i_+d];if(pv||nx){const row=`<div class="stepper">${pv&&pv.dataset.stone?`<button type="button" class="chip" data-stonepick="${pv.dataset.stone}">← ${bi(st(-1).zh,st(-1).py||st(-1).zh)}</button>`:'<span></span>'}${nx&&nx.dataset.stone?`<button type="button" class="chip" data-stonepick="${nx.dataset.stone}">${bi(st(1).zh,st(1).py||st(1).zh)} →</button>`:''}</div>`;const ff=body.querySelector('[data-ff]');if(ff)ff.insertAdjacentHTML('beforebegin',`<p class="lab" style="margin-top:12px">${bi('沿着这条经','Along this channel')}</p>`+row);else body.insertAdjacentHTML('beforeend',row)}}}if(unwalked(g.dataset.chan))peek(g.dataset.chan);document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`).forEach(x=>{x.classList.add('here');x.style.setProperty('--cc',CH[g.dataset.chan].c.color)});{const st=CH[g.dataset.chan].c.st[+g.dataset.i];if(st)pinHere(document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`),st.zh,st.py)}}}
 /* 11-21: a station of a channel still being built: where the standard puts it, the line of the classic it sits on, and our plain words */
 function seeStation(c,s,i){flog('station',{chan:c.id,code:s.code,zh:s.zh});const sg=c.segs[String(s.seg)]||['','',''];
  return `<h2 id="card-h">${bi(s.zh,s.py||s.zh)}</h2><p class="sub">${bi(s.py||'',s.zh)} · ${esc(s.code)}${s.back?' · '+bi('在背面','on the back'):''}</p><p class="chanlab">${bi(`${c.zh} · 第 ${i+1} 站，共 ${c.st.length} 站`,`${c.en} · station ${i+1} of ${c.st.length}`)}</p>
@@ -529,7 +531,7 @@ function activate(g){if(g.dataset.pt)touchPoint(g.dataset.pt);else if(g.dataset.
 /* keyboard and screen readers still use the element itself */
 $('#map').addEventListener('click',e=>{if(e.detail!==0)return;const g=e.target.closest('[data-pt],[data-stone],.lantern');if(g){NEAR=[];activate(g)}});
 $('#map').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const g=e.target.closest('[data-pt],[data-stone],.lantern');if(!g)return;e.preventDefault();NEAR=[];activate(g)});
-card.addEventListener('click',e=>{if(e.target.closest('[data-navback]')){history.back();return}const mo=e.target.closest('[data-more]');if(mo){mo.parentNode.querySelectorAll('[hidden]').forEach(x=>x.hidden=false);mo.remove();return}if(e.target.closest('[data-swap]')){setLang(document.body.classList.contains('zh')?'en':'zh',true);return}
+card.addEventListener('click',e=>{if(e.target.closest('[data-navback]')){history.back();return}{const ng=e.target.closest('[data-navgo]');if(ng){history.go(-(+ng.dataset.navgo));return}if(e.target.closest('[data-navhome]')){closeCard();return}}const mo=e.target.closest('[data-more]');if(mo){mo.parentNode.querySelectorAll('[hidden]').forEach(x=>x.hidden=false);mo.remove();return}if(e.target.closest('[data-swap]')){setLang(document.body.classList.contains('zh')?'en':'zh',true);return}
  const sp=e.target.closest('[data-stonepick]');if(sp){const g=document.querySelector(`[data-stone="${sp.dataset.stonepick}"]`);if(g)stoneCard(g);return}const fd=e.target.closest('[data-found]');if(fd){const fk=fd.dataset.found,fa=fd.dataset.a;let before=null;try{before=localStorage.getItem('found:'+fk)}catch(x){}if(!before){tick('find-'+fk+'-'+fa);try{localStorage.setItem('found:'+fk,fa)}catch(x){}}FOUND[fk]=fa;store.set('forest-found-pt',FOUND);const row=fd.closest('.fq');row.outerHTML=foundRow(fd.dataset.found,true);return}
  const m=e.target.closest('[data-mat],[data-back]');if(m){if(m.dataset.mat)mat(m.dataset.mat,m.dataset.at);else{const k=m.dataset.back;if(m.dataset.ok)felt(k);touchPoint(k,m.dataset.ok?'yes':'not')}return}
  const b=e.target.closest('[data-pt],[data-pose],[data-felt],[data-linepose]');if(!b)return;if(b.dataset.linepose){linePose(b.dataset.linepose);return}if(b.dataset.felt)felt(b.dataset.felt);else if(b.dataset.pose)lightPose(b.dataset.pose,b.dataset.from);else touchPoint(b.dataset.pt)});
