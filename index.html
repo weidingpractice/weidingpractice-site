@@ -508,7 +508,7 @@ function seeStation(c,s,i){flog('station',{chan:c.id,code:s.code,zh:s.zh});const
  <button class="linkbtn" type="button" data-more>${bi('整段原文','The whole passage')}</button>${c.page?`<figure class="opg" hidden><div class="pg"><img src="${c.page.file}" alt="${esc(c.zh)} · ${esc(c.page.alt||'元刻本《灵枢》卷三')}" loading="lazy"><span class="hl" style="left:${c.page.hl[0]*100}%;top:${c.page.hl[1]*100}%;width:${c.page.hl[2]*100}%;height:${c.page.hl[3]*100}%"></span></div><figcaption class="sub">${c.page.cap?bi(c.page.cap[0],c.page.cap[1]):bi('元刻本原叶，框里是这条经。国家图书馆藏，影像见 archive.org，阅读器第 '+c.page.n+' 页。','The 1339 woodblock page; the frame marks this channel. National Library of China, scan on archive.org, reader page '+c.page.n+'.')}</figcaption></figure>`:''}<p class="cl" hidden>「${esc(c.text)}」</p><p class="sub" hidden>${esc(c.src)}。${esc(c.note||'')}</p>
  <p class="sub" hidden>${bi('实线在身体表面，淡线走在身体里面。湖是藏，谷是府：湖和谷是我们的说法，原文里没有这两个字。','Solid on the surface, faint where it runs inside. A lake is a zang organ, a valley a fu: lake and valley are our images, not words from the classic.')}</p></div>
  ${(lineWays[c.id]||[]).length?`<div class="find2 pose2"><p class="lab">${bi('整条地感觉','Feel the whole line')}</p><div class="ways">${lineWays[c.id].map(([pid])=>poseById(pid)).filter(Boolean).map(po=>`<button class="chip door" type="button" data-linepose="${po.id}" data-chan="${c.id}">${bi(po.zh,po.en)} <span aria-hidden="true">→</span></button>`).join('')}</div></div>`:''}
- <p class="sub" style="margin-top:10px">${bi('这一站还没有人走到。','Nobody has walked here yet.')}</p>`}
+ <div data-ff="${s.key||s.code.toLowerCase().replace('+','p')}"></div>`}
 function lantern(){if(!J)return;clearLit();openCard(`<p class="sub">手记 · <span class="e">Journal</span> #${J.n}</p><h2 id="card-h" style="font-size:24px">${esc(J.title)}</h2><p class="say" style="font-size:16px">${esc(J.summary)}</p><a class="go" href="${SITE}${J.slug}.html">${bi('读','Read')} →</a>`)}
 
 /* ---------- input ---------- */
@@ -626,7 +626,7 @@ else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gat
         head='<p class="ff-done">✓ '+(n?T('你和另外 '+n+' 人找到了','Found, with '+n+' others'):T('找到了','Found'))+'</p><p><b>'+T('找到的是','What you found')+'</b></p>'+chips(k,KIND,'ff-kind',c)+'<p><b>'+T('有什么感觉？','What do you feel?')+'</b></p>';
       }else head='<p><b>'+T('卡在哪？','Stuck where?')+'</b></p>';
       var caught=list.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
-      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+(caught?INP(a==='yes'):'')+'<p class="ff-redo"><button type="button" class="ff-change">'+T(a==='yes'?'改成「没找到」':'改成「找到了」',a==='yes'?'Change to: not yet':'Change to: found it',1)+'</button> <button type="button" class="ff-reset">'+T('重新选','Start over',1)+'</button></p>';
+      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+INP(a==='yes')+'<p class="ff-redo"><button type="button" class="ff-change">'+T(a==='yes'?'改成「没找到」':'改成「找到了」',a==='yes'?'Change to: not yet':'Change to: found it',1)+'</button> <button type="button" class="ff-reset">'+T('重新选','Start over',1)+'</button></p>';
     });
   }
   function ask(el,k){

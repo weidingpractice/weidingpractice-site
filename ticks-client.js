@@ -70,7 +70,7 @@
         head='<p class="ff-done">✓ '+(n?T('你和另外 '+n+' 人找到了','Found, with '+n+' others'):T('找到了','Found'))+'</p><p><b>'+T('找到的是','What you found')+'</b></p>'+chips(k,KIND,'ff-kind',c)+'<p><b>'+T('有什么感觉？','What do you feel?')+'</b></p>';
       }else head='<p><b>'+T('卡在哪？','Stuck where?')+'</b></p>';
       var caught=list.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
-      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+(caught?INP(a==='yes'):'')+'<p class="ff-redo"><button type="button" class="ff-change">'+T(a==='yes'?'改成「没找到」':'改成「找到了」',a==='yes'?'Change to: not yet':'Change to: found it',1)+'</button> <button type="button" class="ff-reset">'+T('重新选','Start over',1)+'</button></p>';
+      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+INP(a==='yes')+'<p class="ff-redo"><button type="button" class="ff-change">'+T(a==='yes'?'改成「没找到」':'改成「找到了」',a==='yes'?'Change to: not yet':'Change to: found it',1)+'</button> <button type="button" class="ff-reset">'+T('重新选','Start over',1)+'</button></p>';
     });
   }
   function ask(el,k){
