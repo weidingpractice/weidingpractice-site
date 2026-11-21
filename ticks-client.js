@@ -53,8 +53,9 @@
   function css(){if(document.getElementById('ff-css'))return;var s=document.createElement('style');s.id='ff-css';s.textContent=CSS;document.head.appendChild(s)}
   function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-  function tick(id){return fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
-  function counts(ids){return fetch(API+'/counts?ids='+ids.join(',')).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){return {}})}
+  // 11-21: a preview (no counter) still shows the whole flow; it just counts nothing
+  function tick(id){if(!API)return Promise.resolve({count:1,preview:true});return fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
+  function counts(ids){if(!API)return Promise.resolve({});return fetch(API+'/counts?ids='+ids.join(',')).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){return {}})}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function chips(k,list,cls,c){return '<div class="ff-drift '+cls+'">'+list.map(function(x){var id='leaf-'+k+'-'+x[0],on=get('leaf:'+k+':'+x[0])==='1',n=c[id]||0;
     return '<button type="button" class="ff-chip'+(on?' on':'')+'" data-c="'+x[0]+'"'+(on?' aria-pressed="true" disabled':'')+'>'+T(esc(x[1]),esc(x[2]),1)+(n?'<i>'+n+'</i>':'')+'</button>'}).join('')+'</div>'}
@@ -73,7 +74,7 @@
     el.innerHTML='<div class="ff-q"><b>'+T('找到了吗？','Found it?',1)+'</b> <button type="button" data-a="yes">'+T('✓ 找到了','✓ Yes',1)+'</button> <button type="button" data-a="no">'+T('没找到','Not yet',1)+'</button></div>';
   }
   function mount(el){
-    if(el.__ff)return;el.__ff=1;var k=el.getAttribute('data-ff');if(!API||!/^[a-z0-9-]{1,40}$/.test(k))return;css();el.classList.add('ff');
+    if(el.__ff)return;el.__ff=1;var k=el.getAttribute('data-ff');if(!/^[a-z0-9-]{1,40}$/.test(k))return;css();el.classList.add('ff');
     var a=get('found:'+k);if(a==='yes'||a==='no')after(el,k,a);else ask(el,k);el.hidden=false;
     el.addEventListener('click',function(e){
       var b=e.target.closest('button');if(!b||b.disabled)return;
