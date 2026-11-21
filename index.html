@@ -126,7 +126,7 @@ body.zh #idle .sep,body.en #idle .sep{display:none}
 #veil{position:fixed;inset:0;z-index:35;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .4s}#veil.on{opacity:1;pointer-events:auto}
 
 #idle{position:fixed;left:0;right:0;top:calc(64px + env(safe-area-inset-top,0px));text-align:center;color:var(--ink);font-family:var(--display);font-size:19px;letter-spacing:.12em;line-height:1.5;opacity:0;transition:opacity 2s;pointer-events:none;z-index:5;text-shadow:0 0 18px rgba(124,199,189,.55)}
-#idle .e{display:block!important;font-style:italic;font-size:15px;letter-spacing:.04em;color:var(--mist)}#idle .z{display:block!important}
+#idle .e{display:block;font-style:italic;font-size:15px;letter-spacing:.04em;color:var(--mist)}#idle .z{display:block}body.en #idle .z,body.zh #idle .e{display:none!important}
 #idle.on{opacity:1}
 /* the forest breathes: all lights, one slow rhythm (no words needed) */
 @keyframes breathe{0%,100%{opacity:.45}50%{opacity:1}}
@@ -171,7 +171,7 @@ body.view-back #sidetag{opacity:.85}
 body.view-back .chg .branch:not([data-side="back"]){display:none}
 #lights .stone.chanstone .core{fill:var(--cc,#7a4a3e);opacity:.5}
 #lights .stone.here{opacity:1!important}
-#herepin{pointer-events:none}#herepin .pinring{fill:none;stroke:#fff;stroke-width:3;stroke-dasharray:6 7;opacity:.95;transform-box:fill-box;transform-origin:center;animation:pinspin 9s linear infinite}@keyframes pinspin{to{transform:rotate(360deg)}}#herepin .pinlab rect{fill:rgba(11,19,18,.86);stroke:rgba(255,255,255,.75);stroke-width:2}#herepin .pinlab line{stroke:rgba(255,255,255,.75);stroke-width:2}#herepin .pinlab text{fill:#fff;font-family:var(--display);font-size:24px;letter-spacing:.04em}@media (prefers-reduced-motion:reduce){#herepin .pinring{animation:none}}#lights .stone.here .core{fill:#fff;r:8}#lights .stone.here .ring{stroke:#fff;stroke-width:3;transform-box:fill-box;transform-origin:center;animation:starpulse 2.2s ease-in-out infinite}
+#herepin{pointer-events:none}#herepin .pinring{fill:none;stroke:#fff;stroke-width:3;stroke-dasharray:6 7;opacity:.95;transform-box:fill-box;transform-origin:center;animation:pinspin 9s linear infinite}#herepin .pinping{fill:#fff;opacity:0;transform-box:fill-box;transform-origin:center;animation:pinping 1.4s ease-out infinite}@keyframes pinping{0%{opacity:.85;transform:scale(.5)}100%{opacity:0;transform:scale(2.6)}}#herepin .pindot{fill:#fff;animation:pinblink 1.4s ease-in-out infinite}@keyframes pinblink{0%,100%{opacity:1}50%{opacity:.2}}@keyframes pinspin{to{transform:rotate(360deg)}}#herepin .pinlab rect{fill:rgba(11,19,18,.86);stroke:rgba(255,255,255,.75);stroke-width:2}#herepin .pinlab line{stroke:rgba(255,255,255,.75);stroke-width:2}#herepin .pinlab text{fill:#fff;font-family:var(--display);font-size:24px;letter-spacing:.04em}@media (prefers-reduced-motion:reduce){#herepin .pinring,#herepin .pinping{animation:none}#herepin .pinping{opacity:0}}#lights .stone.here .core{fill:#fff;r:8}#lights .stone.here .ring{stroke:#fff;stroke-width:3;transform-box:fill-box;transform-origin:center;animation:starpulse 2.2s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){#lights .stone.here .ring{animation:none}}
 #card .orig{margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}#card .orig .cl{font-size:17px;line-height:1.7;margin:4px 0}
 #card .opg{margin:10px 0 6px}#card .opg .pg{position:relative;overflow:hidden;border-radius:6px;max-width:360px}#card .opg img{display:block;width:100%;height:auto;filter:sepia(.3) brightness(.92)}#card .opg .hl{position:absolute;border:2px solid #b94d30;border-radius:4px;box-shadow:0 0 0 9999px rgba(8,10,9,.35);pointer-events:none}#card .opg figcaption{margin-top:6px;font-size:13px}
@@ -414,7 +414,7 @@ function unpin(){window.__pinArgs&&0;document.querySelectorAll('#herepin').forEa
 function pinHere(gs,zh,en){window.__pinArgs=[gs,zh,en];unpin();gs=[...gs].filter(Boolean);if(!gs.length)return;const root=el('g',{id:'herepin','aria-hidden':'true'},$('#lights'));
  const lab=document.body.classList.contains('zh')?zh:en;let done=false;
  for(const g of gs){const m=(g.getAttribute('transform')||'').match(/translate\(([-\d.]+)[ ,]+([-\d.]+)\)/);if(!m)continue;const x=+m[1],y=+m[2];
-  el('circle',{cx:x,cy:y,r:26,class:'pinring'},root);
+  el('circle',{cx:x,cy:y,r:16,class:'pinping'},root);el('circle',{cx:x,cy:y,r:26,class:'pinring'},root);el('circle',{cx:x,cy:y,r:7,class:'pindot'},root);
   if(!done&&lab){done=true;const w=Math.max(60,lab.length*(/[一-鿿]/.test(lab)?26:15)+28),ty=y-58;
    const t=el('g',{class:'pinlab',transform:`translate(${x},${ty})`},root);
    el('rect',{x:-w/2,y:-22,width:w,height:40,rx:20},t);el('line',{x1:0,y1:18,x2:0,y2:32},t);
@@ -499,14 +499,14 @@ function felt(k,quiet){if(mine.has(k))return;mine.add(k);store.set('forest-mine'
  const b=card.querySelector(`[data-felt="${k}"]`);if(b){b.classList.add('ghost');b.innerHTML=bi('你在这里感觉到过','You have felt it here')}}
 function stoneCard(g){if(g.dataset.side&&g.dataset.side!==VIEW)setView(g.dataset.side,true);clearLit();let h='';const sy=+(g.getAttribute('transform').match(/,([\d.]+)\)/)||[0,0])[1];
  if(g.dataset.chan){const c=CH[g.dataset.chan].c,s=c.st[+g.dataset.i];const known=g.classList.contains('known');
-  h=c.segs?seeStation(c,s,+g.dataset.i):known?`<h2 id="card-h">${esc(s.zh)}</h2><p class="sub">${esc(s.py||'')} · ${esc(s.code)}</p><p class="chanlab">${bi(`${c.zh} · 第 ${+g.dataset.i+1} 站`,`${c.en} · station ${+g.dataset.i+1}`)}</p><p class="find">${bi(s.loc,'')}<span class="e" style="display:block">${esc('GB/T 12346-2021 '+s.clause)}</span></p><p class="sub" style="margin-top:12px">${bi('这一站还没有人走到。这条路还在修。','Nobody has walked to this station yet. This path is still being built.')}</p>`
+  h=c.segs?seeStation(c,s,+g.dataset.i):known?`<h2 id="card-h">${bi(s.zh,s.py||s.zh)}</h2><p class="sub">${bi(s.py||'',s.zh)} · ${esc(s.code)}</p><p class="chanlab">${bi(`${c.zh} · 第 ${+g.dataset.i+1} 站`,`${c.en} · station ${+g.dataset.i+1}`)}</p><p class="find"><span class="e sub" style="display:block;font-size:13px;margin-bottom:4px">Location in the Chinese national standard, quoted in the original:</span>${esc(s.loc)}<span class="sub" style="display:block;font-size:13px;margin-top:4px">${esc('GB/T 12346-2021 '+s.clause)}</span></p><p class="sub" style="margin-top:12px">${bi('这一站还没有人走到。这条路还在修。','Nobody has walked to this station yet. This path is still being built.')}</p>`
    :`<h2 id="card-h" style="font-size:22px">这条路还在修</h2><p class="sub"><i class="e">This path is still being built</i></p>`}
  else h=`<h2 id="card-h" style="font-size:22px">这条路还在修</h2><p class="sub"><i class="e">This path is still being built</i></p>`;
  openCard(h,sy);if(g.dataset.chan){if(unwalked(g.dataset.chan))peek(g.dataset.chan);document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`).forEach(x=>{x.classList.add('here');x.style.setProperty('--cc',CH[g.dataset.chan].c.color)});{const st=CH[g.dataset.chan].c.st[+g.dataset.i];if(st)pinHere(document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`),st.zh,st.py)}}}
 /* 11-21: a station of a channel still being built: where the standard puts it, the line of the classic it sits on, and our plain words */
 function seeStation(c,s,i){flog('station',{chan:c.id,code:s.code,zh:s.zh});const sg=c.segs[String(s.seg)]||['','',''];
- return `<h2 id="card-h">${esc(s.zh)}</h2><p class="sub">${esc(s.py||'')} · ${esc(s.code)}${s.back?' · '+bi('在背面','on the back'):''}</p><p class="chanlab">${bi(`${c.zh} · 第 ${i+1} 站，共 ${c.st.length} 站`,`${c.en} · station ${i+1} of ${c.st.length}`)}</p>
- <p class="find">${esc(s.loc)}<span class="sub" style="display:block;font-size:13px;margin-top:4px">${esc('GB/T 12346-2021 '+s.clause)}</span></p>
+ return `<h2 id="card-h">${bi(s.zh,s.py||s.zh)}</h2><p class="sub">${bi(s.py||'',s.zh)} · ${esc(s.code)}${s.back?' · '+bi('在背面','on the back'):''}</p><p class="chanlab">${bi(`${c.zh} · 第 ${i+1} 站，共 ${c.st.length} 站`,`${c.en} · station ${i+1} of ${c.st.length}`)}</p>
+ <p class="find"><span class="e sub" style="display:block;font-size:13px;margin-bottom:4px">Location in the Chinese national standard, quoted in the original:</span>${esc(s.loc)}<span class="sub" style="display:block;font-size:13px;margin-top:4px">${esc('GB/T 12346-2021 '+s.clause)}</span></p>
  <div class="orig"><p class="lab">${bi('原文','The classic')}</p>${sg[0]?`<p class="cl">「${esc(sg[0])}」</p>${bi(sg[1],sg[2])}`:`<p class="sub">${bi(c.noseg?c.noseg[0]:'原文没有写到这一段。',c.noseg?c.noseg[1]:'The classic does not describe this stretch.')}</p>`}
  <button class="linkbtn" type="button" data-more>${bi('整段原文','The whole passage')}</button>${c.page?`<figure class="opg" hidden><div class="pg"><img src="${c.page.file}" alt="${esc(c.zh)} · ${esc(c.page.alt||'元刻本《灵枢》卷三')}" loading="lazy"><span class="hl" style="left:${c.page.hl[0]*100}%;top:${c.page.hl[1]*100}%;width:${c.page.hl[2]*100}%;height:${c.page.hl[3]*100}%"></span></div><figcaption class="sub">${c.page.cap?bi(c.page.cap[0],c.page.cap[1]):bi('元刻本原叶，框里是这条经。国家图书馆藏，影像见 archive.org，阅读器第 '+c.page.n+' 页。','The 1339 woodblock page; the frame marks this channel. National Library of China, scan on archive.org, reader page '+c.page.n+'.')}</figcaption></figure>`:''}<p class="cl" hidden>「${esc(c.text)}」</p><p class="sub" hidden>${esc(c.src)}。${esc(c.note||'')}</p>
  <p class="sub" hidden>${bi('实线在身体表面，淡线走在身体里面。湖是藏，谷是府：湖和谷是我们的说法，原文里没有这两个字。','Solid on the surface, faint where it runs inside. A lake is a zang organ, a valley a fu: lake and valley are our images, not words from the classic.')}</p></div>
@@ -557,7 +557,7 @@ $('#alllist').onclick=()=>{toggleDrawer(false);text.classList.remove('sr');text.
   text.querySelector('.back').onclick=()=>{text.classList.add('sr');text.style.cssText='';corner.focus()}}
  text.querySelectorAll('a').forEach(a=>{a.target='_blank';a.rel='noopener';a.style.color='var(--ink)'});text.querySelector('.back').focus()};
 
-let idleT;function idleReset(){$('#idle').classList.remove('on');clearTimeout(idleT);if(touched.size<2)idleT=setTimeout(()=>$('#idle').classList.add('on'),7000)}
+let idleT;function idleReset(){$('#idle').classList.remove('on');clearTimeout(idleT);if(touched.size<2)idleT=setTimeout(()=>{if(!card.classList.contains('on'))$('#idle').classList.add('on')},7000)}
 addEventListener('pointerdown',idleReset);
 
 /* 11-20: the lights next to this one on the body (the map is the body), for 「想找的是旁边的？」 */
