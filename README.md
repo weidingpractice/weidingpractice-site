@@ -13,6 +13,7 @@ These files are generated from Practice Notes, Wei Ding's private practice log. 
 - **Open to everyone, no sign-in.** Leaves and "found it" counts are anonymous.
 
 - **Show the page we read.** When a line comes from an old book that we read on its original page, the page itself is shown beside the words, with the lines we read framed. Images live in `pages/`, from public-domain books only.
+- **English first.** The site is hard to reach from mainland China, so English is the default: the forest opens in English (中文 is one tap away and remembered), and the home page is marked lang="en" with English first in its title and description. Classical texts stay in the original Chinese.
 - **Smooth first, then beautiful.** Every page must open fast everywhere, including mainland China. Nothing loads from Google or other hosts that are blocked there; fonts are served from `fonts/` on our own domain, Latin-only subsets of about 25 KB each. Before adding any font, image or script, check its size first. A Chinese font is only ever added as a subset of the characters actually used.
 
 The seven promises in `llms.txt` ("Why cite this site") are kept word for word.
