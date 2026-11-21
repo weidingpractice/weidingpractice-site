@@ -2,7 +2,7 @@
 :root{
   --bg:#f5f6f3; --surface:#ffffff; --ink:#1c2a2c; --muted:#5d6b6b; --line:#dfe3df;
   --water:#1f6f6a; --water-soft:#e3efed; --seal:#b0452e; --seal-soft:#f6e6e1;
-  --display:"Spectral","Songti SC","Noto Serif SC","STSong",Georgia,serif;
+  --display:"Spectral","Yishen Serif SC","Songti SC","Noto Serif SC","STSong",Georgia,serif;
   --body:"Inter","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){

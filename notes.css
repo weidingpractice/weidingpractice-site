@@ -1,7 +1,7 @@
-.appv{
+@font-face{font-family:"Yishen Serif SC";font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/yishen-serif-sc-600.woff) format("woff");unicode-range:U+3000-303F,U+3400-9FFF,U+F900-FAFF,U+FF00-FFEF,U+2014,U+2026,U+201C-201D,U+2018-2019}.appv{
   --bg:#f5f6f3; --surface:#ffffff; --ink:#1c2a2c; --muted:#5d6b6b; --line:#dfe3df;
   --water:#1f6f6a; --water-soft:#e3efed; --seal:#b0452e; --seal-soft:#f6e6e1; --paper:#f1f0ea;
-  --display:"Spectral","Songti SC","STSong","Noto Serif CJK SC",serif;
+  --display:"Spectral","Yishen Serif SC","Songti SC","STSong","Noto Serif CJK SC",serif;
   --body:"Inter","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;
   --classic:"Songti SC","STSong","Noto Serif CJK SC","Spectral",serif;
 }@media (prefers-color-scheme: dark){.appv:not([data-theme="light"]){
