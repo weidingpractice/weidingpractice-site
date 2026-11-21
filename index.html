@@ -340,7 +340,11 @@ function openCard(html,y){lastFocus=document.activeElement;html=nearHTML()+html;
  let top=false,sy=null;if(y!=null){const m=$('#map').getScreenCTM();if(m){sy=y*m.d+m.f;top=sy>innerHeight*.5}}
  card.classList.toggle('top',top);card.classList.add('on');
  /* 11-21: a tall card must not cover the light you chose: if it would, put it on the other side */
- if(sy!=null){const r=card.getBoundingClientRect(),hgt=r.height+36;if(!top&&sy>innerHeight-hgt&&sy>hgt)card.classList.add('top');else if(top&&sy<hgt&&sy<innerHeight-hgt)card.classList.remove('top')}
+ if(sy!=null){const r=card.getBoundingClientRect(),hgt=r.height+36;if(!top&&sy>innerHeight-hgt&&sy>hgt)card.classList.add('top');else if(top&&sy<hgt&&sy<innerHeight-hgt)card.classList.remove('top');
+  /* 11-21: if the card still covers the light on both sides, the forest moves, not the card */
+  const r2=card.getBoundingClientRect(),isTop=card.classList.contains('top');let dy=0;
+  if(!isTop&&sy>r2.top-40)dy=-(sy-(r2.top-70));else if(isTop&&sy<r2.bottom+40)dy=(r2.bottom+70)-sy;
+  panMap(dy)}
  idleReset()}
 /* 11-20 「全宇宙的星星都为你闪亮」: the light you chose twinkles like a star (both sides); the lights next to it glimmer; its channel shines with it */
 const RAY='M0,-30 L3.5,-3.5 L30,0 L3.5,3.5 L0,30 L-3.5,3.5 L-30,0 L-3.5,-3.5Z';
@@ -348,7 +352,8 @@ function star(k,cls){if(!cls&&!reduce){document.body.classList.remove('flicker')
  if(!cls||cls==='star'){const co=chanOf(k);if(co&&CH[co[0]]){[CH[co[0]].line,CH[co[0]].mirror].forEach(ln=>{if(ln&&ln.classList.contains('on'))ln.classList.add('shine')});if(CH[co[0]].chg&&CH[co[0]].line.classList.contains('on'))CH[co[0]].chg.classList.add('peek')}}}
 function unstar(){document.querySelectorAll('.chg.peek').forEach(e=>e.classList.remove('peek'));document.querySelectorAll('#lights .star,#lights .nearstar').forEach(g=>g.classList.remove('star','nearstar'));document.querySelectorAll('.chan.shine').forEach(l=>l.classList.remove('shine'))}
 function clearLit(){unstar();unpeek();document.querySelectorAll('.stone.here').forEach(e=>e.classList.remove('here'));document.querySelectorAll('.light.on,.light.go').forEach(g=>g.classList.remove('on','go'));document.body.classList.remove('focus','mat')}
-function closeCard(){const lit=document.querySelector('.light.on,.light.go');card.classList.remove('on');clearLit();
+function panMap(dy){const m=$('#map');m.style.transition='opacity 2.4s ease,transform .6s ease';m.style.transform=dy?`translateY(${Math.round(dy)}px)`:''}
+function closeCard(){panMap(0);const lit=document.querySelector('.light.on,.light.go');card.classList.remove('on');clearLit();
  if(lit){lit.classList.add('was');setTimeout(()=>lit.classList.remove('was'),reduce?1500:4500)}  /* 11-20: the light you were at stays lit a moment */
  STACK=[];try{if(location.hash)history.replaceState(null,'',location.pathname+location.search)}catch(x){}
  if(lastFocus&&lastFocus.focus)lastFocus.focus()}
