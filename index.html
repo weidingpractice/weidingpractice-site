@@ -170,7 +170,8 @@ body.view-back #sidetag{opacity:.85}
 #card.on~#turn{opacity:.35}
 body.view-back .chg .branch:not([data-side="back"]){display:none}
 #lights .stone.chanstone .core{fill:var(--cc,#7a4a3e);opacity:.5}
-#lights .stone.here{opacity:1!important}#lights .stone.here .core{fill:#fff;r:8}#lights .stone.here .ring{stroke:#fff;stroke-width:3;transform-box:fill-box;transform-origin:center;animation:starpulse 2.2s ease-in-out infinite}
+#lights .stone.here{opacity:1!important}
+#herepin{pointer-events:none}#herepin .pinring{fill:none;stroke:#fff;stroke-width:3;stroke-dasharray:6 7;opacity:.95;transform-box:fill-box;transform-origin:center;animation:pinspin 9s linear infinite}@keyframes pinspin{to{transform:rotate(360deg)}}#herepin .pinlab rect{fill:rgba(11,19,18,.86);stroke:rgba(255,255,255,.75);stroke-width:2}#herepin .pinlab line{stroke:rgba(255,255,255,.75);stroke-width:2}#herepin .pinlab text{fill:#fff;font-family:var(--display);font-size:24px;letter-spacing:.04em}@media (prefers-reduced-motion:reduce){#herepin .pinring{animation:none}}#lights .stone.here .core{fill:#fff;r:8}#lights .stone.here .ring{stroke:#fff;stroke-width:3;transform-box:fill-box;transform-origin:center;animation:starpulse 2.2s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){#lights .stone.here .ring{animation:none}}
 #card .orig{margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}#card .orig .cl{font-size:17px;line-height:1.7;margin:4px 0}
 #card .opg{margin:10px 0 6px}#card .opg .pg{position:relative;overflow:hidden;border-radius:6px;max-width:360px}#card .opg img{display:block;width:100%;height:auto;filter:sepia(.3) brightness(.92)}#card .opg .hl{position:absolute;border:2px solid #b94d30;border-radius:4px;box-shadow:0 0 0 9999px rgba(8,10,9,.35);pointer-events:none}#card .opg figcaption{margin-top:6px;font-size:13px}
@@ -406,8 +407,18 @@ const RAY='M0,-30 L3.5,-3.5 L30,0 L3.5,3.5 L0,30 L-3.5,3.5 L-30,0 L-3.5,-3.5Z';
 function star(k,cls){if(!cls&&!reduce){document.body.classList.remove('flicker');void document.body.offsetWidth;document.body.classList.add('flicker');clearTimeout(window.__flk);window.__flk=setTimeout(()=>document.body.classList.remove('flicker'),1700)}document.querySelectorAll(`#lights [data-pt="${k}"]`).forEach(g=>{if(!g.querySelector('.rays'))el('path',{d:RAY,class:'rays'},g);g.classList.add(cls||'star')});
  if(!cls||cls==='star'){const co=chanOf(k);if(co&&CH[co[0]]){CH[co[0]].paths.forEach(([ln])=>{if(ln.classList.contains('on'))ln.classList.add('shine')});if(CH[co[0]].chg&&CH[co[0]].line.classList.contains('on'))CH[co[0]].chg.classList.add('peek')}}}
 function unstar(){document.querySelectorAll('.chg.peek').forEach(e=>e.classList.remove('peek'));document.querySelectorAll('#lights .star,#lights .nearstar').forEach(g=>g.classList.remove('star','nearstar'));document.querySelectorAll('.chan.shine').forEach(l=>l.classList.remove('shine'))}
-function clearLit(){unstar();unpeek();document.querySelectorAll('.stone.here').forEach(e=>e.classList.remove('here'));document.querySelectorAll('.light.on,.light.go').forEach(g=>g.classList.remove('on','go'));document.body.classList.remove('focus','mat')}
+function clearLit(){unpin();unstar();unpeek();document.querySelectorAll('.stone.here').forEach(e=>e.classList.remove('here'));document.querySelectorAll('.light.on,.light.go').forEach(g=>g.classList.remove('on','go'));document.body.classList.remove('focus','mat')}
 function panMap(dy){const m=$('#map');m.style.transition='opacity 2.4s ease,transform .6s ease';m.style.transform=dy?`translateY(${Math.round(dy)}px)`:''}
+/* 11-21 Wei: when the card moves, I should still see what I tapped. A pin with the name stays on that place until the card closes. */
+function unpin(){window.__pinArgs&&0;document.querySelectorAll('#herepin').forEach(x=>x.remove())}
+function pinHere(gs,zh,en){window.__pinArgs=[gs,zh,en];unpin();gs=[...gs].filter(Boolean);if(!gs.length)return;const root=el('g',{id:'herepin','aria-hidden':'true'},$('#lights'));
+ const lab=document.body.classList.contains('zh')?zh:en;let done=false;
+ for(const g of gs){const m=(g.getAttribute('transform')||'').match(/translate\(([-\d.]+)[ ,]+([-\d.]+)\)/);if(!m)continue;const x=+m[1],y=+m[2];
+  el('circle',{cx:x,cy:y,r:26,class:'pinring'},root);
+  if(!done&&lab){done=true;const w=Math.max(60,lab.length*(/[一-鿿]/.test(lab)?26:15)+28),ty=y-58;
+   const t=el('g',{class:'pinlab',transform:`translate(${x},${ty})`},root);
+   el('rect',{x:-w/2,y:-22,width:w,height:40,rx:20},t);el('line',{x1:0,y1:18,x2:0,y2:32},t);
+   const tx=el('text',{x:0,y:7,'text-anchor':'middle'},t);tx.textContent=lab}}}
 function closeCard(){panMap(0);resetCard();const lit=document.querySelector('.light.on,.light.go');card.classList.remove('on');clearLit();
  if(lit){lit.classList.add('was');setTimeout(()=>lit.classList.remove('was'),reduce?1500:4500)}  /* 11-20: the light you were at stays lit a moment */
  STACK=[];try{if(location.hash)history.replaceState(null,'',location.pathname+location.search)}catch(x){}
@@ -436,7 +447,7 @@ function setView(v,anim){if(v!==VIEW)flog('view',{to:v});if(v!=='back')v='front'
  const apply=()=>{VIEW=v;document.body.classList.toggle('view-back',v==='back');document.body.classList.toggle('view-front',v==='front');store.set('forest-view',v);
   const t=$('#turn');if(t)t.setAttribute('aria-pressed',v==='back')};
  const m=$('#map');if(anim&&!reduce){m.style.transition='opacity 2.4s ease,transform .6s ease,scale .28s ease-in';m.style.scale='0 1';setTimeout(()=>{apply();m.style.transition='opacity 2.4s ease,transform .6s ease,scale .32s ease-out';m.style.scale='1 1'},290)}else apply()}
-function touchPoint(k,after){flog('light',{k});if(sideOf(k)!==VIEW)setView(sideOf(k),true);{const r_=ROUTING;setTimeout(()=>stepTo('pt-'+k,r_),0)}clearLit();document.querySelectorAll('.light.invite').forEach(x=>x.classList.remove('invite'));const p=DATA.pts[k],L=LIGHT[k];L.g.classList.add('on');setTimeout(()=>{star(k);NEAR.forEach(g=>{if(g.dataset.pt)star(g.dataset.pt,'nearstar')})},0);
+function touchPoint(k,after){flog('light',{k});if(sideOf(k)!==VIEW)setView(sideOf(k),true);{const r_=ROUTING;setTimeout(()=>stepTo('pt-'+k,r_),0)}clearLit();document.querySelectorAll('.light.invite').forEach(x=>x.classList.remove('invite'));const p=DATA.pts[k],L=LIGHT[k];L.g.classList.add('on');setTimeout(()=>{star(k);NEAR.forEach(g=>{if(g.dataset.pt)star(g.dataset.pt,'nearstar')});pinHere(document.querySelectorAll(`#lights [data-pt="${k}"]`),p.zh,p.py||p.en)},0);
  const fresh=!touched.has(k);if(fresh){touched.add(k);store.set('forest-touched',[...touched]);L.g.classList.add('touched');L.halo.setAttribute('fill','url(#haloWarm)');bodyCheck();lanternCheck();updateCount()}
  const co=chanOf(k);let reveal='';
  if(co){const [id,i]=co;const had=CH[id].line.classList.contains('on');const span=chanSpan(id);
@@ -488,7 +499,7 @@ function stoneCard(g){if(g.dataset.side&&g.dataset.side!==VIEW)setView(g.dataset
   h=c.segs?seeStation(c,s,+g.dataset.i):known?`<h2 id="card-h">${esc(s.zh)}</h2><p class="sub">${esc(s.py||'')} · ${esc(s.code)}</p><p class="chanlab">${bi(`${c.zh} · 第 ${+g.dataset.i+1} 站`,`${c.en} · station ${+g.dataset.i+1}`)}</p><p class="find">${bi(s.loc,'')}<span class="e" style="display:block">${esc('GB/T 12346-2021 '+s.clause)}</span></p><p class="sub" style="margin-top:12px">${bi('这一站还没有人走到。这条路还在修。','Nobody has walked to this station yet. This path is still being built.')}</p>`
    :`<h2 id="card-h" style="font-size:22px">这条路还在修</h2><p class="sub"><i class="e">This path is still being built</i></p>`}
  else h=`<h2 id="card-h" style="font-size:22px">这条路还在修</h2><p class="sub"><i class="e">This path is still being built</i></p>`;
- openCard(h,sy);if(g.dataset.chan){if(unwalked(g.dataset.chan))peek(g.dataset.chan);document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`).forEach(x=>{x.classList.add('here');x.style.setProperty('--cc',CH[g.dataset.chan].c.color)})}}
+ openCard(h,sy);if(g.dataset.chan){if(unwalked(g.dataset.chan))peek(g.dataset.chan);document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`).forEach(x=>{x.classList.add('here');x.style.setProperty('--cc',CH[g.dataset.chan].c.color)});{const st=CH[g.dataset.chan].c.st[+g.dataset.i];if(st)pinHere(document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`),st.zh,st.py)}}}
 /* 11-21: a station of a channel still being built: where the standard puts it, the line of the classic it sits on, and our plain words */
 function seeStation(c,s,i){flog('station',{chan:c.id,code:s.code,zh:s.zh});const sg=c.segs[String(s.seg)]||['','',''];
  return `<h2 id="card-h">${esc(s.zh)}</h2><p class="sub">${esc(s.py||'')} · ${esc(s.code)}${s.back?' · '+bi('在背面','on the back'):''}</p><p class="chanlab">${bi(`${c.zh} · 第 ${i+1} 站，共 ${c.st.length} 站`,`${c.en} · station ${i+1} of ${c.st.length}`)}</p>
@@ -528,11 +539,13 @@ corner.onclick=()=>toggleDrawer(!drawer.classList.contains('on'));veil.onclick=(
 const nPts=Object.keys(LIGHT).length;
 function updateCount(){$('#count').innerHTML=bi(`碰过 ${touched.size} / ${nPts} 盏光`,`${touched.size} of ${nPts} lights touched`)}
 updateCount();lanternCheck();bodyCheck();
-function setLang(l,save){if(l!=='zh'&&l!=='en')l='en';document.body.classList.remove('zh','en');document.body.classList.add(l);document.documentElement.lang=l==='zh'?'zh-Hans':'en';drawer.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===l));if(save)store.set('forest-lang',l)}
+function setLang(l,save){if(l!=='zh'&&l!=='en')l='en';document.body.classList.remove('zh','en');document.body.classList.add(l);document.documentElement.lang=l==='zh'?'zh-Hans':'en';drawer.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===l));if(save){try{sessionStorage.setItem('forest-lang',l)}catch(e){}}if(window.__pinArgs&&document.getElementById('herepin'))pinHere(...window.__pinArgs)}
 drawer.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(b)setLang(b.dataset.lang,true)});
 /* one language at a time: the visitor's own, unless they chose */
 const nav=(navigator.languages||[navigator.language||'']).join(',').toLowerCase();
-setLang(store.get('forest-lang',null)||'en');  /* 11-21 Wei: English first, everywhere. The site is hard to reach from mainland China, so English is the default; 中文 stays one tap away and is remembered. */
+try{localStorage.removeItem('forest-lang')}catch(e){}
+/* 11-21 Wei: every visit opens in English; a switch to 中文 lasts for this visit only */
+setLang((()=>{try{return sessionStorage.getItem('forest-lang')}catch(e){return null}})()||'en');  /* 11-21 Wei: English first, everywhere. The site is hard to reach from mainland China, so English is the default; 中文 stays one tap away and is remembered. */
 const text=$('#text');
 text.innerHTML=`<h2>林子 · The forest</h2><h3>穴位 · Points</h3><ul>${Object.keys(LIGHT).map(k=>{const p=DATA.pts[k];const ws=(through[k]||[]).map(([id])=>poseById(id)).filter(Boolean);return `<li><a href="${SITE}${p.slug}.html">${esc(p.zh)} ${esc(p.py)} ${esc(p.code)}</a>：${esc(p.find)}${ws.length?`（${ws.map(w=>esc(w.zh)).join('、')}）`:''}</li>`}).join('')}</ul>
  <h3>经络 · Channels</h3>${CHANNELS.map(c=>`<p>${esc(c.zh)} · ${esc(c.en)}：${c.st.map(s=>esc(s.zh)+' '+esc(s.py||'')).join(' → ')}</p>`).join('')}`;
@@ -588,7 +601,7 @@ else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gat
     '.ff .ff-chip:nth-child(2n){animation-delay:-1.6s}.ff .ff-chip:nth-child(3n){animation-delay:-3.1s}'+
     '.ff-chip i{font-style:normal;font-size:12px;color:var(--muted,#5d6b6b);margin-left:6px}'+
     '.ff-stuck .ff-chip{background:rgba(190,90,60,.16)}'+
-    '.ff .ff-chip.on{background:#1f6f6a;color:#fff;animation:none}.ff-chip.on i{color:#fff}'+
+    '.ff .ff-chip.on{background:#1f6f6a;color:#fff;animation:none}.ff-chip.on i{color:#fff}.ff-redo{margin:12px 0 0;display:flex;gap:14px;flex-wrap:wrap}.ff-redo button{background:none;border:0;padding:4px 0;font:inherit;font-size:13px;color:inherit;opacity:.7;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.ff-redo button:hover{opacity:1}'+
     '@keyframes fffloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-1deg)}}'+
     '@media (prefers-reduced-motion:reduce){.ff .ff-chip{animation:none}}'+
     '.ff-say{font-size:13px;color:var(--water,#1f6f6a)}'+
@@ -598,12 +611,13 @@ else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gat
   function css(){if(document.getElementById('ff-css'))return;var s=document.createElement('style');s.id='ff-css';s.textContent=CSS;document.head.appendChild(s)}
   function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  function del(k){try{localStorage.removeItem(k)}catch(e){}}
   // 11-21: a preview (no counter) still shows the whole flow; it just counts nothing
   function tick(id){try{if(window.__flog)window.__flog('tick',{id:id})}catch(x){}if(!API)return Promise.resolve({count:1,preview:true});return fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
   function counts(ids){if(!API)return Promise.resolve({});return fetch(API+'/counts?ids='+ids.join(',')).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){return {}})}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function chips(k,list,cls,c){return '<div class="ff-drift '+cls+'">'+list.map(function(x){var id='leaf-'+k+'-'+x[0],on=get('leaf:'+k+':'+x[0])==='1',n=c[id]||0;
-    return '<button type="button" class="ff-chip'+(on?' on':'')+'" data-c="'+x[0]+'"'+(on?' aria-pressed="true" disabled':'')+'>'+T(esc(x[1]),esc(x[2]),1)+(n?'<i>'+n+'</i>':'')+'</button>'}).join('')+'</div>'}
+    return '<button type="button" class="ff-chip'+(on?' on':'')+'" data-c="'+x[0]+'"'+(on?' aria-pressed="true"':' aria-pressed="false"')+'>'+T(esc(x[1]),esc(x[2]),1)+(n?'<i>'+n+'</i>':'')+'</button>'}).join('')+'</div>'}
   function after(el,k,a){
     var list=a==='yes'?FELT:stuckFor(k),ids=list.concat(a==='yes'?KIND:[]).map(function(x){return 'leaf-'+k+'-'+x[0]});if(a==='yes')ids.push('find-'+k+'-yes');
     counts(ids).then(function(c){
@@ -612,7 +626,7 @@ else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gat
         head='<p class="ff-done">✓ '+(n?T('你和另外 '+n+' 人找到了','Found, with '+n+' others'):T('找到了','Found'))+'</p><p><b>'+T('找到的是','What you found')+'</b></p>'+chips(k,KIND,'ff-kind',c)+'<p><b>'+T('有什么感觉？','What do you feel?')+'</b></p>';
       }else head='<p><b>'+T('卡在哪？','Stuck where?')+'</b></p>';
       var caught=list.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
-      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+(caught?INP(a==='yes'):'');
+      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+(caught?INP(a==='yes'):'')+'<p class="ff-redo"><button type="button" class="ff-change">'+T(a==='yes'?'改成「没找到」':'改成「找到了」',a==='yes'?'Change to: not yet':'Change to: found it',1)+'</button> <button type="button" class="ff-reset">'+T('重新选','Start over',1)+'</button></p>';
     });
   }
   function ask(el,k){
@@ -625,8 +639,17 @@ else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gat
       var b=e.target.closest('button');if(!b||b.disabled)return;
       if(b.hasAttribute('data-a')){var ans=b.getAttribute('data-a');[].forEach.call(el.querySelectorAll('button'),function(x){x.disabled=true});
         tick('find-'+k+'-'+ans).then(function(){put('found:'+k,ans);after(el,k,ans)}).catch(function(){[].forEach.call(el.querySelectorAll('button'),function(x){x.disabled=false})});return}
+      if(b.classList.contains('ff-change')||b.classList.contains('ff-reset')){var prev=get('found:'+k);
+        // counters only go up: an undo is counted as its own event, so the numbers stay honest
+        if(prev)tick('undo-'+k+'-'+prev).catch(function(){});
+        [FELT,KIND,STUCK,STUCK_AT[k]||[]].forEach(function(L){(L||[]).forEach(function(x){del('leaf:'+k+':'+x[0])})});
+        if(b.classList.contains('ff-reset')||!prev){del('found:'+k);ask(el,k);return}
+        var nx=prev==='yes'?'no':'yes';tick('find-'+k+'-'+nx).then(function(){put('found:'+k,nx);after(el,k,nx)}).catch(function(){put('found:'+k,nx);after(el,k,nx)});return}
+      if(b.classList.contains('ff-chip')&&b.classList.contains('on')){var cc=b.getAttribute('data-c');del('leaf:'+k+':'+cc);b.classList.remove('on');b.setAttribute('aria-pressed','false');
+        var ii=b.querySelector('i');if(ii){var nn=Math.max(0,(+ii.textContent||1)-1);if(nn)ii.textContent=nn;else ii.remove()}
+        tick('unleaf-'+k+'-'+cc).catch(function(){});return}
       if(b.classList.contains('ff-chip')){var c=b.getAttribute('data-c');b.disabled=true;
-        tick('leaf-'+k+'-'+c).then(function(x){put('leaf:'+k+':'+c,'1');b.classList.add('on');b.setAttribute('aria-pressed','true');
+        tick('leaf-'+k+'-'+c).then(function(x){put('leaf:'+k+':'+c,'1');b.disabled=false;b.classList.add('on');b.setAttribute('aria-pressed','true');
           var i=b.querySelector('i');if(!i){i=document.createElement('i');b.appendChild(i)}i.textContent=x.count;
           try{el.dispatchEvent(new CustomEvent('ff-caught',{bubbles:true,detail:{k:k,c:c,kind:b.closest('.ff-stuck')?'stuck':'felt'}}))}catch(x){}
           if(c==='where'&&!el.querySelector('.ff-near')){var nb=NEARBY(el,k);if(nb)el.querySelector('.ff-drift').insertAdjacentHTML('afterend',nb)}
