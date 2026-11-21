@@ -67,14 +67,16 @@
     counts(ids).then(function(c){
       var head;
       if(a==='yes'){var n=Math.max(0,(c['find-'+k+'-yes']||1)-1);
-        head='<p class="ff-done">✓ '+(n?T('你和另外 '+n+' 人找到了','Found, with '+n+' others'):T('找到了','Found'))+'</p><p><b>'+T('找到的是','What you found')+'</b></p>'+chips(k,KIND,'ff-kind',c)+'<p><b>'+T('有什么感觉？','What do you feel?')+'</b></p>';
+        var F=el.getAttribute('data-ff-q')==='felt';
+        head='<p class="ff-done">✓ '+(F?(n?T('你和另外 '+n+' 人感觉到了','Felt, with '+n+' others'):T('感觉到了','Felt')):(n?T('你和另外 '+n+' 人找到了','Found, with '+n+' others'):T('找到了','Found')))+'</p><p><b>'+T(F?'感觉到的是':'找到的是',F?'What you felt':'What you found')+'</b></p>'+chips(k,KIND,'ff-kind',c)+'<p><b>'+T('有什么感觉？','What do you feel?')+'</b></p>';
       }else head='<p><b>'+T('卡在哪？','Stuck where?')+'</b></p>';
       var caught=list.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
-      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+INP(a==='yes')+'<p class="ff-redo"><button type="button" class="ff-change">'+T(a==='yes'?'改成「没找到」':'改成「找到了」',a==='yes'?'Change to: not yet':'Change to: found it',1)+'</button> <button type="button" class="ff-reset">'+T('重新选','Start over',1)+'</button></p>';
+      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+INP(a==='yes')+'<p class="ff-redo"><button type="button" class="ff-change">'+(el.getAttribute('data-ff-q')==='felt'?T(a==='yes'?'改成「还没有」':'改成「感觉到了」',a==='yes'?'Change to: not yet':'Change to: felt it',1):T(a==='yes'?'改成「没找到」':'改成「找到了」',a==='yes'?'Change to: not yet':'Change to: found it',1))+'</button> <button type="button" class="ff-reset">'+T('重新选','Start over',1)+'</button></p>';
     });
   }
   function ask(el,k){
-    el.innerHTML='<div class="ff-q"><b>'+T('找到了吗？','Found it?',1)+'</b> <button type="button" data-a="yes">'+T('✓ 找到了','✓ Yes',1)+'</button> <button type="button" data-a="no">'+T('没找到','Not yet',1)+'</button></div>';
+    var F=el.getAttribute('data-ff-q')==='felt';
+    el.innerHTML='<div class="ff-q"><b>'+(F?T('在体式里感觉到了吗？','Felt it in a pose?',1):T('找到了吗？','Found it?',1))+'</b> <button type="button" data-a="yes">'+(F?T('✓ 感觉到了','✓ Yes',1):T('✓ 找到了','✓ Yes',1))+'</button> <button type="button" data-a="no">'+(F?T('还没有','Not yet',1):T('没找到','Not yet',1))+'</button></div>';
   }
   function mount(el){
     if(el.__ff)return;el.__ff=1;var k=el.getAttribute('data-ff');if(!/^[a-z0-9-]{1,40}$/.test(k))return;css();el.classList.add('ff');
