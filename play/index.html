@@ -205,7 +205,8 @@ form[data-mode="point"] .only-cue,form[data-mode="cue"] .only-point{display:none
 .penote{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
 .fadd{width:100%;padding:14px;font-size:17px}
 .fwhy{font-size:14px;color:var(--muted);border-left:2px solid var(--line);padding-left:8px}
-.brandbar{padding:14px 0 4px}.brandbar .brand{display:flex;flex-direction:column;text-decoration:none;color:inherit}.brandbar .brand span{font:400 22px/1.2 var(--display,serif);letter-spacing:.06em}.brandbar .brand small{font:300 italic 13px/1.3 var(--display,serif);color:var(--muted)}.tabs2{margin-top:-6px;opacity:.92}.tabs2 .tab{font-size:14px}.tabsep{align-self:center;font-size:11px;letter-spacing:.14em;color:var(--muted);padding:0 6px 0 10px;white-space:nowrap}.forestframe{display:block;width:100%;height:calc(100vh - 170px);min-height:560px;border:0;border-radius:12px;background:#0b1312}
+.brandbar{padding:14px 0 4px}.brandbar .brand{display:flex;flex-direction:column;text-decoration:none;color:inherit}.brandbar .brand span{font:400 22px/1.2 var(--display,serif);letter-spacing:.06em}.brandbar .brand small{font:300 italic 13px/1.3 var(--display,serif);color:var(--muted)}.tabs2{margin-top:-6px;opacity:.92}.tabs2 .tab{font-size:14px}.tabsep{align-self:center;font-size:11px;letter-spacing:.14em;color:var(--muted);padding:0 6px 0 10px;white-space:nowrap}.ffpill{display:none}body.fullforest .wrap>header,body.fullforest .wrap>.tabs,body.fullforest #status,body.fullforest .wrap>.foot,body.fullforest .forestnote{display:none!important}body.fullforest .forestframe{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;min-height:0;border-radius:0;z-index:20}body.fullforest .ffpill{display:block;position:fixed;z-index:25;top:calc(14px + env(safe-area-inset-top,0px));left:calc(14px + env(safe-area-inset-left,0px));font:500 13px/1 var(--body,sans-serif);letter-spacing:.08em;color:#c9d6cf;background:rgba(11,19,18,.72);border:1px solid rgba(201,214,207,.35);border-radius:999px;padding:9px 14px;cursor:pointer}
+.forestframe{display:block;width:100%;height:calc(100vh - 170px);min-height:560px;border:0;border-radius:12px;background:#0b1312}
 .origpage{margin:14px 0;display:flex;flex-direction:column;gap:8px}.origpage .pg{position:relative;max-width:420px}.origpage img{display:block;width:100%;height:auto;border-radius:6px;filter:sepia(.25)}.origpage .hl{position:absolute;border:2px solid #b94d30;border-radius:4px;box-shadow:0 0 0 9999px rgba(20,16,10,.18);pointer-events:none}.origpage .pg{overflow:hidden;border-radius:6px}</style>
 
 <div class="wrap">
@@ -568,13 +569,25 @@ function fstClueHTML(po,k){const v=P[k],nm=fstName(po),pe=esc(fstEn(po));const C
    On the public site: only a count per pose × place × answer, on the same counter as 「我也感觉到了」 (no names, no IP, no cookies); one count per browser per day for the same answer. */
 const TICKS_API='https://yishen-ticks.weidingpractice.workers.dev';
 let PLAYS=[];
+/* 11-21 Wei：存到的数据越多越好。日志里的林子（forest.html）每一步都发消息过来，这里存进 forestlog。 */
+let FLOG=[];
+addEventListener('message',e=>{const d=e.data;if(!d||!d.__forest||!db)return;const t=new Date(d.at||Date.now());const pad=n=>String(n).padStart(2,'0');
+ const doc={date:t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate()),time:pad(t.getHours())+':'+pad(t.getMinutes())+':'+pad(t.getSeconds()),ts:t.getTime(),ev:String(d.ev||''),view:String(d.view||'')};
+ for(const k of ['id','k','pose','from','chan','code','zh','to'])if(d[k]!=null)doc[k]=String(d[k]);if(Array.isArray(d.chans))doc.chans=d.chans.map(String);
+ try{db.collection('forestlog').doc().set(doc).catch(()=>{})}catch(_){}});
 function forestStatsView(){
  const g={};for(const x of PLAYS){const key=x.poseId+'|'+x.point;(g[key]=g[key]||{pose:x.pose||x.poseId,pt:x.point,yes:0,no:0,unsure:0})[x.answer]=(g[key][x.answer]||0)+1}
  const rows=Object.values(g).sort((a,b)=>(b.yes+b.no+b.unsure)-(a.yes+a.no+a.unsure));
  const ids=[];for(const po of fstPoses().fam.concat(fstPoses().rest))for(const [k] of fstPts(po))for(const a of ['yes','no','unsure'])ids.push(('f-'+po.id+'-'+k+'-'+a).toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,80));
  const chunks=[];for(let i=0;i<ids.length;i+=100)chunks.push(ids.slice(i,i+100));
  const fids=Object.keys(P).flatMap(k=>['find-'+k+'-yes','find-'+k+'-no']);const fch=[];for(let i=0;i<fids.length;i+=100)fch.push(fids.slice(i,i+100));
- return `<section><h2 class="sec">林子统计<span class="en">Forest counts</span></h2>
+ const CHZ=id=>lbl(CHAN_NAMES,id);const PZ=id=>(allPoses().find(p=>p.id===id)||{}).zh||id;
+ const flab=x=>{if(x.ev==='light')return '点了一盏光：'+(P[x.k]?.zh||x.k);if(x.ev==='station')return '看了一站：'+(x.zh||'')+' '+(x.code||'')+' · '+CHZ(x.chan);if(x.ev==='pose')return '走进体式：'+PZ(x.pose);if(x.ev==='linepose')return '整条地感觉：'+PZ(x.pose);if(x.ev==='line')return '感觉到整条线：'+(x.chans||[]).map(CHZ).join('、');if(x.ev==='view')return '转身：'+(x.to==='back'?'背面':'正面');
+  if(x.ev==='tick'){const id=x.id||'';let m=id.match(/^find-(.+)-(yes|no)$/);if(m)return (m[2]==='yes'?'找到了：':'没找到：')+(P[m[1]]?.zh||m[1].replace(/^line-/,'整条线 · '));m=id.match(/^leaf-(.+?)-(kind-point|kind-area|kind-line)$/);if(m)return '找到的是'+{'kind-point':'一个点','kind-area':'一片','kind-line':'一条线'}[m[2]]+'：'+(P[m[1]]?.zh||m[1]);m=id.match(/^leaf-([a-z0-9]+(?:-[a-z0-9]+)*?)-([a-z]+)$/);if(m&&P[m[1]])return '感觉 · '+P[m[1]].zh+'：'+m[2];return '计数：'+id}
+  return x.ev};
+ const fdays=[...new Set(FLOG.map(x=>x.date))];
+ const flogHtml=`<section><h2 class="sec">林子里的每一步<span class="en">Every step in the forest</span></h2><p class="note">日志首页的林子里，点光、看站、转身、找到了、找到的是什么、感觉，每一步都存在这里（数据库 forestlog）。一共 ${FLOG.length} 步，${fdays.length} 天。网站上的访客不在这里，只在计数器里。</p>${FLOG.length?`<div style="overflow-x:auto"><table class="sactbl"><thead><tr><th>日期</th><th>时间</th><th>这一步</th><th>面</th></tr></thead><tbody>${FLOG.slice(0,200).map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.time)}</td><td>${esc(flab(x))}</td><td>${x.view==='back'?'背':'正'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="small">还没有。打开林子走一走，这里就会有。</p>'}</section>`;
+ return flogHtml+`<section><h2 class="sec">林子统计<span class="en">Forest counts</span></h2>
  <p class="note">你自己在日志里玩的每一局都存在这里：一共 ${PLAYS.length} 局，感觉到了 ${PLAYS.filter(x=>x.answer==='yes').length} 次。</p>
  ${rows.length?`<div style="overflow-x:auto"><table class="sactbl"><thead><tr><th>体式</th><th>地方</th><th>感觉到了</th><th>没感觉</th><th>说不清</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.pose)}</td><td>${esc(P[r.pt]?.zh||r.pt)}</td><td>${r.yes}</td><td>${r.no}</td><td>${r.unsure}</td></tr>`).join('')}</tbody></table></div>`:'<p class="small">还没有。</p>'}
  <h3 style="margin:18px 0 6px">网站上的访客</h3><p class="small">访客的回答只记次数，存在「我也感觉到了」同一个计数器里。这一页不能直接读它；点下面的链接，在浏览器里打开就能看到每一格的次数（编号是「f-体式-地方-回答」）。</p>
@@ -1824,7 +1837,10 @@ function drawTrail(){
  main.prepend(nav)}
 function setTabs(v){document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.go===v))}
 function render(){renderInner();drawTrail();nmInit()}
+let FOREST_FRAMED=false;
+addEventListener('click',e=>{if(e.target.closest('[data-ffpill]')){FOREST_FRAMED=true;document.body.classList.remove('fullforest')}else if(e.target.closest('[data-fffull]')){FOREST_FRAMED=false;document.body.classList.add('fullforest')}});
 function renderInner(){
+ if(location.hash!=='#forest')document.body.classList.remove('fullforest');
  if(dayFlush){try{dayFlush()}catch(e){}dayFlush=null;dayDirty=false}
  const h=location.hash.slice(1);
  if(PUBLIC&&/^(edit-|add|log$|scripts$|script-|austin$|leaves$|sacrum$|posedata$|bridges$)/.test(h)){setTabs(h.startsWith('add')?'add':h.startsWith('script')?'scripts':h.startsWith('edit')?'log':h);main.innerHTML=`<section style="padding:40px 0">${BUILDING}</section>`;return}
@@ -1854,7 +1870,7 @@ function renderInner(){
  if(h==='posedata'){setTabs('');main.innerHTML=poseDataView();return}
  if(h==='bridges'){setTabs('');main.innerHTML=bridgesView();return}
  if(h==='forest-stats'&&!PUBLIC){setTabs('forest');main.innerHTML=forestStatsView();return}
- if(h==='forest'){setTabs('forest');main.innerHTML=`<iframe class="forestframe" src="${PUBLIC?'../':'forest.html'}" title="林子 · The Forest"></iframe>${PUBLIC?'':`<p class="small" style="margin-top:8px">和网站首页是同一片林子。内部：<a href="#forest-stats">林子统计</a> · <a href="#bridges">桥表</a> · <a href="#play">两个人，一片林子</a></p>`}`;return}
+ if(h==='forest'){setTabs('forest');document.body.classList.toggle('fullforest',!FOREST_FRAMED);main.innerHTML=`<iframe class="forestframe" src="${PUBLIC?'../':'forest.html'}" title="林子 · The Forest"></iframe><button type="button" class="ffpill" data-ffpill>≡ 目录 · Menu</button>${PUBLIC?'':`<p class="small forestnote" style="margin-top:8px"><button type="button" class="linkbtn" data-fffull>⤢ 整屏 · Full screen</button> · 和网站首页是同一片林子。在林子里点的每一步都存进日志，见林子统计。内部：<a href="#forest-stats">林子统计</a> · <a href="#bridges">桥表</a> · <a href="#play">两个人，一片林子</a></p>`}`;return}
  if(h==='play'){setTabs('play');main.innerHTML=`<div style="display:flex;flex-direction:column;gap:30px">${forestView()}</div>`;return}
  if(h.startsWith('names-')){setTabs('');main.innerHTML=namesView();const el=document.getElementById('n-'+h.slice(6));if(el)requestAnimationFrame(()=>el.scrollIntoView({block:'start'}));return}
  const v=h==='by-body'?'by-body':'';setTabs(v);
@@ -1970,6 +1986,7 @@ render();
  db.collection('yin').onSnapshot(snap=>{YIN_DB={};snap.docs.forEach(d=>{YIN_DB[d.id]=d.data()});buildYin();if(!document.getElementById('yinf')&&document.getElementById('yindet')){const o=document.getElementById('yindet').open;render();const n=document.getElementById('yindet');if(n)n.open=o}},()=>{});
  db.collection('textedits').onSnapshot(snap=>{TEXT_EDITS={};snap.docs.forEach(d=>{const x=d.data();delete x.updatedAt;TEXT_EDITS[d.id]=x});applyTextEdits();if(!document.getElementById('textedit')&&!/^#(add|edit)/.test(location.hash))render()},()=>{});
  db.collection('plays').onSnapshot(snap=>{PLAYS=snap.docs.map(d=>d.data());if(location.hash==='#forest-stats')render()},()=>{});
+ db.collection('forestlog').onSnapshot(snap=>{FLOG=snap.docs.map(d=>d.data()).sort((a,b)=>(b.ts||0)-(a.ts||0));if(location.hash==='#forest-stats')render()},()=>{});
  db.collection('poseedits').onSnapshot(snap=>{POSE_EDITS={};snap.docs.forEach(d=>{POSE_EDITS[d.id]=d.data()});applyPoseEdits();if(/^#pose-/.test(location.hash)&&!document.getElementById('poseedit'))render()},()=>{});
  db.collection('poses').onSnapshot(snap=>{POSE_DB={};snap.docs.forEach(d=>{POSE_DB[d.id]=d.data()});buildPoseDim();if(!(document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.pd)&&!/^#(add|edit)/.test(location.hash))render()},()=>{});
  db.collection('austin').onSnapshot(snap=>{AUS_DB={};snap.docs.forEach(d=>{AUS_DB[d.id]=d.data()});buildAustin();if(location.hash==='#austin'&&!document.getElementById('ausf'))render()},()=>{});
