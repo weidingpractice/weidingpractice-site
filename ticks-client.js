@@ -56,7 +56,7 @@
   function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
   // 11-21: a preview (no counter) still shows the whole flow; it just counts nothing
-  function tick(id){if(!API)return Promise.resolve({count:1,preview:true});return fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
+  function tick(id){try{if(window.__flog)window.__flog('tick',{id:id})}catch(x){}if(!API)return Promise.resolve({count:1,preview:true});return fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
   function counts(ids){if(!API)return Promise.resolve({});return fetch(API+'/counts?ids='+ids.join(',')).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){return {}})}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function chips(k,list,cls,c){return '<div class="ff-drift '+cls+'">'+list.map(function(x){var id='leaf-'+k+'-'+x[0],on=get('leaf:'+k+':'+x[0])==='1',n=c[id]||0;

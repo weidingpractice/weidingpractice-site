@@ -227,7 +227,10 @@ window.__NEAR={"yintang": [], "fengfu": [{"k": "dazhui", "zh": "大椎", "py": "
 const SITE=window.__SITE??'';
 /* on the real site the same counters as the point pages: only counts, no names, no cookies */
 const TICKS=window.__TICKS||'';
-function tick(id){if(!TICKS)return;try{fetch(TICKS+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}).catch(()=>{})}catch(e){}}
+/* 11-21 inside Practice Notes the forest tells the log what happened (the page that holds it saves it); on the public site nobody listens */
+function flog(ev,o){try{if(window.parent&&window.parent!==window)window.parent.postMessage(Object.assign({__forest:1,ev,at:Date.now(),view:typeof VIEW!=='undefined'?VIEW:''},o||{}),'*')}catch(e){}}
+window.__flog=flog;
+function tick(id){flog('tick',{id});if(!TICKS)return;try{fetch(TICKS+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}).catch(()=>{})}catch(e){}}
 const $=s=>document.querySelector(s);const NS='http://www.w3.org/2000/svg';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -328,7 +331,7 @@ function drawWhole(id,flash){const X=CH[id];if(!X)return;
  for(const [ln,P,sd] of X.paths){ln.setAttribute('d',chanDS(P,X.c,sd));if(!ln.getAttribute('d'))continue;ln.classList.add('on');
   if(flash&&!reduce){const L=ln.getTotalLength();ln.style.strokeDasharray=L;ln.style.strokeDashoffset=L;ln.getBoundingClientRect();ln.style.transition='stroke-dashoffset 5.5s ease-in-out,opacity 2.4s';ln.style.strokeDashoffset=0;setTimeout(()=>{ln.style.strokeDasharray='';ln.style.strokeDashoffset='';ln.style.transition=''},5800)}}
  [...X.stones,...X.mstones].forEach(g=>g&&g.classList.add('known'))}
-function feelLine(ids){let fresh=false;ids.forEach(id=>{if(!feltLines.has(id)){feltLines.add(id);fresh=true;drawWhole(id,true)}});if(fresh)store.set('forest-lines',[...feltLines])}
+function feelLine(ids){flog('line',{chans:ids});let fresh=false;ids.forEach(id=>{if(!feltLines.has(id)){feltLines.add(id);fresh=true;drawWhole(id,true)}});if(fresh)store.set('forest-lines',[...feltLines])}
 /* a channel nobody can walk yet (none of its stations is a light) shows its whole course while you look at one of its stations */
 const unwalked=id=>CH[id].c.st.filter(s=>s.key&&LIGHT[s.key]).length<2;  /* 11-21: with fewer than two lights the line could never appear, so show the way */
 function peek(id){unpeek();const X=CH[id];if(!X)return;document.body.classList.add('peeking');
@@ -429,11 +432,11 @@ card.querySelector('.x').onclick=closeCard;
 card.addEventListener('ff-caught',e=>{const d=e.detail||{};if(d.c==='where'&&window.FF_NEAR)window.FF_NEAR(d.k).forEach(x=>star(x.k,'nearstar'));if(d.kind==='felt'&&d.c!=='none'&&LIGHT[d.k])felt(d.k,true)});
 
 /* 11-21 Wei: turn around. The forest shows the front or the back of the body; tapping a light on the other side turns you round. */
-function setView(v,anim){if(v!=='back')v='front';if(v===VIEW&&document.body.classList.contains('view-'+v))return;
+function setView(v,anim){if(v!==VIEW)flog('view',{to:v});if(v!=='back')v='front';if(v===VIEW&&document.body.classList.contains('view-'+v))return;
  const apply=()=>{VIEW=v;document.body.classList.toggle('view-back',v==='back');document.body.classList.toggle('view-front',v==='front');store.set('forest-view',v);
   const t=$('#turn');if(t)t.setAttribute('aria-pressed',v==='back')};
  const m=$('#map');if(anim&&!reduce){m.style.transition='opacity 2.4s ease,transform .6s ease,scale .28s ease-in';m.style.scale='0 1';setTimeout(()=>{apply();m.style.transition='opacity 2.4s ease,transform .6s ease,scale .32s ease-out';m.style.scale='1 1'},290)}else apply()}
-function touchPoint(k,after){if(sideOf(k)!==VIEW)setView(sideOf(k),true);{const r_=ROUTING;setTimeout(()=>stepTo('pt-'+k,r_),0)}clearLit();document.querySelectorAll('.light.invite').forEach(x=>x.classList.remove('invite'));const p=DATA.pts[k],L=LIGHT[k];L.g.classList.add('on');setTimeout(()=>{star(k);NEAR.forEach(g=>{if(g.dataset.pt)star(g.dataset.pt,'nearstar')})},0);
+function touchPoint(k,after){flog('light',{k});if(sideOf(k)!==VIEW)setView(sideOf(k),true);{const r_=ROUTING;setTimeout(()=>stepTo('pt-'+k,r_),0)}clearLit();document.querySelectorAll('.light.invite').forEach(x=>x.classList.remove('invite'));const p=DATA.pts[k],L=LIGHT[k];L.g.classList.add('on');setTimeout(()=>{star(k);NEAR.forEach(g=>{if(g.dataset.pt)star(g.dataset.pt,'nearstar')})},0);
  const fresh=!touched.has(k);if(fresh){touched.add(k);store.set('forest-touched',[...touched]);L.g.classList.add('touched');L.halo.setAttribute('fill','url(#haloWarm)');bodyCheck();lanternCheck();updateCount()}
  const co=chanOf(k);let reveal='';
  if(co){const [id,i]=co;const had=CH[id].line.classList.contains('on');const span=chanSpan(id);
@@ -449,7 +452,7 @@ function touchPoint(k,after){if(sideOf(k)!==VIEW)setView(sideOf(k),true);{const 
   <div class="row end"><a class="go" href="${SITE}${p.slug}.html">${bi('走近','Go closer')} →</a><button class="lg" type="button" data-swap aria-label="换语言 · Switch language"><span class="z">EN</span><span class="e">中文</span></button></div>`,L.y)}
 
 /* 11-21 A practice whose answer is a whole channel, not a point. */
-function linePose(id){const po=poseById(id);if(!po)return;clearLit();unpeek();const ls=(po.lines||[]).map(([x])=>x).filter(x=>CH[x]);
+function linePose(id){flog('linepose',{pose:id});const po=poseById(id);if(!po)return;clearLit();unpeek();const ls=(po.lines||[]).map(([x])=>x).filter(x=>CH[x]);
  ls.forEach(x=>{const X=CH[x];X.paths.forEach(([ln,P,sd])=>{ln.setAttribute('d',chanDS(P,X.c,sd));if(ln.getAttribute('d'))ln.classList.add('peek')});document.body.classList.add('peeking')});
  const names=ls.map(x=>CH[x].c);
  openCard(`<h2 id="card-h">${bi(po.zh,po.en)}</h2>
@@ -460,7 +463,7 @@ function linePose(id){const po=poseById(id);if(!po)return;clearLit();unpeek();co
  const ffEl=body.querySelector('[data-ff]');if(ffEl){if(window.FoundFlow)FoundFlow.mount(ffEl);try{if(localStorage.getItem('found:line-'+po.id)==='yes')feelLine(ls)}catch(e){}
   ffEl.addEventListener('click',ev=>{const b=ev.target.closest('[data-a="yes"]');if(b)setTimeout(()=>feelLine(ls),400)})}}
 /* A pose is a door to the mat. It remembers which light you came from and points only there. */
-function lightPose(id,from){{const r_=ROUTING;setTimeout(()=>stepTo('pose-'+id+(from?'-'+from:''),r_),0)}clearLit();const po=poseById(id);if(!po)return;
+function lightPose(id,from){flog('pose',{pose:id,from:from||''});{const r_=ROUTING;setTimeout(()=>stepTo('pose-'+id+(from?'-'+from:''),r_),0)}clearLit();const po=poseById(id);if(!po)return;
  const ks=po.pts.map(([k])=>k).filter(k=>LIGHT[k]);const k=from&&ks.includes(from)?from:(po.pts.find(([x,s])=>s==='felt'&&LIGHT[x])||[ks[0]])[0];
  const v=DATA.pts[k];document.body.classList.add('focus');LIGHT[k].g.classList.add('go');star(k);ks.filter(x=>x!==k).forEach(x=>star(x,'nearstar'));
  openCard(`<h2 id="card-h">${bi(po.zh,po.en)}</h2>
@@ -487,7 +490,7 @@ function stoneCard(g){if(g.dataset.side&&g.dataset.side!==VIEW)setView(g.dataset
  else h=`<h2 id="card-h" style="font-size:22px">这条路还在修</h2><p class="sub"><i class="e">This path is still being built</i></p>`;
  openCard(h,sy);if(g.dataset.chan){if(unwalked(g.dataset.chan))peek(g.dataset.chan);document.querySelectorAll(`#lights [data-chan="${g.dataset.chan}"][data-i="${g.dataset.i}"]`).forEach(x=>{x.classList.add('here');x.style.setProperty('--cc',CH[g.dataset.chan].c.color)})}}
 /* 11-21: a station of a channel still being built: where the standard puts it, the line of the classic it sits on, and our plain words */
-function seeStation(c,s,i){const sg=c.segs[String(s.seg)]||['','',''];
+function seeStation(c,s,i){flog('station',{chan:c.id,code:s.code,zh:s.zh});const sg=c.segs[String(s.seg)]||['','',''];
  return `<h2 id="card-h">${esc(s.zh)}</h2><p class="sub">${esc(s.py||'')} · ${esc(s.code)}${s.back?' · '+bi('在背面','on the back'):''}</p><p class="chanlab">${bi(`${c.zh} · 第 ${i+1} 站，共 ${c.st.length} 站`,`${c.en} · station ${i+1} of ${c.st.length}`)}</p>
  <p class="find">${esc(s.loc)}<span class="sub" style="display:block;font-size:13px;margin-top:4px">${esc('GB/T 12346-2021 '+s.clause)}</span></p>
  <div class="orig"><p class="lab">${bi('原文','The classic')}</p>${sg[0]?`<p class="cl">「${esc(sg[0])}」</p>${bi(sg[1],sg[2])}`:`<p class="sub">${bi(c.noseg?c.noseg[0]:'原文没有写到这一段。',c.noseg?c.noseg[1]:'The classic does not describe this stretch.')}</p>`}
@@ -596,7 +599,7 @@ else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gat
   function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
   // 11-21: a preview (no counter) still shows the whole flow; it just counts nothing
-  function tick(id){if(!API)return Promise.resolve({count:1,preview:true});return fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
+  function tick(id){try{if(window.__flog)window.__flog('tick',{id:id})}catch(x){}if(!API)return Promise.resolve({count:1,preview:true});return fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
   function counts(ids){if(!API)return Promise.resolve({});return fetch(API+'/counts?ids='+ids.join(',')).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){return {}})}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function chips(k,list,cls,c){return '<div class="ff-drift '+cls+'">'+list.map(function(x){var id='leaf-'+k+'-'+x[0],on=get('leaf:'+k+':'+x[0])==='1',n=c[id]||0;
