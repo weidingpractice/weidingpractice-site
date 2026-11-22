@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>林子 · The Forest · 以身观身</title><meta name="description" content="林子：选一个体式，选哪里有感觉，林子给一条线索。The Forest: pick a pose, pick where you feel it, and the forest gives you a clue."><link rel="canonical" href="https://weidingpractice.com/play/"><style>@font-face{font-family:"Spectral";font-style:normal;font-weight:300;font-display:swap;src:url(/fonts/spectral-300.woff2) format("woff2")}@font-face{font-family:"Spectral";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/spectral-400.woff2) format("woff2")}@font-face{font-family:"Spectral";font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/spectral-600.woff2) format("woff2")}@font-face{font-family:"Spectral";font-style:italic;font-weight:300;font-display:swap;src:url(/fonts/spectral-300-italic.woff2) format("woff2")}@font-face{font-family:"Spectral";font-style:italic;font-weight:400;font-display:swap;src:url(/fonts/spectral-400-italic.woff2) format("woff2")}@font-face{font-family:"Inter";font-style:normal;font-weight:400 600;font-display:swap;src:url(/fonts/inter-var.woff2) format("woff2")}@font-face{font-family:"Yishen Serif SC";font-style:normal;font-weight:300 700;font-display:swap;src:url(/fonts/yishen-serif-sc-600.woff) format("woff");unicode-range:U+3000-303F,U+3400-9FFF,U+F900-FAFF,U+FF00-FFEF,U+2014,U+2026,U+201C-201D,U+2018-2019}</style><style>[hidden]{display:none!important}body{margin:0}</style><script>window.__PUBLIC=true;if(!location.hash)history.replaceState(null,"","#play")</script></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>@font-face{font-family:"Spectral";font-style:normal;font-weight:300;font-display:swap;src:url(/fonts/spectral-300.woff2) format("woff2")}@font-face{font-family:"Spectral";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/spectral-400.woff2) format("woff2")}@font-face{font-family:"Spectral";font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/spectral-600.woff2) format("woff2")}@font-face{font-family:"Spectral";font-style:italic;font-weight:300;font-display:swap;src:url(/fonts/spectral-300-italic.woff2) format("woff2")}@font-face{font-family:"Spectral";font-style:italic;font-weight:400;font-display:swap;src:url(/fonts/spectral-400-italic.woff2) format("woff2")}@font-face{font-family:"Inter";font-style:normal;font-weight:400 600;font-display:swap;src:url(/fonts/inter-var.woff2) format("woff2")}@font-face{font-family:"Yishen Serif SC";font-style:normal;font-weight:300 700;font-display:swap;src:url(/fonts/yishen-serif-sc-600.woff) format("woff");unicode-range:U+3000-303F,U+3400-9FFF,U+F900-FAFF,U+FF00-FFEF,U+2014,U+2026,U+201C-201D,U+2018-2019}</style>
-<style>
+<style>.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;border:0;border-radius:999px;padding:12px 18px;background:#b5462f;color:#fff;font:inherit;font-size:15px;box-shadow:0 6px 18px rgba(0,0,0,.25);display:flex;gap:6px;align-items:baseline;cursor:pointer}.fab small{font-size:12px;opacity:.85}
 @font-face{font-family:"Yishen Serif SC";font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/yishen-serif-sc-600.woff) format("woff");unicode-range:U+3000-303F,U+3400-9FFF,U+F900-FAFF,U+FF00-FFEF,U+2014,U+2026,U+201C-201D,U+2018-2019}
 /* Layout: one narrow reading column, like a kept practice notebook. A pose opens one page holding every point, channel, classical source and log entry for it. */
 :root{
@@ -1917,8 +1917,9 @@ function wireForm(){
    dict.start().catch(e=>{if(e&&e.code==='not_granted'){mic.hidden=true}});};
  }
 }
-document.querySelector('.tabs').addEventListener('click',e=>{const t=e.target.closest('.tab');if(!t)return;
- navReset=true;if(t.dataset.go){location.hash=t.dataset.go}else{history.replaceState(null,'',location.pathname+location.search);navTrack();render()}});
+/* 11-22: both rows of tabs (the second row was dead after the nav split into two rows) */
+document.querySelectorAll('.tabs').forEach(tb=>tb.addEventListener('click',e=>{const t=e.target.closest('.tab');if(!t)return;
+ navReset=true;if(t.dataset.go){location.hash=t.dataset.go}else{history.replaceState(null,'',location.pathname+location.search);navTrack();render()}}));
 main.addEventListener('click',async e=>{
  if(e.target.closest('[data-sib]')){navSib=true}
  const ld=e.target.closest('[data-leafdel]');if(ld&&db){const id=ld.dataset.leafdel;if(pendingDel!==id){pendingDel=id;render();return}pendingDel=null;try{await db.collection('leaves').doc(id).delete()}catch(err){}render();return}
@@ -1966,6 +1967,9 @@ document.getElementById('filepick').addEventListener('change',async ev=>{
  }catch(e){busy=`${k}|${slot}|没有上传成功，请再试一次。`}
  render();
 });
+/* 11-22 Wei: 记一条 is the thing done most, so it is always one tap away (log only) */
+if(!PUBLIC){const fab=document.createElement('button');fab.type='button';fab.className='fab';fab.innerHTML='＋ 记一条<small>Log</small>';fab.addEventListener('click',()=>{location.hash='add'});document.body.appendChild(fab);
+ const fabSync=()=>{fab.hidden=/^#add/.test(location.hash)};fabSync();addEventListener('hashchange',fabSync)}
 addEventListener('hashchange',()=>{pendingDel=null;busy='';exportMsg='';navTrack();render();window.scrollTo(0,0)});
 render();
 
