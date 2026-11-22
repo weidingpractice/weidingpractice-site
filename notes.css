@@ -1,4 +1,4 @@
-@font-face{font-family:"Yishen Serif SC";font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/yishen-serif-sc-600.woff) format("woff");unicode-range:U+3000-303F,U+3400-9FFF,U+F900-FAFF,U+FF00-FFEF,U+2014,U+2026,U+201C-201D,U+2018-2019}.appv{
+.appv .fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;border:0;border-radius:999px;padding:12px 18px;background:#b5462f;color:#fff;font:inherit;font-size:15px;box-shadow:0 6px 18px rgba(0,0,0,.25);display:flex;gap:6px;align-items:baseline;cursor:pointer}.appv .fab small{font-size:12px;opacity:.85}@font-face{font-family:"Yishen Serif SC";font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/yishen-serif-sc-600.woff) format("woff");unicode-range:U+3000-303F,U+3400-9FFF,U+F900-FAFF,U+FF00-FFEF,U+2014,U+2026,U+201C-201D,U+2018-2019}.appv{
   --bg:#f5f6f3; --surface:#ffffff; --ink:#1c2a2c; --muted:#5d6b6b; --line:#dfe3df;
   --water:#1f6f6a; --water-soft:#e3efed; --seal:#b0452e; --seal-soft:#f6e6e1; --paper:#f1f0ea;
   --display:"Spectral","Yishen Serif SC","Songti SC","STSong","Noto Serif CJK SC",serif;
