@@ -185,6 +185,24 @@ body.flicker #lights .light .halo{animation:flicker 1.6s ease-in-out 1}
 @keyframes flicker{0%{opacity:.45}15%{opacity:1}30%{opacity:.15}50%{opacity:1}70%{opacity:.25}100%{opacity:.6}}
 @keyframes chanshine{0%,100%{opacity:.75}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){#lights .light.star .halo,#lights .light.star .rays,#lights .light.nearstar .halo,#lights .light.nearstar .rays,.chan.shine{animation:none}}
+
+/* 11-22 宝藏图 · Treasure map */
+body.treasure #lights>g:not(#xmarks):not(.coinpop){opacity:.22!important;pointer-events:none}body.treasure #lights .light{animation:none!important}body.treasure #lights .light .halo{display:none}body.treasure #chans,body.treasure #lanterns{opacity:.25;pointer-events:none}body.treasure #turn{display:none!important}
+#xmarks .xmark{outline:none}#xmarks .xmark:focus-visible .xglow{opacity:.5}
+#xmarks .xx{stroke:#d4a35f;stroke-width:2.4;stroke-linecap:round;fill:none}
+#xmarks .xglow{fill:#d4a35f;opacity:.12}
+#xmarks .xmark:not(.dug) .xglow{animation:xg 2.6s ease-in-out infinite}
+@keyframes xg{0%,100%{opacity:.08}50%{opacity:.28}}
+#xmarks .dug .xx{stroke:#8a6a3a}#xmarks .dug .xglow{opacity:.05}
+.coinpop .cf{fill:#d4a35f;stroke:#8a5a1f;stroke-width:2}.coinpop .ch{fill:var(--night,#0b1312);stroke:#8a5a1f;stroke-width:1.5}
+.coinpop{animation:cpop .8s cubic-bezier(.2,.9,.3,1) forwards;transform-box:fill-box}
+@keyframes cpop{0%{opacity:1;translate:0 0}45%{opacity:1;translate:0 -90px}100%{opacity:0;translate:0 -60px}}
+#pouch{display:none;position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:max(16px,env(safe-area-inset-left,0px));z-index:6;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;border:1px solid rgba(212,163,95,.5);background:rgba(11,19,18,.72);color:#f3e6cf;font:500 14px/1 var(--body);letter-spacing:.04em}
+body.treasure #pouch{display:flex}
+#pouch .pc{width:14px;height:14px;border-radius:50%;background:#d4a35f;position:relative}#pouch .pc::after{content:"";position:absolute;left:4.5px;top:4.5px;width:5px;height:5px;background:#0b1312}
+#card .coinline{font-family:var(--display);font-size:19px;line-height:1.6;color:var(--ink);margin:12px 0 6px}
+#card .coinchip{border-color:rgba(212,163,95,.55);color:#f3e6cf}#card .coinchip.unk{opacity:.45}
+#card .pset{margin:10px 0}
 </style>
 <canvas id="woods" aria-hidden="true"></canvas>
 <svg id="map" viewBox="200 70 600 1580" preserveAspectRatio="xMidYMid meet" role="group" aria-label="林子 · The forest">
@@ -202,6 +220,9 @@ body.flicker #lights .light .halo{animation:flicker 1.6s ease-in-out 1}
  <p class="count" id="count"></p>
  <h3><span class="z">语言</span><span class="e">Language</span></h3>
  <div class="lang" role="group" aria-label="语言 · Language"><button type="button" data-lang="zh" aria-pressed="false">中文</button><button type="button" data-lang="en" aria-pressed="false">English</button></div>
+ <h3><span class="z">两个游戏</span><span class="e">Two games</span></h3>
+ <a href="index.html">林子<span class="e">The forest</span></a>
+ <a href="treasure.html">宝藏图<span class="e">Treasure map</span></a>
  <h3><span class="z">更深</span><span class="e">Deeper</span></h3>
  <a href="sources.html">原文<span class="e">Sources</span></a>
  <a href="checks.html">核查<span class="e">Source checks</span></a>
@@ -518,7 +539,7 @@ function lantern(){if(!J)return;clearLit();openCard(`<p class="sub">手记 · <s
 /* ---------- input ---------- */
 /* fingers are wide: a tap goes to the nearest light, never to nothing. Lights win over stones when close. */
 const REACH=46;
-function targets(){return [...document.querySelectorAll('#lights [data-pt],#lights [data-stone],#lanterns .lantern.on')]}
+function targets(){return [...document.querySelectorAll(TREASURE?'#xmarks [data-coin]':'#lights [data-pt],#lights [data-stone],#lanterns .lantern.on')]}
 function pickAt(x,y){const out=[];for(const g of targets()){const r=g.getBoundingClientRect();if(!r.width)continue;
   const ar=g.dataset.pt&&DATA.pts[g.dataset.pt]&&DATA.pts[g.dataset.pt].shape==='area';const d=Math.hypot(r.left+r.width/2-x,r.top+r.height/2-y)+(g.dataset.stone?8:0)-(ar?14:0);if(d<=REACH+(ar?16:0))out.push([d,g])}
  return out.sort((a,b)=>a[0]-b[0]).map(a=>a[1])}
@@ -526,10 +547,10 @@ let NEAR=[];
 $('#map').addEventListener('click',e=>{if(e.detail===0)return;const hits=pickAt(e.clientX,e.clientY);if(!hits.length){if(card.classList.contains('on'))closeCard();return}
  const g=hits[0];const seen=new Set();NEAR=hits.slice(1).filter(h=>{const id=h.dataset.pt||h.dataset.stone;if(!id||id===(g.dataset.pt||g.dataset.stone)||seen.has(id))return false;seen.add(id);return true}).slice(0,3);
  activate(g)});
-function activate(g){if(g.dataset.pt)touchPoint(g.dataset.pt);else if(g.dataset.stone)stoneCard(g);else lantern()}
+function activate(g){if(g.dataset.coin){dig(g.dataset.coin);return}if(g.dataset.pt)touchPoint(g.dataset.pt);else if(g.dataset.stone)stoneCard(g);else lantern()}
 /* keyboard and screen readers still use the element itself */
-$('#map').addEventListener('click',e=>{if(e.detail!==0)return;const g=e.target.closest('[data-pt],[data-stone],.lantern');if(g){NEAR=[];activate(g)}});
-$('#map').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const g=e.target.closest('[data-pt],[data-stone],.lantern');if(!g)return;e.preventDefault();NEAR=[];activate(g)});
+$('#map').addEventListener('click',e=>{if(e.detail!==0)return;const g=e.target.closest('[data-coin],[data-pt],[data-stone],.lantern');if(g){NEAR=[];activate(g)}});
+$('#map').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const g=e.target.closest('[data-coin],[data-pt],[data-stone],.lantern');if(!g)return;e.preventDefault();NEAR=[];activate(g)});
 card.addEventListener('click',e=>{if(e.target.closest('[data-navback]')){history.back();return}{const ng=e.target.closest('[data-navgo]');if(ng){history.go(-(+ng.dataset.navgo));return}if(e.target.closest('[data-navhome]')){closeCard();return}}const mo=e.target.closest('[data-more]');if(mo){mo.parentNode.querySelectorAll('[hidden]').forEach(x=>x.hidden=false);mo.remove();return}if(e.target.closest('[data-swap]')){setLang(document.body.classList.contains('zh')?'en':'zh',true);return}
  const sp=e.target.closest('[data-stonepick]');if(sp){const g=document.querySelector(`[data-stone="${sp.dataset.stonepick}"]`);if(g)stoneCard(g);return}const fd=e.target.closest('[data-found]');if(fd){const fk=fd.dataset.found,fa=fd.dataset.a;let before=null;try{before=localStorage.getItem('found:'+fk)}catch(x){}if(!before){tick('find-'+fk+'-'+fa);try{localStorage.setItem('found:'+fk,fa)}catch(x){}}FOUND[fk]=fa;store.set('forest-found-pt',FOUND);const row=fd.closest('.fq');row.outerHTML=foundRow(fd.dataset.found,true);return}
  const m=e.target.closest('[data-mat],[data-back]');if(m){if(m.dataset.mat)mat(m.dataset.mat,m.dataset.at);else{const k=m.dataset.back;if(m.dataset.ok)felt(k);touchPoint(k,m.dataset.ok?'yes':'not')}return}
@@ -577,6 +598,53 @@ window.__entryGo=leave;
 let seen=false;try{seen=sessionStorage.getItem('forest-entered')==='1'}catch(e){}
 if(!entry||seen){if(entry)entry.remove();arrive()}
 else{const gate=document.getElementById('gate');new MutationObserver(()=>{if(gate.classList.contains('on'))setTimeout(leave,600)}).observe(gate,{attributes:true,attributeFilter:['class']})}
+/* 11-22 宝藏图 · Treasure map: the second game. Same body, same data, same cards; instead of lights, a few ✕ where a coin is buried.
+   Tap → a coin jumps, a bell rings, one sentence with its source. Coins found stay in this browser; each first find is counted, nothing else. */
+const TREASURE=!!window.__TREASURE;
+const COINS=window.__COINS||[];const COIN=Object.fromEntries(COINS.map(c=>[c.id,c]));
+const DUG=new Set(store.get('tr-dug',[]));
+/* The bell. iPhone plays an <audio> element more reliably than Web Audio inside nested frames, so the chime is made once as a small WAV in memory. */
+let BELL=null;
+function bellURL(){if(window.__BELL)return window.__BELL;if(BELL)return BELL;const sr=22050,n=Math.floor(sr*1.5),d=new DataView(new ArrayBuffer(44+n*2));
+ const w=(o,t)=>{for(let i=0;i<t.length;i++)d.setUint8(o+i,t.charCodeAt(i))};w(0,'RIFF');d.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');d.setUint32(16,16,true);d.setUint16(20,1,true);d.setUint16(22,1,true);d.setUint32(24,sr,true);d.setUint32(28,sr*2,true);d.setUint16(32,2,true);d.setUint16(34,16,true);w(36,'data');d.setUint32(40,n*2,true);
+ const P=[[1046.5,.55,1.3],[2093,.18,.8],[2793,.09,.5],[3520,.04,.3]];
+ for(let i=0;i<n;i++){const t=i/sr;let v=0;for(const [f,a,dk] of P)v+=a*Math.sin(2*Math.PI*f*t)*Math.exp(-t/(dk/4));v*=Math.min(1,t/.004);d.setInt16(44+i*2,Math.max(-1,Math.min(1,v*.7))*32767,true)}
+ BELL=URL.createObjectURL(new Blob([d],{type:'audio/wav'}));return BELL}
+let AUD=null;
+function ding(){if(store.get('tr-mute',false))return;
+ try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+ try{AUD=AUD||new Audio(bellURL());AUD.currentTime=0;AUD.volume=1;const p=AUD.play();if(p)p.catch(()=>{})}catch(e){}}
+function unlockAudio(){try{AUD=AUD||new Audio(bellURL());if(!AUD.__ok){AUD.muted=true;const p=AUD.play();if(p)p.then(()=>{AUD.pause();AUD.currentTime=0;AUD.muted=false;AUD.__ok=1}).catch(()=>{AUD.muted=false})}}catch(e){}}
+function coinShape(x,y,cls,p){const g=el('g',{class:cls,transform:`translate(${x},${y})`},p);el('circle',{r:15,class:'cf'},g);el('rect',{x:-4.5,y:-4.5,width:9,height:9,class:'ch'},g);return g}
+function coinXY(c){const g=document.querySelector(`#xmarks [data-coin="${c.id}"]`);if(g){const m=g.getAttribute('transform').match(/translate\(([-\d.]+)[ ,]+([-\d.]+)\)/);return [+m[1],+m[2]]}
+ return c.after&&COIN[c.after]?coinXY(COIN[c.after]):[500,500]}
+function pouch(){const b=$('#pouch');if(b)b.querySelector('b').textContent=[...DUG].filter(k=>COIN[k]).length+' / '+COINS.length}
+function coinCard(c){const L=MAPN(c.map),kids=COINS.filter(k=>k.after===c.id),o=c.page;
+ return `<p class="chanlab">${bi('宝藏 · '+c.set[0],'Treasure · '+c.set[1])}</p><h2 id="card-h">${bi(c.word[0],c.word[1])}</h2><p class="sub">${bi(L[0],L[1])}</p>
+ <p class="coinline">${bi(c.s[0],c.s[1])}</p><p class="sub">${bi(c.src[0],c.src[1])}</p>
+ ${o?`<button class="linkbtn" type="button" data-more>${bi('看原叶','See the page')}</button><figure class="opg" hidden><div class="pg"><img src="${o.file}" alt="${esc(o.alt||'')}" decoding="sync"><span class="hl" style="left:${o.hl[0]*100}%;top:${o.hl[1]*100}%;width:${o.hl[2]*100}%;height:${o.hl[3]*100}%"></span></div><figcaption class="sub">${esc(o.cap||'')}</figcaption></figure>`:''}
+ ${kids.length?`<div class="ways">${kids.map(k=>`<button class="chip coinchip" type="button" data-dig="${k.id}">${DUG.has(k.id)?bi('✦ '+k.word[0],'✦ '+k.word[1]):bi('✦ 下面还有一枚','✦ Something under this one')}</button>`).join('')}</div>`:''}
+ <div class="row end"><span></span><button class="lg" type="button" data-swap aria-label="换语言 · Switch language"><span class="z">EN</span><span class="e">中文</span></button></div>`}
+function dig(id){const c=COIN[id];if(!c)return;const [x,y]=coinXY(c);
+ if(!DUG.has(id)){DUG.add(id);store.set('tr-dug',[...DUG]);tick('coin-'+id);const g=document.querySelector(`#xmarks [data-coin="${id}"]`);if(g)g.classList.add('dug');pouch()}
+ if(!reduce){const p=coinShape(x,y,'coinpop',$('#lights'));setTimeout(()=>p.remove(),900)}
+ ding();flog('coin',{id});openCard(coinCard(c),y)}
+function pouchCard(){const sets=[];for(const c of COINS){let s=sets.find(x=>x.k===c.set[1]);if(!s)sets.push(s={k:c.set[1],z:c.set[0],cs:[]});s.cs.push(c)}
+ const mute=store.get('tr-mute',false);
+ return `<p class="chanlab">${bi('钱袋','Your pouch')}</p><h2 id="card-h">${bi([...DUG].filter(k=>COIN[k]).length+' / '+COINS.length,[...DUG].filter(k=>COIN[k]).length+' / '+COINS.length)}</h2>
+ ${sets.map(s=>`<div class="pset"><p class="sub">${bi(s.z,s.k)}</p><div class="ways">${s.cs.map(c=>DUG.has(c.id)?`<button class="chip coinchip" type="button" data-dig="${c.id}">${bi('✦ '+c.word[0],'✦ '+c.word[1])}</button>`:`<span class="chip coinchip unk">${bi('？','?')}</span>`).join('')}</div></div>`).join('')}
+ <div class="row end"><span><button class="chip" type="button" data-mute>${mute?bi('声音：关','Sound: off'):bi('声音：开','Sound: on')}</button> ${DUG.size?`<button class="chip" type="button" data-rebury>${bi('重新埋好','Bury them again')}</button>`:''}</span><button class="lg" type="button" data-swap aria-label="换语言 · Switch language"><span class="z">EN</span><span class="e">中文</span></button></div>`}
+if(TREASURE){document.body.classList.add('treasure');['touchend','pointerdown','keydown'].forEach(ev=>addEventListener(ev,unlockAudio,{passive:true}));document.title='宝藏图 · Treasure map';
+ const xg=el('g',{id:'xmarks'},$('#lights'));const n={};
+ for(const c of COINS){if(c.after||!POS[c.area])continue;const i=n[c.area]=(n[c.area]||0)+1;const [x0,y0]=POS[c.area];const x=x0+(i-1)*92,y=y0;
+  const g=el('g',{class:'xmark'+(DUG.has(c.id)?' dug':''),transform:`translate(${x},${y})`,tabindex:'0',role:'button','aria-label':`${c.set[0]} ${c.set[1]}`,'data-coin':c.id},xg);
+  el('circle',{r:22,class:'xglow'},g);el('path',{d:'M-9,-9 L9,9 M9,-9 L-9,9',class:'xx'},g);el('circle',{r:30,fill:'transparent'},g)}
+ $('#idle').innerHTML='<span class="z">挖一个 ✕</span><span class="sep"> · </span><span class="e">dig where you see ✕</span>';
+ const pb=document.createElement('button');pb.id='pouch';pb.type='button';pb.setAttribute('aria-label','钱袋 · Your pouch');pb.innerHTML='<span class="pc" aria-hidden="true"></span><b></b>';document.body.appendChild(pb);pouch();
+ pb.addEventListener('click',()=>openCard(pouchCard(),null));
+ card.addEventListener('click',e=>{const d=e.target.closest('[data-dig]');if(d){e.stopPropagation();dig(d.dataset.dig);return}
+  if(e.target.closest('[data-rebury]')){e.stopPropagation();DUG.clear();store.set('tr-dug',[]);document.querySelectorAll('#xmarks .dug').forEach(g=>g.classList.remove('dug'));pouch();closeCard();return}
+  if(e.target.closest('[data-mute]')){e.stopPropagation();store.set('tr-mute',!store.get('tr-mute',false));openCard(pouchCard(),null)}},true)}
 })();
 
 // 「找到了吗」之后：接住一片飘来的叶子。只记次数：不记名字、不记 IP、不用 cookie。
