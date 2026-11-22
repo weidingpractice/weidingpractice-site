@@ -415,7 +415,7 @@ function pinHere(gs,zh,en){window.__pinArgs=[gs,zh,en];unpin();gs=[...gs].filter
  const lab=document.body.classList.contains('zh')?zh:en;let done=false;
  for(const g of gs){const m=(g.getAttribute('transform')||'').match(/translate\(([-\d.]+)[ ,]+([-\d.]+)\)/);if(!m)continue;const x=+m[1],y=+m[2];
   el('circle',{cx:x,cy:y,r:16,class:'pinping'},root);el('circle',{cx:x,cy:y,r:26,class:'pinring'},root);el('circle',{cx:x,cy:y,r:7,class:'pindot'},root);
-  if(!done&&lab){done=true;const w=Math.max(60,lab.length*(/[一-鿿]/.test(lab)?26:15)+28),ty=y-58;
+  if(!done&&lab){done=true;const w=Math.max(60,lab.length*(/[\u4e00-\u9fff]/.test(lab)?26:15)+28),ty=y-58;
    const t=el('g',{class:'pinlab',transform:`translate(${x},${ty})`},root);
    el('rect',{x:-w/2,y:-22,width:w,height:40,rx:20},t);el('line',{x1:0,y1:18,x2:0,y2:32},t);
    const tx=el('text',{x:0,y:7,'text-anchor':'middle'},t);tx.textContent=lab}}}
@@ -460,7 +460,7 @@ function touchPoint(k,after){flog('light',{k});if(sideOf(k)!==VIEW)setView(sideO
  openCard(`${after==='yes'?`<p class="aim" style="margin:0 36px 10px 0">${bi('这盏光现在是你的了。','This light is yours now.')}</p>`:after==='not'?`<p class="aim" style="margin:0 36px 10px 0">${bi('没关系。换一个体式，也能找到它。','That is fine. Another pose can find it too.')}</p>`:''}<div class="sign"><h2 id="card-h"><span class="z">${esc(p.zh)}</span><span class="e">${esc(p.py)}</span></h2>
    <p class="meta">${p.code==='Area'?bi('一片','An area'):esc(p.code)} · ${bi(MAPN(p.map)[0],MAPN(p.map)[1])}<span class="e">${p.en?` · ${esc(p.en)}`:''}</span></p></div>
   ${p.map==='body'?otherMapsCard(p):p.find?`<div class="find2"><p class="lab">${bi('先用手找','First, find it with your hand')}</p>${steps(p.find,p.findEn)}<div class="labrow" style="margin:6px 0 0">${foundRow(k)}</div></div>`:''}${reveal||chanLine}
-  ${ws.length?`<div class="find2 pose2"><p class="lab">${p.map==='body'?bi('到体式里感受它','Feel it in a pose'):bi('再到体式里找','Then find it in a pose')}</p><div class="ways">${ws.map((po,i)=>`<button class="chip door" type="button" data-pose="${po.id}" data-from="${k}"${i>=3?' hidden':''}>${bi(po.zh,po.en)} <span aria-hidden="true">→</span></button>`).join('')}${ws.length>3?`<button class="chip more" type="button" data-more>${bi('还有 '+(ws.length-3)+' 个','+'+(ws.length-3)+' more')}</button>`:''}</div></div>`:''}${p.map==='body'?`<div class="find2"><div class="labrow" style="margin:6px 0 0">${foundRow(k)}</div></div>`:''}
+  ${ws.length&&p.map==='body'?`<div class="find2 pose2"><p class="lab">${bi('到体式里感受它','Feel it in a pose')}</p><div class="ways">${ws.map((po,i)=>`<button class="chip door" type="button" data-pose="${po.id}" data-from="${k}"${i>=3?' hidden':''}>${bi(po.zh,po.en)} <span aria-hidden="true">→</span></button>`).join('')}${ws.length>3?`<button class="chip more" type="button" data-more>${bi('还有 '+(ws.length-3)+' 个','+'+(ws.length-3)+' more')}</button>`:''}</div></div>`:''}${p.map==='body'?`<div class="find2"><div class="labrow" style="margin:6px 0 0">${foundRow(k)}</div></div>`:''}
   <div class="row end"><a class="go" href="${SITE}${p.slug}.html">${bi('走近','Go closer')} →</a><button class="lg" type="button" data-swap aria-label="换语言 · Switch language"><span class="z">EN</span><span class="e">中文</span></button></div>`,L.y)}
 
 /* 11-21 A practice whose answer is a whole channel, not a point. */
