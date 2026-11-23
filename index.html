@@ -203,6 +203,14 @@ body.treasure #pouch{display:flex}
 #card .coinline{font-family:var(--display);font-size:19px;line-height:1.6;color:var(--ink);margin:12px 0 6px}
 #card .coinchip{border-color:rgba(212,163,95,.55);color:#f3e6cf}#card .coinchip.unk{opacity:.45}
 #card .pset{margin:10px 0}
+
+/* 11-23 Wei: after reading, make the card small and see the whole forest; tap it to open again */
+#card .mn{position:absolute;top:10px;right:48px;background:none;border:0;width:36px;height:36px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center}
+#card .mn span{display:block;width:14px;height:2px;border-radius:2px;background:var(--muted)}
+#card.mini .mn span{width:0;height:0;background:none;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:8px solid var(--muted);border-radius:0}
+#card.mini{max-height:none;overflow:hidden;cursor:pointer;padding-top:10px;padding-bottom:10px}
+#card.mini #card-body{display:none!important}
+#card.mini::before{content:attr(data-title);display:block;padding:6px 84px 6px 2px;font:400 18px/1.3 var(--display);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 <canvas id="woods" aria-hidden="true"></canvas>
 <svg id="map" viewBox="200 70 600 1580" preserveAspectRatio="xMidYMid meet" role="group" aria-label="林子 · The forest">
@@ -235,7 +243,7 @@ body.treasure #pouch{display:flex}
  <p class="count" style="margin-top:18px">这里记录的是练习时注意力放在哪里，不是诊断，也不是治疗。<span class="e" style="display:block;margin:4px 0 0">Where attention goes in practice. Not diagnosis, not treatment.</span></p>
 </nav>
 <section id="text" class="sr" aria-label="所有的光 · All the lights"></section>
-<div id="card" role="dialog" aria-modal="false" aria-live="polite" aria-labelledby="card-h"><button class="x" type="button" aria-label="合上 · Close">×</button><div id="card-body"></div></div>
+<div id="card" role="dialog" aria-modal="false" aria-live="polite" aria-labelledby="card-h"><button class="mn" type="button" aria-label="收起，看整片林子 · Minimise to see the whole forest" aria-expanded="true"><span aria-hidden="true"></span></button><button class="x" type="button" aria-label="合上 · Close">×</button><div id="card-body"></div></div>
 
 <script>window.__SITE="";window.__TICKS="https://yishen-ticks.weidingpractice.workers.dev";</script>
 <script>
@@ -392,7 +400,12 @@ const CARDPOS={x:0,y:0};let DRAG=null,DRAGGED=false;
 function placeCard(x,y){const r=card.getBoundingClientRect(),bx=r.left-CARDPOS.x,by=r.top-CARDPOS.y,keep=64;
  x=Math.min(Math.max(x,keep-bx-r.width),innerWidth-keep-bx);y=Math.min(Math.max(y,keep-by-r.height),innerHeight-keep-by);
  CARDPOS.x=x;CARDPOS.y=y;card.style.translate=(x||y)?`${Math.round(x)}px ${Math.round(y)}px`:''}
-function resetCard(){CARDPOS.x=0;CARDPOS.y=0;card.style.translate=''}
+function resetCard(){CARDPOS.x=0;CARDPOS.y=0;card.style.translate='';card.classList.remove('mini');const b=card.querySelector('.mn');if(b)b.setAttribute('aria-expanded','true')}
+/* 11-23 Wei: read the card, then make it small to see the whole forest. The light you chose keeps blinking; tap the small card to open it again. */
+let MINI=null;
+function miniCard(on){const b=card.querySelector('.mn');if(on){if(card.classList.contains('mini'))return;MINI={t:$('#map').style.transform,top:card.classList.contains('top'),tr:card.style.translate};
+  const hh=card.querySelector('#card-h');card.dataset.title=hh?[...hh.querySelectorAll(document.body.classList.contains('zh')?'.z':'.e')].map(x=>x.textContent).join(' ')||hh.textContent.trim():'';card.style.translate='';card.classList.remove('top');card.classList.add('mini');panMap(0);if(b)b.setAttribute('aria-expanded','false');flog('minicard',{})}
+ else{if(!card.classList.contains('mini'))return;card.classList.remove('mini');if(MINI){card.classList.toggle('top',MINI.top);card.style.translate=MINI.tr||'';const m=$('#map');m.style.transition='transform .6s ease';m.style.transform=MINI.t||''}if(b)b.setAttribute('aria-expanded','true')}}
 card.addEventListener('pointerdown',e=>{if(e.button>0)return;if(e.target.closest('input,textarea,select,[contenteditable]'))return;
  DRAG={id:e.pointerId,sx:e.clientX,sy:e.clientY,x0:CARDPOS.x,y0:CARDPOS.y,on:false,st:card.scrollTop};DRAGGED=false});
 card.addEventListener('pointermove',e=>{if(!DRAG||e.pointerId!==DRAG.id)return;const dx=e.clientX-DRAG.sx,dy=e.clientY-DRAG.sy;
@@ -459,7 +472,7 @@ function route(h){const m=(h||'').split('-');ROUTING=true;try{
 addEventListener('popstate',()=>{const h=location.hash.slice(1);
  if(!h){if(card.classList.contains('on')){const lit=document.querySelector('.light.on,.light.go');card.classList.remove('on');clearLit();if(lit){lit.classList.add('was');setTimeout(()=>lit.classList.remove('was'),4500)}}STACK=[];return}
  const i=STACK.lastIndexOf(h);STACK=i>=0?STACK.slice(0,i+1):[h];route(h)});
-card.querySelector('.x').onclick=closeCard;
+card.querySelector('.x').onclick=closeCard;card.querySelector('.mn').onclick=e=>{e.stopPropagation();miniCard(!card.classList.contains('mini'))};card.addEventListener('click',e=>{if(card.classList.contains('mini')&&!e.target.closest('.x,.mn')){e.stopPropagation();e.preventDefault();miniCard(false)}},true);
 ['pointerover','focusin'].forEach(t=>card.addEventListener(t,e=>{const c=e.target.closest&&e.target.closest('[data-pt]');document.querySelectorAll('#lights .peek').forEach(g=>g.classList.remove('peek'));if(c)document.querySelectorAll(`#lights [data-pt="${c.dataset.pt}"]`).forEach(g=>g.classList.add('peek'))}));
 card.addEventListener('ff-caught',e=>{const d=e.detail||{};if(d.c==='where'&&window.FF_NEAR)window.FF_NEAR(d.k).forEach(x=>star(x.k,'nearstar'));if(d.kind==='felt'&&d.c!=='none'&&LIGHT[d.k])felt(d.k,true)});
 
