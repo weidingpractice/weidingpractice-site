@@ -478,7 +478,7 @@ addEventListener('popstate',()=>{const h=location.hash.slice(1);
  const i=STACK.lastIndexOf(h);STACK=i>=0?STACK.slice(0,i+1):[h];route(h)});
 card.querySelector('.x').onclick=closeCard;card.querySelector('.mn').onclick=e=>{e.stopPropagation();miniCard(!card.classList.contains('mini'))};card.addEventListener('click',e=>{if(card.classList.contains('mini')&&!e.target.closest('.x,.mn')){e.stopPropagation();e.preventDefault();miniCard(false)}},true);
 ['pointerover','focusin'].forEach(t=>card.addEventListener(t,e=>{const c=e.target.closest&&e.target.closest('[data-pt]');document.querySelectorAll('#lights .peek').forEach(g=>g.classList.remove('peek'));if(c)document.querySelectorAll(`#lights [data-pt="${c.dataset.pt}"]`).forEach(g=>g.classList.add('peek'))}));
-card.addEventListener('ff-caught',e=>{const d=e.detail||{};if(d.c==='where'&&window.FF_NEAR)window.FF_NEAR(d.k).forEach(x=>star(x.k,'nearstar'));if(d.kind==='felt'&&d.c!=='none'&&LIGHT[d.k])felt(d.k,true)});
+card.addEventListener('ff-caught',e=>{const d=e.detail||{};if(d.c==='where'&&window.FF_NEAR)window.FF_NEAR(d.k).forEach(x=>star(x.k,'nearstar'));if(((d.kind==='felt'&&d.c!=='none')||(d.kind==='breath'&&d.c!=='same'))&&LIGHT[d.k])felt(d.k,true)});
 
 /* 11-21 Wei: turn around. The forest shows the front or the back of the body; tapping a light on the other side turns you round. */
 function setView(v,anim){if(v!==VIEW)flog('view',{to:v});if(v!=='back')v='front';if(v===VIEW&&document.body.classList.contains('view-'+v))return;
@@ -670,7 +670,12 @@ if(TREASURE){document.body.classList.add('treasure');['touchend','pointerdown','
 (function(){
   if(window.FoundFlow)return;
   var API=document.documentElement.getAttribute('data-ticks')||window.__TICKS||'';
-  var FELT=[['warm','热了','Warm'],['soft','松了','Softer'],['tingle','有点麻','Tingling'],['sink','沉下去','Sinking'],['move','想动','Engaged'],['none','没感觉','Nothing yet']];
+  var FELT=[['warm','热了','Warm'],['soft','松了','Softer'],['tingle','有点麻','Tingling'],['sink','沉下去','Sinking'],['none','没感觉','Nothing']];
+  // 11-23 Wei: breath on top of your ordinary breathing, noticed, never guided. In and out can both happen.
+  var BREATH=[['in','吸气加深了','Deeper in-breath'],['out','呼气加深了','Deeper out-breath'],['same','没变','No change']];
+  // within one layer, these stand alone: choosing one clears the others, choosing any other clears it
+  var SOLO={none:1,same:1};
+  // 11-23 Wei: every time is a new record. Nothing is remembered on the device; the card always starts at 「找到了吗」.
   // 11-21 Wei: what you find can be a point, a stretch of the body, or a whole line. None is more right.
   var KIND=[['kind-point','一个点','A point'],['kind-area','一片','An area'],['kind-line','一条线','A line']];
   var STUCK=[['where','不确定是这里',"Not sure it's here"],['step','有一步不懂','A step is unclear'],['reach','够不到',"Can't reach"]];
@@ -695,7 +700,7 @@ if(TREASURE){document.body.classList.add('treasure');['touchend','pointerdown','
     '.ff-lab{font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin:2px 0 -4px!important}.ff .ff-chip{border:none;background:rgba(60,150,140,.16);color:inherit;padding:4px 10px;font-size:13px;animation:fffloat 5s ease-in-out infinite}'+
     '.ff .ff-chip:nth-child(2n){animation-delay:-1.6s}.ff .ff-chip:nth-child(3n){animation-delay:-3.1s}'+
     '.ff-chip i{font-style:normal;font-size:12px;color:var(--muted,#5d6b6b);margin-left:6px}'+
-    '.ff-stuck .ff-chip{background:rgba(190,90,60,.16)}'+
+    '.ff-stuck .ff-chip{background:rgba(190,90,60,.16)}.ff-breath .ff-chip{background:rgba(90,110,170,.14)}'+
     '.ff .ff-chip.on{background:#1f6f6a;color:#fff;animation:none}.ff-chip.on i{color:#fff}.ff-redo{margin:12px 0 0;display:flex;gap:14px;flex-wrap:wrap}.ff-redo button{background:none;border:0;padding:4px 0;font:inherit;font-size:13px;color:inherit;opacity:.7;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.ff-redo button:hover{opacity:1}'+
     '@keyframes fffloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-1deg)}}'+
     '@media (prefers-reduced-motion:reduce){.ff .ff-chip{animation:none}}'+
@@ -704,25 +709,23 @@ if(TREASURE){document.body.classList.add('treasure');['touchend','pointerdown','
     '.ff-links{display:flex;flex-wrap:wrap;gap:6px 16px}.ff-links a{color:var(--water,#1f6f6a)}'+
     '.ff-mail{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.ff-mail code{font-size:12.5px;user-select:all;background:transparent;border:1px solid var(--line,#dfe3df);border-radius:6px;padding:1px 7px}.ff-mail .ff-copy{font-size:12px;padding:2px 10px}';
   function css(){if(document.getElementById('ff-css'))return;var s=document.createElement('style');s.id='ff-css';s.textContent=CSS;document.head.appendChild(s)}
-  function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
-  function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-  function del(k){try{localStorage.removeItem(k)}catch(e){}}
   // 11-21: a preview (no counter) still shows the whole flow; it just counts nothing
   function tick(id){try{if(window.__flog)window.__flog('tick',{id:id})}catch(x){}if(!API)return Promise.resolve({count:1,preview:true});return fetch(API+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
   function counts(ids){if(!API)return Promise.resolve({});return fetch(API+'/counts?ids='+ids.join(',')).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){return {}})}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-  function chips(k,list,cls,c){return '<div class="ff-drift '+cls+'">'+list.map(function(x){var id='leaf-'+k+'-'+x[0],on=get('leaf:'+k+':'+x[0])==='1',n=c[id]||0;
+  function chips(el,k,list,cls,c){var S=el.__sel||(el.__sel={});return '<div class="ff-drift '+cls+'">'+list.map(function(x){var id='leaf-'+k+'-'+x[0],on=!!S[x[0]],n=c[id]||0;
     return '<button type="button" class="ff-chip'+(on?' on':'')+'" data-c="'+x[0]+'"'+(on?' aria-pressed="true"':' aria-pressed="false"')+'>'+T(esc(x[1]),esc(x[2]),1)+(n?'<i>'+n+'</i>':'')+'</button>'}).join('')+'</div>'}
   function after(el,k,a){
-    var list=a==='yes'?FELT:stuckFor(k),ids=list.concat(a==='yes'?KIND:[]).map(function(x){return 'leaf-'+k+'-'+x[0]});if(a==='yes')ids.push('find-'+k+'-yes');
+    el.__sel={};var list=a==='yes'?FELT.concat(BREATH,KIND):stuckFor(k),ids=list.map(function(x){return 'leaf-'+k+'-'+x[0]});ids.push('find-'+k+'-'+a);
     counts(ids).then(function(c){
-      var head;
-      if(a==='yes'){var n=Math.max(0,(c['find-'+k+'-yes']||1)-1);
-        var F=el.getAttribute('data-ff-q')==='felt';
-        head='<p class="ff-done">✓ '+(F?(n?T('你和另外 '+n+' 人感觉到了','Felt, with '+n+(n===1?' other':' others')):T('感觉到了','Felt')):(n?T('你和另外 '+n+' 人找到了','Found, with '+n+(n===1?' other':' others')):T('找到了','Found')))+'</p><p class="ff-lab">'+T(F?'感觉到的是':'找到的是',F?'It was':'It was',1)+'</p>'+chips(k,KIND,'ff-kind',c)+'<p class="ff-lab">'+T('有什么感觉','It feels',1)+'</p>';
-      }else head='<p class="ff-lab">'+T('卡在哪','Stuck where',1)+'</p>';
-      var caught=list.some(function(x){return get('leaf:'+k+':'+x[0])==='1'});
-      el.innerHTML=head+chips(k,list,a==='yes'?'ff-felt':'ff-stuck',c)+(a==='no'&&get('leaf:'+k+':where')==='1'?NEARBY(el,k):'')+INP(a==='yes')+'<p class="ff-redo"><button type="button" class="ff-reset">'+T('撤回','Undo',1)+'</button></p>';
+      var head,F=el.getAttribute('data-ff-q')==='felt';
+      if(a==='yes'){var n=c['find-'+k+'-yes']||1;
+        head='<p class="ff-done">✓ '+(F?T('这里被感觉到过 '+n+' 次','Felt here '+n+(n===1?' time':' times')):T('这里被找到过 '+n+' 次','Found here '+n+(n===1?' time':' times')))+'</p>'+
+          '<p class="ff-lab">'+T(F?'感觉到的是':'找到的是','It was',1)+'</p>'+chips(el,k,KIND,'ff-kind',c)+
+          '<p class="ff-lab">'+T('手底下','Under your hand',1)+'</p>'+chips(el,k,FELT,'ff-felt',c)+
+          '<p class="ff-lab">'+T('呼吸','Breath',1)+'</p>'+chips(el,k,BREATH,'ff-breath',c);
+      }else head='<p class="ff-lab">'+T('卡在哪','Stuck where',1)+'</p>'+chips(el,k,stuckFor(k),'ff-stuck',c);
+      el.innerHTML=head+INP(a==='yes')+'<p class="ff-redo"><button type="button" class="ff-again">'+(a==='yes'?T('再记一次','Record again',1):T('再试一次','Try again',1))+'</button></p>';
     });
   }
   function ask(el,k){
@@ -731,27 +734,23 @@ if(TREASURE){document.body.classList.add('treasure');['touchend','pointerdown','
   }
   function mount(el){
     if(el.__ff)return;el.__ff=1;var k=el.getAttribute('data-ff');if(!/^[a-z0-9-]{1,40}$/.test(k))return;css();el.classList.add('ff');
-    var a=get('found:'+k);if(a==='yes'||a==='no')after(el,k,a);else ask(el,k);el.hidden=false;
+    ask(el,k);el.hidden=false;
+    function setOn(b,on,delta){b.classList.toggle('on',on);b.setAttribute('aria-pressed',on?'true':'false');var i=b.querySelector('i');var n=Math.max(0,(i?+i.textContent:0)+delta);
+      if(n){if(!i){i=document.createElement('i');b.appendChild(i)}i.textContent=n}else if(i)i.remove()}
     el.addEventListener('click',function(e){
       var b=e.target.closest('button');if(!b||b.disabled)return;
       if(b.hasAttribute('data-a')){var ans=b.getAttribute('data-a');[].forEach.call(el.querySelectorAll('button'),function(x){x.disabled=true});
-        tick('find-'+k+'-'+ans).then(function(){put('found:'+k,ans);after(el,k,ans)}).catch(function(){[].forEach.call(el.querySelectorAll('button'),function(x){x.disabled=false})});return}
-      if(b.classList.contains('ff-change')||b.classList.contains('ff-reset')){var prev=get('found:'+k);
-        // counters only go up: an undo is counted as its own event, so the numbers stay honest
-        if(prev)tick('undo-'+k+'-'+prev).catch(function(){});
-        [FELT,KIND,STUCK,STUCK_AT[k]||[]].forEach(function(L){(L||[]).forEach(function(x){del('leaf:'+k+':'+x[0])})});
-        if(b.classList.contains('ff-reset')||!prev){del('found:'+k);ask(el,k);return}
-        var nx=prev==='yes'?'no':'yes';tick('find-'+k+'-'+nx).then(function(){put('found:'+k,nx);after(el,k,nx)}).catch(function(){put('found:'+k,nx);after(el,k,nx)});return}
-      if(b.classList.contains('ff-chip')&&b.classList.contains('on')){var cc=b.getAttribute('data-c');del('leaf:'+k+':'+cc);b.classList.remove('on');b.setAttribute('aria-pressed','false');
-        var ii=b.querySelector('i');if(ii){var nn=Math.max(0,(+ii.textContent||1)-1);if(nn)ii.textContent=nn;else ii.remove()}
-        tick('unleaf-'+k+'-'+cc).catch(function(){});return}
-      if(b.classList.contains('ff-chip')){var c=b.getAttribute('data-c');b.disabled=true;
-        tick('leaf-'+k+'-'+c).then(function(x){put('leaf:'+k+':'+c,'1');b.disabled=false;b.classList.add('on');b.setAttribute('aria-pressed','true');
-          var i=b.querySelector('i');if(!i){i=document.createElement('i');b.appendChild(i)}i.textContent=x.count;
-          try{el.dispatchEvent(new CustomEvent('ff-caught',{bubbles:true,detail:{k:k,c:c,kind:b.closest('.ff-stuck')?'stuck':'felt'}}))}catch(x){}
-          if(c==='where'&&!el.querySelector('.ff-near')){var nb=NEARBY(el,k);if(nb)el.querySelector('.ff-drift').insertAdjacentHTML('afterend',nb)}
-          if(!el.querySelector('.ff-in'))el.insertAdjacentHTML('beforeend',INP(!b.closest('.ff-stuck')));
-        }).catch(function(){b.disabled=false});return}
+        tick('find-'+k+'-'+ans).then(function(){after(el,k,ans)}).catch(function(){[].forEach.call(el.querySelectorAll('button'),function(x){x.disabled=false})});return}
+      if(b.classList.contains('ff-again')){el.__sel={};ask(el,k);return}
+      if(b.classList.contains('ff-chip')){var c=b.getAttribute('data-c'),S=el.__sel||(el.__sel={}),row=b.closest('.ff-drift');
+        if(S[c]){delete S[c];setOn(b,false,-1);tick('unleaf-'+k+'-'+c).catch(function(){});return}
+        // counters only go up: a cleared choice is counted as its own event
+        [].forEach.call(row.querySelectorAll('.ff-chip.on'),function(o){var oc=o.getAttribute('data-c');if(SOLO[c]||SOLO[oc]){delete S[oc];setOn(o,false,-1);tick('unleaf-'+k+'-'+oc).catch(function(){})}});
+        S[c]=1;setOn(b,true,1);
+        tick('leaf-'+k+'-'+c).then(function(x){var i=b.querySelector('i');if(i&&x&&x.count&&S[c])i.textContent=x.count}).catch(function(){});
+        try{el.dispatchEvent(new CustomEvent('ff-caught',{bubbles:true,detail:{k:k,c:c,kind:row.classList.contains('ff-stuck')?'stuck':row.classList.contains('ff-breath')?'breath':'felt'}}))}catch(x){}
+        if(c==='where'&&!el.querySelector('.ff-near')){var nb=NEARBY(el,k);if(nb)row.insertAdjacentHTML('afterend',nb)}
+        return}
       if(b.classList.contains('ff-copy')){var t='hello@weidingpractice.com';
         (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已复制 · Copied'}).catch(function(){var r=document.createRange();r.selectNodeContents(el.querySelector('.ff-mail code'));var s=getSelection();s.removeAllRanges();s.addRange(r)})}
     });
