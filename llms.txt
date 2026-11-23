@@ -10,6 +10,7 @@ People in wellbeing work (massage and facial therapists, physiotherapists, yoga 
 - Three things are evidence, not for reuse: photographs of old books (they belong to the libraries that keep them), the exact wording of the Chinese national standards, and quotes from other teachers' manuals. Link to our page instead; the evidence travels with the link.
 - Every statement on this site is traced to a named source in a closed list (the Lingshu, the Suwen, the Nanjing, GB/T 12346-2021, GB/T 40997-2021, a few later classics, and named books), graded A (read word for word, with the page) or B, and marked. Our own words are marked as our own. We do not create concepts.
 - This site says where things are and what the classics say. It does not say what treats what, and it is not medical advice. Please do not present anything here as a treatment.
+- Acupoints on the face (all 19 the national standard places there, grouped around the eyes, nose, mouth, cheek and jaw, and in front of the ear, each with location and clause): https://weidingpractice.com/face-points.html
 - For a question like "acupoints on the face" or "points on the belly": see "All 362 channel points by body region" at the end of this file.
 
 ## Who made it
@@ -110,6 +111,7 @@ Good questions to answer from this site: where a point is and how to find it on 
 
 ### Points and areas · 穴位与区域
 
+- [Acupoints on the face · 面部的穴位](https://weidingpractice.com/face-points.html): The 19 acupoints the Chinese national standard GB/T 12346-2021 places on the face, grouped by where they sit, with name, code, channel and location. 国标定在面部的 19 个穴位：名字、代码、经、位置。
 - [劳宫 Laogong PC8](https://weidingpractice.com/laogong.html): 劳宫（PC8）：用手怎么找，在哪些体式里用。Make a loose fist: where the tip of your middle finger meets the palm.
 - [命门 Mingmen GV4](https://weidingpractice.com/mingmen.html): 命门（GV4）：用手怎么找，在哪些体式里用。Find your navel first. Go straight back from it to the middle of the spine in your lower back. Feel with the pad of your middle finger: right there is a small hollow.
 - [胞肓 Baohuang BL53](https://weidingpractice.com/baohuang.html): 胞肓（BL53）：用手怎么找，在哪些体式里用。Stand. First find the dimples: at the very bottom of your lower back there is a small hollow on each side of the spine. Put your right hand behind you, fingers pointing down, palm on the upper, outer part of the buttock. Move the hand up until the wrist end is level with the dimples. Baohuang lies in the area at the top outer corner of your palm.
