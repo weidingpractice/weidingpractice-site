@@ -669,6 +669,7 @@ if(TREASURE){document.body.classList.add('treasure');['touchend','pointerdown','
 (function(){
   if(window.FoundFlow)return;
   var API=document.documentElement.getAttribute('data-ticks')||window.__TICKS||'';
+  // 11-23 Wei: no 「手底下」: once found, you let go; what you feel may be anywhere
   var FELT=[['warm','热了','Warm'],['soft','松了','Softer'],['tingle','有点麻','Tingling'],['sink','沉下去','Sinking'],['none','没感觉','Nothing']];
   // 11-23 Wei: breath on top of your ordinary breathing, noticed, never guided. In and out can both happen.
   var BREATH=[['in','吸气加深了','Deeper in-breath'],['out','呼气加深了','Deeper out-breath'],['same','没变','No change']];
@@ -721,7 +722,7 @@ if(TREASURE){document.body.classList.add('treasure');['touchend','pointerdown','
       if(a==='yes'){var n=c['find-'+k+'-yes']||1;
         head='<p class="ff-done">✓ '+(F?T('这里被感觉到过 '+n+' 次','Felt here '+n+(n===1?' time':' times')):T('这里被找到过 '+n+' 次','Found here '+n+(n===1?' time':' times')))+'</p>'+
           '<p class="ff-lab">'+T(F?'感觉到的是':'找到的是','It was',1)+'</p>'+chips(el,k,KIND,'ff-kind',c)+
-          '<p class="ff-lab">'+T('手底下','Under your hand',1)+'</p>'+chips(el,k,FELT,'ff-felt',c)+
+          '<p class="ff-lab">'+T('有什么感觉','It feels',1)+'</p>'+chips(el,k,FELT,'ff-felt',c)+
           '<p class="ff-lab">'+T('呼吸','Breath',1)+'</p>'+chips(el,k,BREATH,'ff-breath',c);
       }else head='<p class="ff-lab">'+T('卡在哪','Stuck where',1)+'</p>'+chips(el,k,stuckFor(k),'ff-stuck',c);
       el.innerHTML=head+INP(a==='yes')+'<p class="ff-redo"><button type="button" class="ff-again">'+(a==='yes'?T('再记一次','Record again',1):T('再试一次','Try again',1))+'</button></p>';
