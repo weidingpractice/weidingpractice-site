@@ -30,7 +30,9 @@
   // the forest has a 中文/English switch (body.zh / body.en, spans .z/.e); point pages show Chinese with English beneath
   function forest(){return document.body.classList.contains('zh')||document.body.classList.contains('en')}
   function T(z,e,inline){return forest()?'<span class="z">'+z+'</span><span class="e">'+e+'</span>':(inline?z+' · '+e:z+'<span class="ff-en">'+e+'</span>')}
-  function INP(found){return '<p class="ff-in"><a href="inperson.html">'+(found?T('当面一起找','Meet in person',1):T('当面一起找','Find it together, in person',1))+' →</a></p>'}
+  /* 11-23: inside the log the forest is a frame on another host, so the link goes to the site itself, in a new tab */
+  function INP(found){var base=(typeof window.__FF_BASE==='string')?window.__FF_BASE:'',framed=false;try{framed=window.top!==window.self}catch(e){framed=true}
+   return '<p class="ff-in"><a href="'+base+'inperson.html"'+(framed?' target="_blank" rel="noopener"':'')+'>'+(found?T('当面一起找','Meet in person',1):T('当面一起找','Find it together, in person',1))+' →</a></p>'}
   // 11-20: 「不确定是这里」 → the lights next door on the body (forest: window.FF_NEAR; point pages: data-near from the build)
   function NEARBY(el,k){var L=window.FF_NEAR?window.FF_NEAR(k):(function(){try{return JSON.parse(el.getAttribute('data-near')||'[]')}catch(e){return []}})();if(!L.length)return '';
     return '<div class="ff-near"><p><b>'+T('想找的是旁边的？','Maybe the one next door?')+'</b></p><div class="ff-drift">'+L.map(function(x){
