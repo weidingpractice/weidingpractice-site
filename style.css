@@ -167,8 +167,7 @@ section.classics cite{font-size:13.5px;color:var(--seal)}
 .toforest{align-self:flex-start;font-size:14px;color:var(--water);text-decoration:none;margin-bottom:-24px}
 .toforest .en{color:var(--muted);font-size:13px}
 /* 11-23 Galleries */
-.galrow{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
-.galrow a{display:block;min-width:0}
-.galrow a:first-child{flex:1.78 1 280px}.galrow a:last-child{flex:1 1 160px}
-.galrow img{display:block;width:100%;height:auto;border-radius:6px}
-.gal .dl{font-size:1.02em}
+.gal{display:flex;flex-direction:column;gap:14px;align-items:center}
+.gal>a{display:block;width:100%;max-width:560px}
+.gal img{display:block;width:100%;height:auto;border-radius:6px}
+.gal .dl{letter-spacing:.08em}
