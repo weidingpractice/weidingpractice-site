@@ -258,6 +258,8 @@ const SITE=window.__SITE??'';window.__FF_BASE=SITE;
 /* on the real site the same counters as the point pages: only counts, no names, no cookies */
 const TICKS=window.__TICKS||'';
 /* 11-21 inside Practice Notes the forest tells the log what happened (the page that holds it saves it); on the public site nobody listens */
+/* 11-23: inside the log, links to the site are handed to the log page to open (a frame may not open new pages itself) */
+try{if(window.parent!==window)document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href^=""]');if(!a)return;e.preventDefault();e.stopPropagation();window.parent.postMessage({__openlink:1,url:a.href},'*')},true)}catch(e){}
 function flog(ev,o){try{if(window.parent&&window.parent!==window)window.parent.postMessage(Object.assign({__forest:1,ev,at:Date.now(),view:typeof VIEW!=='undefined'?VIEW:''},o||{}),'*')}catch(e){}}
 window.__flog=flog;
 function tick(id){flog('tick',{id});if(!TICKS)return;try{fetch(TICKS+'/tick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}).catch(()=>{})}catch(e){}}
