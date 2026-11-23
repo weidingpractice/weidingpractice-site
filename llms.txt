@@ -537,7 +537,7 @@ Each line: Chinese name, pinyin, code, channel. The body region is the one the C
 - 劳宫 Laogong PC8 (Pericardium channel (hand jueyin)): https://weidingpractice.com/laogong.html
 - 中冲 Zhongchong PC9 (Pericardium channel (hand jueyin))
 - 关冲 Guanchong TE1 (Sanjiao channel (hand shaoyang))
-- 液门 Yemen TE2 (Sanjiao channel (hand shaoyang))
+- 液门 Yemen TE2 (Sanjiao channel (hand shaoyang)): https://weidingpractice.com/yemen.html
 - 中渚 Zhongzhu TE3 (Sanjiao channel (hand shaoyang))
 - 阳池 Yangchi TE4 (Sanjiao channel (hand shaoyang))
 - 外关 Waiguan TE5 (Sanjiao channel (hand shaoyang))
@@ -549,7 +549,7 @@ Each line: Chinese name, pinyin, code, channel. The body region is the one the C
 - 清泠渊 Qinglengyuan TE11 (Sanjiao channel (hand shaoyang))
 - 消泺 Xiaoluo TE12 (Sanjiao channel (hand shaoyang))
 - 臑会 Naohui TE13 (Sanjiao channel (hand shaoyang))
-- 风池 Fengchi GB20 (Gallbladder channel (foot shaoyang))
+- 风池 Fengchi GB20 (Gallbladder channel (foot shaoyang)): https://weidingpractice.com/fengchi.html
 - 风市 Fengshi GB31 (Gallbladder channel (foot shaoyang))
 - 中渎 Zhongdu GB32 (Gallbladder channel (foot shaoyang))
 - 膝阳关 Xiyangguan GB33 (Gallbladder channel (foot shaoyang))
