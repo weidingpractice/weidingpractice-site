@@ -486,7 +486,7 @@ card.addEventListener('ff-caught',e=>{const d=e.detail||{};if(d.c==='where'&&win
 function setView(v,anim){if(v!==VIEW)flog('view',{to:v});if(v!=='back')v='front';if(v===VIEW&&document.body.classList.contains('view-'+v))return;
  const apply=()=>{VIEW=v;document.body.classList.toggle('view-back',v==='back');document.body.classList.toggle('view-front',v==='front');store.set('forest-view',v);
   const t=$('#turn');if(t)t.setAttribute('aria-pressed',v==='back')};
- const m=$('#map');if(anim&&!reduce){m.style.transition='opacity 2.4s ease,transform .6s ease,scale .28s ease-in';m.style.scale='0 1';setTimeout(()=>{apply();m.style.transition='opacity 2.4s ease,transform .6s ease,scale .32s ease-out';m.style.scale='1 1'},290)}else apply()}
+ const m=$('#map');if(anim&&!reduce){m.style.transition='opacity 2.4s ease,transform .6s ease,scale .9s ease-in';m.style.scale='0 1';setTimeout(()=>{apply();m.style.transition='opacity 2.4s ease,transform .6s ease,scale 1s ease-out';m.style.scale='1 1'},920)}else apply()}
 function touchPoint(k,after){flog('light',{k});if(sideOf(k)!==VIEW)setView(sideOf(k),true);{const r_=ROUTING;setTimeout(()=>stepTo('pt-'+k,r_),0)}clearLit();document.querySelectorAll('.light.invite').forEach(x=>x.classList.remove('invite'));const p=DATA.pts[k],L=LIGHT[k];L.g.classList.add('on');setTimeout(()=>{star(k);NEAR.forEach(g=>{if(g.dataset.pt)star(g.dataset.pt,'nearstar')});pinHere(document.querySelectorAll(`#lights [data-pt="${k}"]`),p.zh,p.py||p.en)},0);
  const fresh=!touched.has(k);if(fresh){touched.add(k);store.set('forest-touched',[...touched]);L.g.classList.add('touched');L.halo.setAttribute('fill','url(#haloWarm)');bodyCheck();lanternCheck();updateCount()}
  const co=chanOf(k);let reveal='';
