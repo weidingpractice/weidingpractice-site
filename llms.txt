@@ -155,6 +155,7 @@ Good questions to answer from this site: where a point is and how to find it on 
 - [液门 Yemen TE2](https://weidingpractice.com/yemen.html): 液门（TE2）：用手怎么找，在哪些体式里用。Back of the hand: the small hollow just behind the web between ring and little fingers.
 - [环跳 Huantiao GB30](https://weidingpractice.com/huantiao.html): 环跳（GB30）：用手怎么找，在哪些体式里用。Lie on your left side, lower leg straight, right leg bent at hip and knee. With your right hand, find the most prominent bone on the outside of your hip. Press the first joint of your right thumb onto the highest point of that bone, with your thumb tip pointing towards your tailbone. Where the thumb tip lands is roughly Huantiao.
 - [太白 Taibai SP3](https://weidingpractice.com/taibai.html): 太白（SP3）：用手怎么找，在哪些体式里用。Sit and look at the inside of your foot. Behind the base of the big toe is a bony bump. Feel from it toward the heel: just past the bone is a small hollow, on the line where the colour of the sole meets the colour of the top of the foot.
+- [阴谷 Yingu KI10](https://weidingpractice.com/yingu.html): 阴谷（KI10）：用手怎么找，在哪些体式里用。Sit on a chair, both feet on the floor. Cover the inner side of your right knee with your left palm. Press your right heel into the floor and pull it back towards the chair, without actually moving the foot: a firm cord stands out under your left middle finger. Move your middle finger just a little from the cord into the hollow at the back of the knee: as soon as it comes off the cord, it drops into a small hollow right beside it. That is roughly Yingu. Feel around: the slightly soft, slightly hollow spot is it.
 - [中焦 Zhongjiao Area](https://weidingpractice.com/zhongjiao.html): 中焦（Area）：用手怎么找，在哪些体式里用。Rest your palm between the bottom of your breastbone and your navel, on the upper belly. This is the middle jiao.
 - [神阙 Shenque CV8](https://weidingpractice.com/shenque.html): 神阙（CV8）：用手怎么找，在哪些体式里用。The centre of the navel.
 - [膝盖内侧 Inner knee Area](https://weidingpractice.com/inner-knee.html): 膝盖内侧（Area）：用手怎么找，在哪些体式里用。Sit and cross one leg over the other. Cover the top knee with the opposite hand, palm right over the kneecap. Let it rest there naturally: under the fleshy pad at the base of your thumb, beside the inner edge of the kneecap, you will feel a hollow.
@@ -556,7 +557,7 @@ Each line: Chinese name, pinyin, code, channel. The body region is the one the C
 - 复溜 Fuliu KI7 (Kidney channel (foot shaoyin))
 - 交信 Jiaoxin KI8 (Kidney channel (foot shaoyin))
 - 筑宾 Zhubin KI9 (Kidney channel (foot shaoyin))
-- 阴谷 Yingu KI10 (Kidney channel (foot shaoyin))
+- 阴谷 Yingu KI10 (Kidney channel (foot shaoyin)): https://weidingpractice.com/yingu.html
 - 天泉 Tianquan PC2 (Pericardium channel (hand jueyin))
 - 曲泽 Quze PC3 (Pericardium channel (hand jueyin))
 - 郄门 Ximen PC4 (Pericardium channel (hand jueyin))
