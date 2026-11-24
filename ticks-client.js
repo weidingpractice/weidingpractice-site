@@ -77,7 +77,7 @@
           '<p class="ff-lab">'+T('有什么感觉','It feels',1)+'</p>'+chips(el,k,FELT,'ff-felt',c)+
           '<p class="ff-lab">'+T('呼吸','Breath',1)+'</p>'+chips(el,k,BREATH,'ff-breath',c);
       }else head='<p class="ff-lab">'+T('卡在哪','Stuck where',1)+'</p>'+chips(el,k,stuckFor(k),'ff-stuck',c);
-      el.innerHTML=head+INP(a==='yes')+'<p class="ff-redo"><button type="button" class="ff-again">'+(a==='yes'?T('再记一次','Record again',1):T('再试一次','Try again',1))+'</button></p>';
+      el.innerHTML=head+INP(a==='yes')+(a==='yes'?'':'<p class="ff-redo"><button type="button" class="ff-again">'+T('再试一次','Try again',1)+'</button></p>');
     });
   }
   function ask(el,k){
