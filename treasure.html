@@ -813,11 +813,11 @@ body.story #corner,body.story #turn,body.story #pouch,body.story #sidetag,body.s
 body.en #todaycard .tz,body.zh #todaycard .te{display:none}`;document.head.appendChild(st);
 const B=(z,e)=>`<span class="tz">${z}</span><span class="te">${e}</span>`;
 const card=document.createElement('div');card.id='todaycard';card.setAttribute('role','status');
-const DEV={春:['生','birth'],夏:['长','growth'],秋:['收','harvest'],冬:['藏','storing']},Q4={春:'春三月，此谓发陈……此春气之应，养生之道也',夏:'夏三月，此谓蕃秀……此夏气之应，养长之道也',秋:'秋三月，此谓容平……此秋气之应，养收之道也',冬:'冬三月，此谓闭藏……此冬气之应，养藏之道也'},dev=earth?['化','transforming']:DEV[season];
+const DEV={春:['生','birth'],夏:['长','growth'],秋:['收','harvest'],冬:['藏','storing']},Q4=null,dev=earth?['化','transforming']:DEV[season];
 const codeOf=k=>(PY[k]||'').split(' ').pop(),ks=wo[4].split('、');
 const lk=(attr,t)=>`<button type="button" class="lk" ${attr}>${t}</button>`;
 const chips=`<p class="go">${B(lk(`data-chan="${ch[0]}"`,ch[0]+' ›'),lk(`data-chan="${ch[0]}"`,ch[1]+' ›'))}${B(ks.map(k=>lk(`data-code="${codeOf(k)}"`,k+' ›')).join(''),ks.map(k=>lk(`data-code="${codeOf(k)}"`,(PY[k]||k)+' ›')).join(''))}</p>`;
-card.innerHTML=`<i class="bar"><b></b></i><p class="m">${B('今天的主题','Today\'s attention')}</p><h3>${B(wo[0],wo[1])}</h3><p>${B(wo[2],wo[3])}</p>${chips}<details><summary>${B('为什么是这里','Why here')}</summary><p class="m" style="font-size:13px;margin-top:4px">${B(`${term[0]} · ${earth?season+'末，归土':season} · ${el} · ${dev[0]}<br>节气：《淮南子·天文训》；${earth?'四季末十八日归土：《素问·太阴阳明论》；':`「${Q4[season]}」：《素问·四气调神大论》；`}「${QUOTE[el]}」：《素问·藏气法时论》`,`${earth?'Last 18 days of '+SEA[season]:['Early','Mid','Late'][Math.floor(((lon-{春:315,夏:45,秋:135,冬:225}[season]+360)%360)/30)]+' '+SEA[season]} · ${ELE[el]} element · ${dev[1]}`)}</p></details>`;
+card.innerHTML=`<i class="bar"><b></b></i><p class="m">${B('今天的主题','Today\'s attention')}</p><h3>${B(wo[0],wo[1])}</h3><p>${B(wo[2],wo[3])}</p>${chips}<details><summary>${B('为什么是这里','Why here')}</summary><p class="m" style="font-size:13px;margin-top:4px">${B(`${term[0]} · ${earth?season+'末，归土':season} · ${el} · ${dev[0]}<br>节气：《淮南子·天文训》；${earth?'四季末十八日归土：《素问·太阴阳明论》；':(Q4?Q4[season]:'')}「${QUOTE[el]}」：《素问·藏气法时论》`,`${earth?'Last 18 days of '+SEA[season]:['Early','Mid','Late'][Math.floor(((lon-{春:315,夏:45,秋:135,冬:225}[season]+360)%360)/30)]+' '+SEA[season]} · ${ELE[el]} element · ${dev[1]}`)}</p></details>`;
 document.body.appendChild(card);
 if(STORY){document.body.classList.add('story');card.querySelector('details').open=true;card.classList.add('on');card.insertAdjacentHTML('beforeend','<p class="url">weidingpractice.com</p>');return}
 const SEC=8,bar=card.querySelector('.bar b'),det=card.querySelector('details');let held=false;
