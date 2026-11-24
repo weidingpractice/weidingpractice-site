@@ -1,0 +1,21 @@
+name: Today's attention image
+on:
+  schedule:
+    - cron: '30 4 * * *'   # 04:30 UTC, before 6am in London all year
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright==1.48.0 && python -m playwright install --with-deps chromium
+      - run: python tools/story.py
+      - run: |
+          git config user.name "today-bot"
+          git config user.email "today-bot@users.noreply.github.com"
+          git add story/today.png
+          git diff --cached --quiet || (git commit -m "Today's attention $(TZ=Europe/London date +%F)" && git push)
