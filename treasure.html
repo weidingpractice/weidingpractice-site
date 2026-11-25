@@ -813,7 +813,7 @@ body.story #corner,body.story #turn,body.story #pouch,body.story #sidetag,body.s
 body.en #todaycard .tz,body.zh #todaycard .te{display:none}`;document.head.appendChild(st);
 const B=(z,e)=>`<span class="tz">${z}</span><span class="te">${e}</span>`;
 const card=document.createElement('div');card.id='todaycard';card.setAttribute('role','status');
-const DEV={春:['生','birth'],夏:['长','growth'],秋:['收','harvest'],冬:['藏','storing']},Q4=null,dev=earth?['化','transforming']:DEV[season];
+const DEV={春:['生','birth'],夏:['长','growth'],秋:['收','harvest'],冬:['藏','storing']},Q4={春:'「春三月，此谓发陈……此春气之应，养生之道也」：《素问·四气调神大论》；',夏:'「夏三月，此谓蕃秀……此夏气之应，养长之道也」：《素问·四气调神大论》；',秋:'「秋三月，此谓容平……此秋气之应，养收之道也」：《素问·四气调神大论》；',冬:'「冬三月，此谓闭藏……此冬气之应，养藏之道也」：《素问·四气调神大论》；'},dev=earth?['化','transforming']:DEV[season];
 const codeOf=k=>(PY[k]||'').split(' ').pop(),ks=wo[4].split('、');
 const lk=(attr,t)=>`<button type="button" class="lk" ${attr}>${t}</button>`;
 const chips=`<p class="go">${B(lk(`data-chan="${ch[0]}"`,ch[0]+' ›'),lk(`data-chan="${ch[0]}"`,ch[1]+' ›'))}${B(ks.map(k=>lk(`data-code="${codeOf(k)}"`,k+' ›')).join(''),ks.map(k=>lk(`data-code="${codeOf(k)}"`,(PY[k]||k)+' ›')).join(''))}</p>`;
